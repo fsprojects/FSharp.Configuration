@@ -2,9 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>TypeProviderForNamespaces - FSharp.Configuration</title>
+    <title>The ResX type provider
+</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
+    <meta name="description" content="Type providers for the configuration of .NET projects.">
     <meta name="author" content="Steffen Forkmann">
 
     <script src="http://code.jquery.com/jquery-1.8.0.js"></script>
@@ -32,83 +33,38 @@
       <div class="row">
         <div class="span9" id="main">
           
+<h1>The ResX type provider</h1>
 
+<p>This tutorial shows the use of the ResX type provider. 
+It allows to access .resx files.</p>
 
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="c">// reference the type provider dll</span>
+<span class="prep">#r</span> <span class="s">&quot;</span><span class="s">System</span><span class="s">.</span><span class="s">Configuration</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
+<span class="k">open</span> <span class="i">FSharp</span><span class="o">.</span><span class="i">Configuration</span>
 
-<h1>TypeProviderForNamespaces</h1>
-<div class="xmldoc">
-<p>A base type providing default implementations of type provider functionality when all provided 
-types are of type ProvidedTypeDefinition.</p>
-</div>
-  <h3>Instance members</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="member-name">
+<span class="c">// Let the type provider do it&#39;s work</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">ResX</span> <span class="o">=</span> <span class="i">ResXProvider</span><span class="o">&lt;</span><span class="i">file</span><span class="o">=</span><span class="s">&quot;</span><span class="s">Resource1</span><span class="s">.</span><span class="s">resx</span><span class="s">&quot;</span><span class="o">&gt;</span>
 
-          <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
-            Invalidate()
-          </code>
-          <div class="tip" id="3">
-            <strong>Signature:</strong>unit -&gt; unit<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-        <p>Invalidate the information provided by the provider</p>
+<span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">ResX</span><span class="o">.</span><span class="i">Resource1</span><span class="o">.</span><span class="i">HelloWorld</span>
+<span class="fsi">val it : string = &quot;Hello World&quot;</span></pre>
+</td>
+</tr>
+</table>
 
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
-            RegisterProbingFolder(folder)
-          </code>
-          <div class="tip" id="4">
-            <strong>Signature:</strong>folder:string -&gt; unit<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-        <p>Registers custom probing path that can be used for probing assemblies</p>
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '5', 5)" onmouseover="showTip(event, '5', 5)">
-            RegisterRuntimeAssemblyLocationAsProbingFolder(...)
-          </code>
-          <div class="tip" id="5">
-            <strong>Signature:</strong>cfg:TypeProviderConfig -&gt; unit<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-        <p>Registers location of RuntimeAssembly (from TypeProviderConfig) as probing folder</p>
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '6', 6)" onmouseover="showTip(event, '6', 6)">
-            ResolveAssembly(arg1)
-          </code>
-          <div class="tip" id="6">
-            <strong>Signature:</strong>ResolveEventArgs -&gt; Assembly<br />
-              <strong>Modifiers:</strong> abstract<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-        <p>AssemblyResolve handler. Default implementation searches <assemblyname>.dll file in registered folders</p>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="tip" id="fs1">type ResX = obj<br /><br />Full name: ResXProvider.ResX</div>
 
         </div>
         <div class="span3">
