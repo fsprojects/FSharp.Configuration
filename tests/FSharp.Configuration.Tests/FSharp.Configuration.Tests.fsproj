@@ -62,6 +62,8 @@
   <ItemGroup>
     <Compile Include="FsUnit.fs" />
     <Compile Include="AppSettingsProvider.Tests.fs" />
+    <Compile Include="ResXProvider.Tests.fs" />
+    <EmbeddedResource Include="Resource1.resx" />
     <None Include="packages.config" />
     <None Include="app.config" />
   </ItemGroup>

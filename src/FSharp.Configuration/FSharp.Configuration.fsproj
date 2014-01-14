@@ -45,13 +45,17 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="ProvidedTypes.fsi" />
     <Compile Include="ProvidedTypes.fs" />
     <Compile Include="TypeProviders.Helper.fs" />
+    <Compile Include="ResX.fs" />
+    <Compile Include="ResXProvider.fs" />
     <Compile Include="AppSettingsProvider.fs" />
+    <Compile Include="ConfigTypeProvider.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

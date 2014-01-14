@@ -8,6 +8,7 @@ FSharp.Configuration
 The FSharp.Configuration project contains type providers for the configuration of .NET projects.
 
 * [AppSettings](AppSettingsProvider.html)
+* [ResX](ResXProvider.html)
 
 <div class="row">
   <div class="span1"></div>

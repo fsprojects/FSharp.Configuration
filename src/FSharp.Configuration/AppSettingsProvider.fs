@@ -1,4 +1,4 @@
-module FSharp.Configuration.AppSettingsTypeProvider
+module internal FSharp.Configuration.AppSettingsTypeProvider
 
 open FSharp.Configuration.Helper
 open Microsoft.FSharp.Core.CompilerServices
@@ -58,13 +58,3 @@ let internal typedAppSettings (ownerType:TypeProviderForNamespaces) (cfg:TypePro
             | x -> failwithf "unexpected parameter values %A" x))
 
     appSettings
-
-
-[<TypeProvider>]
-type public FSharpConfigurationProvider(cfg:TypeProviderConfig) as this =
-    inherit TypeProviderForNamespaces()
-
-    do this.AddNamespace(rootNamespace,[typedAppSettings this cfg])
-
-[<TypeProviderAssembly>]
-do ()
