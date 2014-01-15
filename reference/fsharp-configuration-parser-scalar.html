@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>ProvidedAssembly - FSharp.Configuration</title>
+    <title>Scalar - FSharp.Configuration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Steffen Forkmann">
@@ -35,24 +35,79 @@
 
 
 
-<h1>ProvidedAssembly</h1>
+<h1>Scalar</h1>
 <div class="xmldoc">
-<p>A provided generated assembly</p>
 </div>
-  <h3>Constructors</h3>
+  <h3>Union Cases</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Constructor</td><td>Description</td></tr>
+      <tr><td>Union Case</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
-            new(assemblyFileName)
+          <code onmouseout="hideTip(event, '12', 12)" onmouseover="showTip(event, '12', 12)">
+            Bool
           </code>
-          <div class="tip" id="32">
-            <strong>Signature:</strong>assemblyFileName:string -&gt; ProvidedAssembly<br />
+          <div class="tip" id="12">
+            <strong>Signature:</strong>bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '13', 13)" onmouseover="showTip(event, '13', 13)">
+            Int
+          </code>
+          <div class="tip" id="13">
+            <strong>Signature:</strong>int<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '14', 14)" onmouseover="showTip(event, '14', 14)">
+            String
+          </code>
+          <div class="tip" id="14">
+            <strong>Signature:</strong>string<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '15', 15)" onmouseover="showTip(event, '15', 15)">
+            TimeSpan
+          </code>
+          <div class="tip" id="15">
+            <strong>Signature:</strong>TimeSpan<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '16', 16)" onmouseover="showTip(event, '16', 16)">
+            Uri
+          </code>
+          <div class="tip" id="16">
+            <strong>Signature:</strong>Uri<br />
                       </div>
         </td>
         <td class="xmldoc">
@@ -70,35 +125,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '33', 33)" onmouseover="showTip(event, '33', 33)">
-            AddNestedTypes(...)
+          <code onmouseout="hideTip(event, '21', 21)" onmouseover="showTip(event, '21', 21)">
+            UnderlyingType
           </code>
-          <div class="tip" id="33">
-            <strong>Signature:</strong>(types:ProvidedTypeDefinition list * enclosingGeneratedTypeNames:string list) -&gt; unit<br />
+          <div class="tip" id="21">
+            <strong>Signature:</strong>Type<br />
                       </div>
         </td>
         <td class="xmldoc">
         
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
-            AddTypes(types)
-          </code>
-          <div class="tip" id="34">
-            <strong>Signature:</strong>(types:ProvidedTypeDefinition list) -&gt; unit<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-        <p>Emit the given provided type definitions as part of the assembly 
-and adjust the 'Assembly' property of all provided type definitions to return that
-assembly.</p>
-
-<p>The assembly is only emitted when the Assembly property on the root type is accessed for the first time.
-The host F# compiler does this when processing a generative type declaration for the type.</p>
-
         </td>
       </tr>
     </tbody>
@@ -112,16 +147,15 @@ The host F# compiler does this when processing a generative type declaration for
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '39', 39)" onmouseover="showTip(event, '39', 39)">
-            RegisterGenerated(fileName)
+          <code onmouseout="hideTip(event, '23', 23)" onmouseover="showTip(event, '23', 23)">
+            Parse(value)
           </code>
-          <div class="tip" id="39">
-            <strong>Signature:</strong>fileName:string -&gt; Assembly<br />
+          <div class="tip" id="23">
+            <strong>Signature:</strong>value:string -&gt; Scalar<br />
                       </div>
         </td>
         <td class="xmldoc">
-        <p>Register that a given file is a provided generated assembly</p>
-
+        
         </td>
       </tr>
     </tbody>

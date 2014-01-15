@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Namespaces - FSharp.Configuration</title>
+    <title>Parser - FSharp.Configuration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Steffen Forkmann">
@@ -33,9 +33,14 @@
         <div class="span9" id="main">
           
 
-<h1>FSharp.Configuration</h1>
 
-  <h2>FSharp.Configuration Namespace</h2>
+
+<h1>Parser</h1>
+<div class="xmldoc">
+</div>
+
+<!-- Render nested types and modules, if there are any -->
+  <h2>Nested types and modules</h2>
   <div>
       <table class="table table-bordered type-list">
     <thead>
@@ -44,38 +49,13 @@
     <tbody>
         <tr>
           <td class="type-name">
-            <a href="fsharp-configuration-root.html">Root</a>
+            <a href="fsharp-configuration-parser-node.html">Node</a>
           </td>
           <td class="xmldoc"></td>
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fsharp-configuration-yamlprovider.html">YamlProvider</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-    </tbody>
-  </table>
-  <table class="table table-bordered module-list">
-    <thead>
-      <tr><td>Module</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td class="module-name">
-            <a href="fsharp-configuration-configtypeprovider.html">ConfigTypeProvider</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="module-name">
-            <a href="fsharp-configuration-parser.html">Parser</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="module-name">
-            <a href="fsharp-configuration-typesfactory.html">TypesFactory</a>
+            <a href="fsharp-configuration-parser-scalar.html">Scalar</a>
           </td>
           <td class="xmldoc"></td>
         </tr>
@@ -83,32 +63,43 @@
   </table>
 
   </div>
-  <h2>Samples.FSharp.ProvidedTypes Namespace</h2>
-  <div>
-      <table class="table table-bordered type-list">
+
+  <h3>Functions and values</h3>
+  <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Type</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
-        <tr>
-          <td class="type-name">
-            <a href="samples-fsharp-providedtypes-providedassembly.html">ProvidedAssembly</a>
-          </td>
-          <td class="xmldoc"><p>A provided generated assembly</p>
-</td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="samples-fsharp-providedtypes-typeproviderfornamespaces.html">TypeProviderForNamespaces</a>
-          </td>
-          <td class="xmldoc"><p>A base type providing default implementations of type provider functionality when all provided 
-types are of type ProvidedTypeDefinition.</p>
-</td>
-        </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
+            parse 
+          </code>
+          <div class="tip" id="2">
+            <strong>Signature:</strong>string -&gt; Node<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
+            update target updater
+          </code>
+          <div class="tip" id="3">
+            <strong>Signature:</strong>target:&#39;a -&gt; updater:Node -&gt; unit<br />
+                          <strong>Type parameters:</strong> 'a          </div>
+        </td>
+        <td class="xmldoc">
+        
+        </td>
+      </tr>
     </tbody>
   </table>
-
-  </div>
 
         </div>
         <div class="span3">

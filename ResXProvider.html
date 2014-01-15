@@ -52,19 +52,24 @@ It allows to access .resx files.</p>
 </td>
 <td class="snippet"><pre class="fssnip">
 <span class="c">// reference the type provider dll</span>
-<span class="prep">#r</span> <span class="s">&quot;</span><span class="s">System</span><span class="s">.</span><span class="s">Configuration</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
-<span class="k">open</span> <span class="i">FSharp</span><span class="o">.</span><span class="i">Configuration</span>
+<span class="prep">#r</span> <span class="s">&quot;</span><span class="s">FSharp</span><span class="s">.</span><span class="s">Configuration</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Configuration</span>
 
 <span class="c">// Let the type provider do it&#39;s work</span>
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">ResX</span> <span class="o">=</span> <span class="i">ResXProvider</span><span class="o">&lt;</span><span class="i">file</span><span class="o">=</span><span class="s">&quot;</span><span class="s">Resource1</span><span class="s">.</span><span class="s">resx</span><span class="s">&quot;</span><span class="o">&gt;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">ResX</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">ResXProvider</span><span class="o">&lt;</span><span class="i">file</span><span class="o">=</span><span class="s">&quot;</span><span class="s">Resource1</span><span class="s">.</span><span class="s">resx</span><span class="s">&quot;</span><span class="o">&gt;</span>
 
-<span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">ResX</span><span class="o">.</span><span class="i">Resource1</span><span class="o">.</span><span class="i">HelloWorld</span>
+<span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">ResX</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">Resource1</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">HelloWorld</span>
 <span class="fsi">val it : string = &quot;Hello World&quot;</span></pre>
 </td>
 </tr>
 </table>
 
-<div class="tip" id="fs1">type ResX = obj<br /><br />Full name: ResXProvider.ResX</div>
+<div class="tip" id="fs1">namespace FSharp</div>
+<div class="tip" id="fs2">namespace FSharp.Configuration</div>
+<div class="tip" id="fs3">type ResX = ResXProvider&lt;...&gt;<br /><br />Full name: ResXProvider.ResX</div>
+<div class="tip" id="fs4">type ResXProvider<br /><br />Full name: FSharp.Configuration.ResXProvider</div>
+<div class="tip" id="fs5">type Resource1 =<br />&#160;&#160;static member HelloWorld : string<br /><br />Full name: FSharp.Configuration.ResXProvider,file=&quot;Resource1.resx&quot;.Resource1</div>
+<div class="tip" id="fs6">property ResXProvider&lt;...&gt;.Resource1.HelloWorld: string<br /><em><br /><br />Greetings</em></div>
 
         </div>
         <div class="span3">
@@ -80,6 +85,7 @@ It allows to access .resx files.</p>
             <li class="nav-header">Getting started</li>
             <li><a href="/FSharp.Configuration/AppSettingsProvider.html">AppSettingsProvider</a></li>
             <li><a href="/FSharp.Configuration/ResXProvider.html">ResXProvider</a></li>
+            <li><a href="/FSharp.Configuration/YamlProvider.html">YamlProvider</a></li>
         </div>
       </div>
     </div>
