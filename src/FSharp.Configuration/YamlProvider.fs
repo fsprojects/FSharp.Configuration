@@ -11,6 +11,7 @@ open SharpYaml.Serialization
 open SharpYaml.Serialization.Serializers
 open Microsoft.FSharp.Quotations
 open System.Collections.Generic
+open FSharp.Configuration.Helper
 
 module Parser =
     type Scalar =
@@ -338,8 +339,6 @@ type public YamlProvider (cfg: TypeProviderConfig) as this =
         watcher |> Option.iter (fun x -> x.Dispose())
         watcher <- None
 
-    let thisAssembly = Assembly.GetExecutingAssembly()
-    let nameSpace = this.GetType().Namespace
     let baseTy = typeof<Root>
     
     let watchForChanges (fileName: string) =
@@ -352,7 +351,7 @@ type public YamlProvider (cfg: TypeProviderConfig) as this =
         
         watcher <- Some (Helper.File.watch false fileName this.Invalidate)
 
-    let newT = ProvidedTypeDefinition(thisAssembly, nameSpace, "Yaml", Some baseTy, IsErased=false, SuppressRelocation=false)
+    let newT = ProvidedTypeDefinition(thisAssembly, rootNamespace, "Yaml", Some baseTy, IsErased=false, SuppressRelocation=false)
     let staticParams = 
         [ ProvidedStaticParameter ("FilePath", typeof<string>, "") 
           ProvidedStaticParameter ("ReadOnly", typeof<bool>, false)
@@ -361,14 +360,14 @@ type public YamlProvider (cfg: TypeProviderConfig) as this =
     do newT.AddXmlDoc 
         """<summary>Generate types for read/write access to a YAML file.</summary>
            <param name='FilePath'>Path to a YAML file.</param>
-           <param name='ReadOnly'>Whether the rusulting properties will be read-only or not.</param>
+           <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
            <param name='YamlText'>Yaml as text. Mutually exclusive with FilePath parameter.</param>"""
 
     do newT.DefineStaticParameters(
         parameters = staticParams,
         instantiationFunction = fun typeName paramValues ->
             let createTy yaml readOnly filePath =
-                let ty = ProvidedTypeDefinition (thisAssembly, nameSpace, typeName, Some baseTy, IsErased=false, 
+                let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, Some baseTy, IsErased=false, 
                                                  SuppressRelocation=false, HideObjectMethods=true)
                 let types = TypesFactory.transform readOnly None (Parser.parse yaml)
                 let ctr = ProvidedConstructor ([], InvokeCode = fun [me] -> types.Init me)
@@ -391,7 +390,7 @@ type public YamlProvider (cfg: TypeProviderConfig) as this =
                       createTy (File.ReadAllText filePath) readOnly (Some filePath)
             | _ -> failwith "Wrong parameters")
     
-    do this.AddNamespace(nameSpace, [newT])
+    do this.AddNamespace(rootNamespace, [newT])
     interface IDisposable with 
         member x.Dispose() = disposeWatcher()
 
