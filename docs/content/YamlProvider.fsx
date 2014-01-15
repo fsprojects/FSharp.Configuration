@@ -2,16 +2,16 @@
 #I "../../bin"
 
 (**
-The ResX type provider
+The Yaml type provider
 ============================
 
-This tutorial shows the use of the ResX type provider. 
-It allows to access .resx files.
+This tutorial shows the use of the YAml type provider. 
+It allows to access .yaml files.
 
 *)
 
 // reference the type provider dll
-#r "FSharp.Configuration.dll"
+#r "System.Configuration.dll"
 open FSharp.Configuration
 
 // Let the type provider do it's work

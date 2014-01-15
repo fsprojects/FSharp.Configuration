@@ -33,6 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{8E6D
 		docs\content\index.fsx = docs\content\index.fsx
 		docs\content\Resource1.resx = docs\content\Resource1.resx
 		docs\content\ResXProvider.fsx = docs\content\ResXProvider.fsx
+		docs\content\YamlProvider.fsx = docs\content\YamlProvider.fsx
 	EndProjectSection
 EndProject
 Global

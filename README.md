@@ -5,6 +5,7 @@ The FSharp.Configuration project contains type providers for the configuration o
 
 * [AppSettings](http://fsprojects.github.io/FSharp.Configuration/AppSettingsProvider.html)
 * [ResX](http://fsprojects.github.io/FSharp.Configuration/ResXProvider.html)
+* [Yaml](http://fsprojects.github.io/FSharp.Configuration/YamlProvider.html)
 
 <a href="http://fsprojects.github.io/FSharp.Configuration" target="_blank">Documentation available here.</a>
 
