@@ -3,6 +3,7 @@ module FSharp.Configuration.Tests.YamlTests
 open FSharp.Configuration
 open NUnit.Framework
 open FsUnit
+open System.IO
 
 type Settings = Yaml<"Settings.yaml">
 
@@ -42,3 +43,13 @@ let ``Can write to an int in the settings file``() =
     let settings = Settings()
     settings.DB.NumberOfDeadlockRepeats <- 6
     settings.DB.NumberOfDeadlockRepeats |> should equal 6
+
+[<Test>] 
+let ``Can save a settings file to a specified location``() =
+    let settings = Settings()
+    settings.DB.NumberOfDeadlockRepeats <- 11
+    settings.DB.DefaultTimeout <- System.TimeSpan.FromMinutes 6.
+    settings.Save("SettingsModifed.yaml")
+
+    File.ReadAllText "SettingsModifed.yaml"
+    |> should equal (File.ReadAllText "Settings2.yaml")
