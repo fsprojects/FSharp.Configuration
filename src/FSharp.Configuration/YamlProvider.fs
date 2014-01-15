@@ -286,7 +286,13 @@ module TypesFactory =
 
 type Root () = 
     let serializer = 
-        let settings = SerializerSettings(EmitDefaultValues=true, EmitTags=false, SortKeyForMapping=false, EmitAlias=false)
+        let settings = 
+            SerializerSettings(EmitDefaultValues=true,
+                               EmitTags=false,
+                               SortKeyForMapping=false,
+                               EmitAlias=false,
+                               ComparerForKeySorting=null)
+
         settings.RegisterSerializer(typeof<System.Uri>, 
                                     { new ScalarSerializerBase() with
                                         member x.ConvertFrom (ctx, scalar) = 
