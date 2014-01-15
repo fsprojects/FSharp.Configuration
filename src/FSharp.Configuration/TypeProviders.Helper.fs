@@ -111,3 +111,59 @@ let optionType ty = typedefof<option<_>>.MakeGenericType[| ty |]
 let thisAssembly = System.Reflection.Assembly.GetExecutingAssembly()
 let rootNamespace = "FSharp.Configuration"
 let missingValue = "@@@missingValue###"
+
+module File =
+    let tryOpenFile filePath =
+        try Some (new FileStream (filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        with _ -> None
+
+    let tryReadNonEmptyTextFile filePath =
+        let maxAttempts = 5
+        let rec sleepAndRun attempt = async {
+            do! Async.Sleep 1000
+            return! loop (attempt - 1) }
+
+        and loop attempt = async {
+            match tryOpenFile filePath with
+            | Some file ->
+                try
+                    use reader = new StreamReader (file)
+                    match attempt, reader.ReadToEnd() with
+                    | 0, x -> return x
+                    | _, "" -> 
+                        printfn "Attempt %d of %d: %s is empty. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
+                        return! sleepAndRun (attempt - 1)
+                    | _, content -> return content 
+                finally file.Dispose() 
+            | None -> 
+                printfn "Attempt %d of %d: cannot read %s. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
+                return! sleepAndRun (attempt - 1) }
+        loop maxAttempts |> Async.RunSynchronously
+
+    type private State = 
+        { LastFileWriteTime: DateTime
+          Updated: DateTime }
+
+    let watch changesOnly filePath onChanged =
+        let getLastWrite() = File.GetLastWriteTime filePath
+        let state = ref { LastFileWriteTime = getLastWrite(); Updated = DateTime.Now }
+        
+        let changed (args: FileSystemEventArgs) =
+            let curr = getLastWrite()
+            // log (sprintf "%A. Last = %A, Curr = %A" args.ChangeType !lastWrite curr)
+            if curr <> (!state).LastFileWriteTime && DateTime.Now - (!state).Updated > TimeSpan.FromMilliseconds 500. then
+//                try 
+                    onChanged()
+                    state := { LastFileWriteTime = curr; Updated = DateTime.Now }
+//                with e -> ()
+                //log "call onChanged"
+                
+
+        let w = new FileSystemWatcher(Path.GetDirectoryName filePath, Path.GetFileName filePath)
+        w.NotifyFilter <- NotifyFilters.CreationTime ||| NotifyFilters.LastWrite ||| NotifyFilters.Size
+        w.Changed.Add changed
+        if not changesOnly then 
+            w.Deleted.Add changed
+            w.Renamed.Add changed
+        w.EnableRaisingEvents <- true
+        w :> IDisposable
