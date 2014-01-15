@@ -147,7 +147,7 @@ module Parser =
                     let ty = target.GetType()
                     let mapProp = ty.GetProperty name
                     if mapProp = null then failwithf "Type %s does not contain %s property." ty.Name name
-                    mapProp.GetValue target
+                    mapProp.GetValue (target, [||])
                 | None -> target
 
             match updaters |> List.collect (fun (name, node) -> update target (Some name) node) with
@@ -236,12 +236,7 @@ module TypesFactory =
                                  (types |> List.map (Option.map (fun x -> x.Name)))
 
         let fieldType = typedefof<ResizeArray<_>>.MakeGenericType elementType
-        
-        let propType =
-            (match readOnly with
-             | true -> typedefof<IReadOnlyList<_>>
-             | false -> typedefof<IList<_>>).MakeGenericType elementType
-
+        let propType = typedefof<IList<_>>.MakeGenericType elementType
         let field = ProvidedField("_" + name, fieldType)
         let prop = ProvidedProperty (name, propType, IsStatic=false, GetterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)))
         let listCtr = fieldType.GetConstructor([|typedefof<seq<_>>.MakeGenericType elementType|])
