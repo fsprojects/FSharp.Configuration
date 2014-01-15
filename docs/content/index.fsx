@@ -25,7 +25,7 @@ The FSharp.Configuration project contains type providers for the configuration o
 Example
 -------
 
-This example demonstrates the use of the FileSystem type provider:
+This example demonstrates the use of the AppSettings type provider:
 
 *)
 // reference the type provider dll
