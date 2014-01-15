@@ -49,27 +49,27 @@
 
 <h2>Using configuration from F# scripts</h2>
 
-<p>Create a <code>Settings.yaml</code> file:
-<code>`
-Mail:
-  Smtp:
+<p>Create a <code>Settings.yaml</code> file:</p>
+
+<pre lang="yaml">Mail:
+    Smtp:
     Host: smtp.sample.com
     Port: 443
     User: user1
     Password: pass1
-  Pop3:
+    Pop3:
     Host: pop3.sample.com
     Port: 331
     User: user2
     Password: pass2
     CheckPeriod: 00:01:00
-  ErrorNotificationRecipients:
+    ErrorNotificationRecipients:
     - user1@sample.com
     - user2@sample.com
 DB:
-  ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
-  NumberOfDeadlockRepeats: 5
-  DefaultTimeout: 00:05:00</code>`</p>
+    ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
+    NumberOfDeadlockRepeats: 5
+    DefaultTimeout: 00:05:00</pre>
 
 <table class="pre"><tr><td class="lines"><pre class="fssnip">
 <span class="l"> 1: </span>
