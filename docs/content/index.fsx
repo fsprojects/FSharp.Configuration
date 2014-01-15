@@ -9,6 +9,7 @@ The FSharp.Configuration project contains type providers for the configuration o
 
 * [AppSettings](AppSettingsProvider.html)
 * [ResX](ResXProvider.html)
+* [Yaml](YamlProvider.html)
 
 <div class="row">
   <div class="span1"></div>
