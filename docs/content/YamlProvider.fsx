@@ -18,7 +18,7 @@ When you push a system into production, you can modify the configs with scripts 
 
 Using configuration from F# scripts
 -----------------------------------
-Create a `Settings.yaml` file:
+Create a `Settings.yaml` file like this:
 
     [lang=yaml]
     Mail:
@@ -40,9 +40,11 @@ Create a `Settings.yaml` file:
         ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
         NumberOfDeadlockRepeats: 5
         DefaultTimeout: 00:05:00
+
+Reference the type provider assembly and configure it to use your yaml file:
+
 *)
 
-// reference the type provider dll
 #r "FSharp.Configuration.dll"
 open FSharp.Configuration
 
@@ -50,8 +52,18 @@ open FSharp.Configuration
 type Settings = Yaml<"Settings.yaml">
 let settings = Settings()
 
+(**
+
+![alt text](img/YamlProvider.png "Intellisense for Yaml")
+
+Reading and writing from the config
+-----------------------------------
+
+*)
+
 // read a value from the config
 settings.DB.ConnectionString
+
 // [fsi:val it : string = ]
 // [fsi:  "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;"]
 
