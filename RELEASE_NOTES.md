@@ -1,3 +1,6 @@
+#### 0.1.0 - 15.01.2013
+* First official release of ResX, Yaml and AppSettings type provider
+
 #### 0.1.0-alpha5 - 15.01.2013
 * Make it compatible with .NET 4.0
 
