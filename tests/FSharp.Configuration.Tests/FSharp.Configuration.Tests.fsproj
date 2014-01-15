@@ -63,9 +63,13 @@
     <Compile Include="FsUnit.fs" />
     <Compile Include="AppSettingsProvider.Tests.fs" />
     <Compile Include="ResXProvider.Tests.fs" />
+    <Compile Include="YamlProvider.Tests.fs" />
     <EmbeddedResource Include="Resource1.resx" />
     <None Include="packages.config" />
     <None Include="app.config" />
+    <Content Include="Settings.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Configuration">

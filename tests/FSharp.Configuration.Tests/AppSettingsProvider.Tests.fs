@@ -1,4 +1,4 @@
-module FSharp.Configuration.Tests.ResXTests
+module FSharp.Configuration.Tests.AppSettingsTests
 
 open FSharp.Configuration
 open NUnit.Framework

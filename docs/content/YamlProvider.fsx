@@ -21,27 +21,27 @@ Examples
 Using configuration from F# scripts
 -----------------------------------
 Create a `Settings.yaml` file:
-```
-Mail:
-  Smtp:
-    Host: smtp.sample.com
-    Port: 443
-    User: user1
-    Password: pass1
-  Pop3:
-    Host: pop3.sample.com
-    Port: 331
-    User: user2
-    Password: pass2
-    CheckPeriod: 00:01:00
-  ErrorNotificationRecipients:
-    - user1@sample.com
-    - user2@sample.com
-DB:
-  ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
-  NumberOfDeadlockRepeats: 5
-  DefaultTimeout: 00:05:00
-```
+
+    [lang=yaml]
+    Mail:
+        Smtp:
+        Host: smtp.sample.com
+        Port: 443
+        User: user1
+        Password: pass1
+        Pop3:
+        Host: pop3.sample.com
+        Port: 331
+        User: user2
+        Password: pass2
+        CheckPeriod: 00:01:00
+        ErrorNotificationRecipients:
+        - user1@sample.com
+        - user2@sample.com
+    DB:
+        ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
+        NumberOfDeadlockRepeats: 5
+        DefaultTimeout: 00:05:00
 *)
 
 // reference the type provider dll
