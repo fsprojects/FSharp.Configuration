@@ -16,8 +16,9 @@ The main purpose for this is to be used as part of a statically typed applicatio
 When you push a system into production, you can modify the configs with scripts written in F# in safe, statically checked way with full intellisense.
 
 
-Using configuration from F# scripts
------------------------------------
+Using Yaml type provdier from F# scripts
+----------------------------------------
+
 Create a `Settings.yaml` file like this:
 
     [lang=yaml]
