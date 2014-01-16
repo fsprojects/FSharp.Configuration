@@ -6,7 +6,13 @@ The ResX type provider
 ============================
 
 This tutorial shows the use of the ResX type provider. 
-It allows to access .resx files.
+It allows typed access to .resx files.
+
+Create a resource file in Visual Studio like:
+
+![alt text](img/Resource1.png "Resources")
+
+Reference the type provider assembly and configure it to use your .resx file:
 
 *)
 
@@ -17,5 +23,15 @@ open FSharp.Configuration
 // Let the type provider do it's work
 type ResX = ResXProvider<file="Resource1.resx">
 
-ResX.Resource1.HelloWorld
-// [fsi:val it : string = "Hello World"]
+(**
+Now you have typed access to your app.config files:
+
+![alt text](img/ResXProvider.png "Intellisense for .resx files")
+
+Reading and writing from the resx file
+--------------------------------------
+
+*)
+
+ResX.Resource1.Greetings
+// [fsi:val it : string = "Hello World!"]
