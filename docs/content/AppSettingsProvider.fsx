@@ -11,7 +11,7 @@ It allows to access app.config files in a strongly typed way.
 Using App.Settings from F# scripts
 ----------------------------------
 
-Create a `app.config` file like this:
+Create a config file called `app.config` like this:
 
     [lang=xml]
     <?xml version="1.0" encoding="utf-8" ?>
