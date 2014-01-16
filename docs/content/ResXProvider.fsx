@@ -28,8 +28,8 @@ Now you have typed access to .resx files:
 
 ![alt text](img/ResXProvider.png "Intellisense for .resx files")
 
-Reading and writing from the resx file
---------------------------------------
+Reading from the resx file
+--------------------------
 
 *)
 
