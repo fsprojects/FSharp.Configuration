@@ -12,7 +12,7 @@ Create a resource file in Visual Studio like:
 
 ![alt text](img/Resource1.png "Resources")
 
-Reference the type provider assembly and configure it to use your .resx file:
+Reference the type provider assembly and configure it to use your Resource1.resx file:
 
 *)
 
@@ -24,7 +24,7 @@ open FSharp.Configuration
 type ResX = ResXProvider<file="Resource1.resx">
 
 (**
-Now you have typed access to your app.config files:
+Now you have typed access to .resx files:
 
 ![alt text](img/ResXProvider.png "Intellisense for .resx files")
 
