@@ -55,7 +55,6 @@
     <Compile Include="ProvidedTypes.fsi" />
     <Compile Include="ProvidedTypes.fs" />
     <Compile Include="TypeProviders.Helper.fs" />
-    <Compile Include="ResX.fs" />
     <Compile Include="ResXProvider.fs" />
     <Compile Include="AppSettingsProvider.fs" />
     <Compile Include="YamlConfigProvider.fs" />
