@@ -300,13 +300,13 @@ type Root () =
                                                 | _ -> "" })
         Serializer(settings) 
     
-    /// Load Yaml text and update itself with it.
+    /// Load Yaml config as text and update itself with it.
     member x.LoadText (yamlText: string) = Parser.parse yamlText |> Parser.update x
-    /// Load Yaml from a TextReader and update itself with it.
+    /// Load Yaml config from a TextReader and update itself with it.
     member x.Load (reader: TextReader) = reader.ReadToEnd() |> Parser.parse |> Parser.update x
-    /// Load Yaml from a file and update itself with it.
+    /// Load Yaml config from a file and update itself with it.
     member x.Load (filePath: string) = filePath |> Helper.File.tryReadNonEmptyTextFile |> x.LoadText
-    /// Load Yaml from a file, update itself with it then start watching it for changes.
+    /// Load Yaml config from a file, update itself with it, then start watching it for changes.
     /// If it detects any change, it reloads the file.
     member x.LoadAndWatch (filePath: string) = 
         x.Load filePath
@@ -332,7 +332,7 @@ type Root () =
         writer.ToString()
 
 [<TypeProvider>]
-type public YamlProvider (cfg: TypeProviderConfig) as this =
+type public YamlConfigProvider (cfg: TypeProviderConfig) as this =
     inherit TypeProviderForNamespaces()
     let mutable watcher: IDisposable option = None
 
@@ -352,15 +352,15 @@ type public YamlProvider (cfg: TypeProviderConfig) as this =
         
         watcher <- Some (Helper.File.watch false fileName this.Invalidate)
 
-    let newT = ProvidedTypeDefinition(thisAssembly, rootNamespace, "Yaml", Some baseTy, IsErased=false, SuppressRelocation=false)
+    let newT = ProvidedTypeDefinition(thisAssembly, rootNamespace, "YamlConfig", Some baseTy, IsErased=false, SuppressRelocation=false)
     let staticParams = 
         [ ProvidedStaticParameter ("FilePath", typeof<string>, "") 
           ProvidedStaticParameter ("ReadOnly", typeof<bool>, false)
           ProvidedStaticParameter ("YamlText", typeof<string>, "") ]
 
     do newT.AddXmlDoc 
-        """<summary>Generate types for read/write access to a YAML file.</summary>
-           <param name='FilePath'>Path to a YAML file.</param>
+        """<summary>Statically typed YAML config.</summary>
+           <param name='FilePath'>Path to YAML file.</param>
            <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
            <param name='YamlText'>Yaml as text. Mutually exclusive with FilePath parameter.</param>"""
 
