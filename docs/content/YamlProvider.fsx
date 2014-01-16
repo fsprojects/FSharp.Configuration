@@ -50,7 +50,7 @@ Reference the type provider assembly and configure it to use your yaml file:
 open FSharp.Configuration
 
 // Let the type provider do it's work
-type Settings = Yaml<"Settings.yaml">
+type Settings = YamlConfig<"Settings.yaml">
 let settings = Settings()
 
 (**

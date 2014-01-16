@@ -5,7 +5,7 @@ open NUnit.Framework
 open FsUnit
 open System.IO
 
-type Settings = Yaml<"Settings.yaml">
+type Settings = YamlConfig<"Settings.yaml">
 
 [<Test>] 
 let ``Can return a string from the settings file``() = 
