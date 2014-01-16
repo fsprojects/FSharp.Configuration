@@ -41,6 +41,8 @@ Settings.Test2
 
 (**
 
+![alt text](img/AppSettingsProvider.png "Intellisense for the App.Settings")
+
 Contributing and copyright
 --------------------------
 

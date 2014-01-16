@@ -36,6 +36,8 @@ type Settings = AppSettings<"app.config">
 
 (**
 
+Now you have typed access to your app.config files:
+
 ![alt text](img/AppSettingsProvider.png "Intellisense for the App.Settings")
 
 Reading and writing from the config
