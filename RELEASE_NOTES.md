@@ -1,3 +1,6 @@
+#### 0.2.0 - 15.01.2013
+* Yaml type provider renamed to Yaml Config type provider
+
 #### 0.1.0 - 15.01.2013
 * First official release of ResX, Yaml and AppSettings type provider
 
