@@ -232,7 +232,7 @@ module TypesFactory =
         let elementType = 
             match elements |> Seq.groupBy (fun n -> n.MainType) |> Seq.map fst |> Seq.toList with
             | [Some ty] -> ty
-            | types -> failwithf "List cannot contain elements of heterohenius types (attempt to mix types: %A)." 
+            | types -> failwithf "List cannot contain elements of heterogeneous types (attempt to mix types: %A)." 
                                  (types |> List.map (Option.map (fun x -> x.Name)))
 
         let fieldType = typedefof<ResizeArray<_>>.MakeGenericType elementType
