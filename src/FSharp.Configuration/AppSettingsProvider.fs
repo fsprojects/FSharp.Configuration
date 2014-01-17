@@ -1,4 +1,4 @@
-module internal FSharp.Configuration.AppSettingsTypeProvider
+module FSharp.Configuration.AppSettingsTypeProvider
 
 open FSharp.Configuration.Helper
 open Microsoft.FSharp.Core.CompilerServices
@@ -21,6 +21,10 @@ let (|Double|_|) text =
     | true, value -> Some value
     | _ -> None
 
+let getConfigValue(filePath,key) = 
+    let settings = ConfigurationManager.OpenMappedExeConfiguration(ExeConfigurationFileMap(ExeConfigFilename=filePath), ConfigurationUserLevel.None).AppSettings.Settings
+    settings.[key].Value
+
 let internal typedAppSettings (ownerType:TypeProviderForNamespaces) (cfg:TypeProviderConfig) =
     let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings"
 
@@ -32,26 +36,33 @@ let internal typedAppSettings (ownerType:TypeProviderForNamespaces) (cfg:TypePro
                 let typeDef = erasedType<obj> thisAssembly rootNamespace typeName
                 let names = System.Collections.Generic.HashSet<_>()
                 try
-                    let filePath = findConfigFile cfg.ResolutionFolder configFileName                    
+                    let filePath = findConfigFile cfg.ResolutionFolder configFileName
                     let fileMap = ExeConfigurationFileMap(ExeConfigFilename=filePath)
                     let appSettings = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None).AppSettings.Settings
 
                     for key in appSettings.AllKeys do
                         let name = niceName names key
-                        let getValue = <@@ ConfigurationManager.AppSettings.[key] @@>
                         let prop =
                             match (appSettings.Item key).Value with
-                            | Int _ ->    ProvidedProperty(name, typeof<int>, GetterCode = (fun _ -> <@@ Int32.Parse(%%getValue) @@>))
-                            | Bool _ ->   ProvidedProperty(name, typeof<bool>, GetterCode = (fun _ -> <@@ Boolean.Parse(%%getValue) @@>))
-                            | Double _ -> ProvidedProperty(name, typeof<float>, GetterCode = (fun _ -> <@@ Double.Parse(%%getValue, Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture) @@>))
-                            | _ ->        ProvidedProperty(name, typeof<string>, GetterCode = (fun _ -> getValue))
+                            | Int _ ->    ProvidedProperty(name, typeof<int>, GetterCode = (fun _ -> <@@ Int32.Parse(getConfigValue(filePath,key) ) @@>))
+                            | Bool _ ->   ProvidedProperty(name, typeof<bool>, GetterCode = (fun _ -> <@@ Boolean.Parse(getConfigValue(filePath,key) ) @@>))
+                            | Double _ -> ProvidedProperty(name, typeof<float>, GetterCode = (fun _ -> <@@ Double.Parse(getConfigValue(filePath,key) , Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture) @@>))
+                            | _ ->        ProvidedProperty(name, typeof<string>, GetterCode = (fun _ -> <@@ getConfigValue(filePath,key) @@>))
 
                         prop.IsStatic <- true
                         prop.AddXmlDoc (sprintf "Returns the value from %s with key %s" configFileName key)
-                        prop.AddDefinitionLocation(1,1,configFileName)
+                        prop.AddDefinitionLocation(1,1,filePath)
 
                         typeDef.AddMember prop
 
+                    let name = niceName names "ConfigFileName"
+                    let getValue = <@@ filePath @@>
+                    let prop = ProvidedProperty(name, typeof<string>, GetterCode = (fun _ -> getValue))
+
+                    prop.IsStatic <- true
+                    prop.AddXmlDoc "Returns the Filename"
+
+                    typeDef.AddMember prop
                     typeDef
                 with 
                 | exn -> typeDef

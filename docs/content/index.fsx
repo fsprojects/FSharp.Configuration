@@ -36,6 +36,7 @@ open FSharp.Configuration
 // Let the type provider do it's work
 type Settings = AppSettings<"app.config">
 
+Settings.ConfigFileName
 Settings.Test2
 // [fsi:val it : string = "Some Test Value 5"]
 

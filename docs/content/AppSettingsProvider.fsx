@@ -48,3 +48,7 @@ Reading and writing from the config
 // read a value from the config
 Settings.Test2
 // [fsi:val it : string = "Some Test Value 5"]
+
+// verify the file name
+Settings.ConfigFileName
+// [fsi:val it : string = "C:\Code\FSharp.Configuration\docs\content\app.config"]

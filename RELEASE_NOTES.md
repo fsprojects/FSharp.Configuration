@@ -1,3 +1,6 @@
+#### 0.2.1 - 17.01.2013
+* Fixed bug with the AppSettings type provider and .fsx files
+
 #### 0.2.0 - 15.01.2013
 * Yaml type provider renamed to Yaml Config type provider
 
