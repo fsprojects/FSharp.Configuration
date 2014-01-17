@@ -48,7 +48,7 @@ let internal typedResources (ownerType:TypeProviderForNamespaces) (cfg:TypeProvi
         instantiationFunction = (fun typeName parameterValues ->
             match parameterValues with 
             | [| :? string as resourcePath|] ->
-                let resXFilePath = Path.Combine(cfg.ResolutionFolder, resourcePath)
+                let resXFilePath = findConfigFile cfg.ResolutionFolder resourcePath
                 if not(File.Exists resXFilePath) then invalidArg "file" "Resouce file not found"
                 createResXProvider typeName resXFilePath
             | _ -> failwith "unexpected parameter values"))
