@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>TypeProviderForNamespaces - FSharp.Configuration</title>
+    <title>AppSettingsTypeProvider - FSharp.Configuration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Steffen Forkmann">
@@ -35,76 +35,96 @@
 
 
 
-<h1>TypeProviderForNamespaces</h1>
+<h1>AppSettingsTypeProvider</h1>
 <div class="xmldoc">
-<p>A base type providing default implementations of type provider functionality when all provided 
-types are of type ProvidedTypeDefinition.</p>
 </div>
-  <h3>Instance members</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '38', 38)" onmouseover="showTip(event, '38', 38)">
-            Invalidate()
+          <code onmouseout="hideTip(event, '1', 1)" onmouseover="showTip(event, '1', 1)">
+            getConfigValue (filePath, key)
           </code>
-          <div class="tip" id="38">
-            <strong>Signature:</strong>unit -&gt; unit<br />
+          <div class="tip" id="1">
+            <strong>Signature:</strong>(filePath:string * key:string) -&gt; string<br />
                       </div>
         </td>
         <td class="xmldoc">
-        <p>Invalidate the information provided by the provider</p>
-
+        
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '40', 40)" onmouseover="showTip(event, '40', 40)">
-            RegisterProbingFolder(folder)
+          <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
+            tryParseWith func
           </code>
-          <div class="tip" id="40">
-            <strong>Signature:</strong>folder:string -&gt; unit<br />
+          <div class="tip" id="2">
+            <strong>Signature:</strong>func:(&#39;?5040 -&gt; bool * &#39;?5041) -&gt; &#39;?5040 -&gt; &#39;?5041 option<br />
+                          <strong>Type parameters:</strong> '?5040, '?5041          </div>
+        </td>
+        <td class="xmldoc">
+        <p>Converts a function returning bool,value to a function returning value option.
+Useful to process TryXX style functions.</p>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Active patterns</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Active pattern</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '10', 10)" onmouseover="showTip(event, '10', 10)">
+            ( |Bool|_| ) 
+          </code>
+          <div class="tip" id="10">
+            <strong>Signature:</strong>string -&gt; bool option<br />
                       </div>
         </td>
         <td class="xmldoc">
-        <p>Registers custom probing path that can be used for probing assemblies</p>
-
+        
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '41', 41)" onmouseover="showTip(event, '41', 41)">
-            RegisterRuntimeAssemblyLocationAsProbingFolder(...)
+          <code onmouseout="hideTip(event, '11', 11)" onmouseover="showTip(event, '11', 11)">
+            ( |Double|_| ) text
           </code>
-          <div class="tip" id="41">
-            <strong>Signature:</strong>cfg:TypeProviderConfig -&gt; unit<br />
+          <div class="tip" id="11">
+            <strong>Signature:</strong>text:string -&gt; float option<br />
                       </div>
         </td>
         <td class="xmldoc">
-        <p>Registers location of RuntimeAssembly (from TypeProviderConfig) as probing folder</p>
-
+        
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '42', 42)" onmouseover="showTip(event, '42', 42)">
-            ResolveAssembly(arg1)
+          <code onmouseout="hideTip(event, '12', 12)" onmouseover="showTip(event, '12', 12)">
+            ( |Int|_| ) 
           </code>
-          <div class="tip" id="42">
-            <strong>Signature:</strong>ResolveEventArgs -&gt; Assembly<br />
-              <strong>Modifiers:</strong> abstract<br />
+          <div class="tip" id="12">
+            <strong>Signature:</strong>string -&gt; int option<br />
                       </div>
         </td>
         <td class="xmldoc">
-        <p>AssemblyResolve handler. Default implementation searches <assemblyname>.dll file in registered folders</p>
-
+        
         </td>
       </tr>
     </tbody>
