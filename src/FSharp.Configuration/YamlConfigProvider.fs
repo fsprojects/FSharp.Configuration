@@ -311,9 +311,12 @@ type Root () =
     member x.LoadAndWatch (filePath: string) = 
         x.Load filePath
         Helper.File.watch true filePath <| fun _ ->
-            printfn "Loading %s..." filePath
-            try x.Load filePath
-            with e -> printfn "Cannot load file %s: %O" filePath e.Message; reraise()
+            Diagnostics.Debug.WriteLine (sprintf "Loading %s..." filePath)
+            try 
+                x.Load filePath
+            with e -> 
+                Diagnostics.Debug.WriteLine (sprintf "Cannot load file %s: %O" filePath e.Message)
+                reraise()
     /// Saves content into a stream.
     member x.Save (stream: Stream) =
         use writer = new StreamWriter(stream)
