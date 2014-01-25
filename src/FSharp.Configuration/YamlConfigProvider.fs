@@ -298,14 +298,18 @@ type Root () =
                                                 match ctx.Instance with
                                                 | :? Uri as uri -> uri.OriginalString
                                                 | _ -> "" })
-        Serializer(settings) 
+        Serializer(settings)
+
+    let mutable lastLoadedFrom = None
     
     /// Load Yaml config as text and update itself with it.
     member x.LoadText (yamlText: string) = Parser.parse yamlText |> Parser.update x
     /// Load Yaml config from a TextReader and update itself with it.
     member x.Load (reader: TextReader) = reader.ReadToEnd() |> Parser.parse |> Parser.update x
     /// Load Yaml config from a file and update itself with it.
-    member x.Load (filePath: string) = filePath |> Helper.File.tryReadNonEmptyTextFile |> x.LoadText
+    member x.Load (filePath: string) = 
+        filePath |> Helper.File.tryReadNonEmptyTextFile |> x.LoadText
+        lastLoadedFrom <- Some filePath
     /// Load Yaml config from a file, update itself with it, then start watching it for changes.
     /// If it detects any change, it reloads the file.
     member x.LoadAndWatch (filePath: string) = 
@@ -317,17 +321,24 @@ type Root () =
             with e -> 
                 Diagnostics.Debug.WriteLine (sprintf "Cannot load file %s: %O" filePath e.Message)
                 reraise()
-    /// Saves content into a stream.
+    /// Saves configuration as Yaml text into a stream.
     member x.Save (stream: Stream) =
         use writer = new StreamWriter(stream)
         x.Save writer
-    /// Saves content into a TestWriter.
+    /// Saves configuration as Yaml text into a TextWriter.
     member x.Save (writer: TextWriter) = serializer.Serialize(writer, x)
-    /// Saves content into a file.
+    /// Saves configuration as Yaml text into a file.
     member x.Save (filePath: string) =
         // forbid any access to the file for atomicity
         use file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None) 
         x.Save file
+    /// Saves configuration as Yaml text into the last file it was loaded (if any).
+    /// Throws InvalidOperationException if configuration has not been loaded at all or if it has loaded from 
+    /// a different kind of source (string or TextReader).
+    member x.Save () =
+        match lastLoadedFrom with
+        | Some filePath -> x.Save filePath
+        | None -> invalidOp "Cannot save configuration because it was not loaded from a file."
     /// Returns content as Yaml text.
     override x.ToString() = 
         use writer = new StringWriter()
