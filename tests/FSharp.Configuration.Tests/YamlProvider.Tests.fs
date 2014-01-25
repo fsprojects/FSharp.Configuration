@@ -45,15 +45,35 @@ let ``Can write to an int in the settings file``() =
     settings.DB.NumberOfDeadlockRepeats <- 6
     settings.DB.NumberOfDeadlockRepeats |> should equal 6
 
+let private assertFilesAreEqual expected actual =
+    let read file = (File.ReadAllText file).Replace("\r\n", "\n")
+    read expected |> should equal (read actual)
+
 [<Test>] 
 let ``Can save a settings file to a specified location``() =
     let settings = Settings()
     settings.DB.NumberOfDeadlockRepeats <- 11
     settings.DB.DefaultTimeout <- System.TimeSpan.FromMinutes 6.
     settings.Save("SettingsModifed.yaml")
+    assertFilesAreEqual "SettingsModifed.yaml" "Settings2.yaml"
 
-    File.ReadAllText "SettingsModifed.yaml"
-    |> should equal (File.ReadAllText "Settings2.yaml")
+[<Test>] 
+let ``Can save settings to the file it was loaded from last time``() =
+    let settings = Settings()
+    let tempFile = Path.GetTempFileName()
+    try
+        File.Copy ("Settings.yaml", tempFile, overwrite=true)
+        settings.Load tempFile
+        settings.DB.NumberOfDeadlockRepeats <- 11
+        settings.DB.DefaultTimeout <- System.TimeSpan.FromMinutes 6.
+        settings.Save()
+        assertFilesAreEqual tempFile "Settings2.yaml"
+    finally File.Delete tempFile
+
+[<Test>] 
+let ``Throws exception during saving if it was not loaded from a file and location is not specified``() =
+    let settings = Settings()
+    (fun() -> settings.Save()) |> should throw typeof<InvalidOperationException>
     
 [<Test>] 
 let ``Can loads full settings``() =
