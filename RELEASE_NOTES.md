@@ -1,3 +1,6 @@
+#### 0.2.2 - 17.01.2013
+* Allows to read bitmaps from resources
+
 #### 0.2.1 - 17.01.2013
 * Fixed bug with the AppSettings type provider and .fsx files
 
