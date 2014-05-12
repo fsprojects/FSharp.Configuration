@@ -21,8 +21,8 @@ let (|Double|_|) text =
     | true, value -> Some value
     | _ -> None
 
-let getConfigValue(filePath,key) = 
-    let settings = ConfigurationManager.OpenMappedExeConfiguration(ExeConfigurationFileMap(ExeConfigFilename=filePath), ConfigurationUserLevel.None).AppSettings.Settings
+let getConfigValue(key) = 
+    let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).AppSettings.Settings
     settings.[key].Value
 
 let internal typedAppSettings (ownerType:TypeProviderForNamespaces) (cfg:TypeProviderConfig) =
@@ -44,10 +44,10 @@ let internal typedAppSettings (ownerType:TypeProviderForNamespaces) (cfg:TypePro
                         let name = niceName names key
                         let prop =
                             match (appSettings.Item key).Value with
-                            | Int _ ->    ProvidedProperty(name, typeof<int>, GetterCode = (fun _ -> <@@ Int32.Parse(getConfigValue(filePath,key) ) @@>))
-                            | Bool _ ->   ProvidedProperty(name, typeof<bool>, GetterCode = (fun _ -> <@@ Boolean.Parse(getConfigValue(filePath,key) ) @@>))
-                            | Double _ -> ProvidedProperty(name, typeof<float>, GetterCode = (fun _ -> <@@ Double.Parse(getConfigValue(filePath,key) , Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture) @@>))
-                            | _ ->        ProvidedProperty(name, typeof<string>, GetterCode = (fun _ -> <@@ getConfigValue(filePath,key) @@>))
+                            | Int _ ->      ProvidedProperty(name, typeof<int>, GetterCode = (fun _ -> <@@ Int32.Parse(getConfigValue(key)) @@>))
+                            | Bool _ ->     ProvidedProperty(name, typeof<bool>, GetterCode = (fun _ -> <@@ Boolean.Parse(getConfigValue(key)) @@>))
+                            | Double _ ->   ProvidedProperty(name, typeof<float>, GetterCode = (fun _ -> <@@ Double.Parse(getConfigValue(key), Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture) @@>))
+                            | _ ->          ProvidedProperty(name, typeof<string>, GetterCode = (fun _ -> <@@ getConfigValue(key) @@>))
 
                         prop.IsStatic <- true
                         prop.AddXmlDoc (sprintf "Returns the value from %s with key %s" configFileName key)
