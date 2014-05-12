@@ -9,10 +9,16 @@ open System.IO
 open System.Reflection
 
 [<TypeProvider>]
-type public FSharpConfigurationProvider(cfg:TypeProviderConfig) as this =
+type public FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
     inherit TypeProviderForNamespaces()
-
-    do this.AddNamespace(rootNamespace,[AppSettingsTypeProvider.typedAppSettings this cfg; ResXProvider.typedResources this cfg])
+    let disposing = Event<unit>()
+    let disposingEvent = disposing.Publish
+    do this.AddNamespace (
+        rootNamespace, 
+        [ AppSettingsTypeProvider.typedAppSettings this disposingEvent cfg
+          ResXProvider.typedResources this cfg ])
+    interface IDisposable with 
+        member x.Dispose() = disposing.Trigger()
 
 [<TypeProviderAssembly>]
 do ()

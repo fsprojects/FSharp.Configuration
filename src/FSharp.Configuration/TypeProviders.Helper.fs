@@ -1,4 +1,5 @@
 /// Starting to implement some helpers on top of ProvidedTypes API
+[<AutoOpen>]
 module internal FSharp.Configuration.Helper
 open System
 open System.IO
@@ -31,6 +32,8 @@ let inline satisfies predicate (charOption:option<char>) =
     match charOption with 
     | Some c when predicate c -> charOption 
     | _ -> None
+
+let dispose (x: IDisposable) = if x = null then () else x.Dispose()
 
 let (|EOF|_|) = function 
     | Some _ -> None
@@ -167,3 +170,8 @@ module File =
             w.Renamed.Add changed
         w.EnableRaisingEvents <- true
         w :> IDisposable
+
+    let getFullPath resolutionFolder fileName = 
+        match Path.IsPathRooted fileName with
+        | true -> fileName
+        | _ -> Path.Combine (resolutionFolder, fileName)
