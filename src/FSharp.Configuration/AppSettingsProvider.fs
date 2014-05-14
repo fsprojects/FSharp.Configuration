@@ -27,20 +27,7 @@ let getConfigValue(key) =
     let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).AppSettings.Settings
     settings.[key].Value
 
-let internal typedAppSettings (ownerType: TypeProviderForNamespaces) (disposing: IEvent<unit>) (cfg: TypeProviderConfig) =
-    let watcher = ref None
-
-    let disposeWatcher() =
-        !watcher |> Option.iter dispose
-        watcher := None
-
-    let watchForChanges (fileName: string) =
-        disposeWatcher()
-        let fileName = File.getFullPath cfg.ResolutionFolder fileName
-        watcher := Some (File.watch false fileName ownerType.Invalidate)
-
-    do disposing.Add disposeWatcher
-
+let internal typedAppSettings (context: Context) =
     let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings"
 
     appSettings.DefineStaticParameters(
@@ -51,7 +38,7 @@ let internal typedAppSettings (ownerType: TypeProviderForNamespaces) (disposing:
                 let typeDef = erasedType<obj> thisAssembly rootNamespace typeName
                 let names = HashSet()
                 try
-                    let filePath = findConfigFile cfg.ResolutionFolder configFileName
+                    let filePath = findConfigFile context.ResolutionFolder configFileName
                     let fileMap = ExeConfigurationFileMap(ExeConfigFilename=filePath)
                     let appSettings = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None).AppSettings.Settings
 
@@ -81,10 +68,9 @@ let internal typedAppSettings (ownerType: TypeProviderForNamespaces) (disposing:
                     prop.AddXmlDoc "Returns the Filename"
 
                     typeDef.AddMember prop
-                    watchForChanges filePath
+                    context.WatchFile filePath
                     typeDef
                 with 
                 | exn -> typeDef
             | x -> failwithf "unexpected parameter values %A" x))
-
     appSettings

@@ -11,14 +11,14 @@ open System.Reflection
 [<TypeProvider>]
 type public FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
     inherit TypeProviderForNamespaces()
-    let disposing = Event<unit>()
-    let disposingEvent = disposing.Publish
+    let context = new Context(this, cfg)
     do this.AddNamespace (
         rootNamespace, 
-        [ AppSettingsTypeProvider.typedAppSettings this disposingEvent cfg
-          ResXProvider.typedResources this cfg ])
+        [ AppSettingsTypeProvider.typedAppSettings context
+          ResXProvider.typedResources context
+          YamlConfigTypeProvider.typedYamlConfig context ])
     interface IDisposable with 
-        member x.Dispose() = disposing.Trigger()
+        member x.Dispose() = dispose context
 
 [<TypeProviderAssembly>]
 do ()
