@@ -7,25 +7,40 @@ open System
 open System.Configuration
 open System.IO
 open System.Reflection
+open System.Collections.Generic
+open System.Globalization
 
 /// Converts a function returning bool,value to a function returning value option.
 /// Useful to process TryXX style functions.
 let inline tryParseWith func = func >> function
-    | true, value -> Some value
+    | true, _ -> Some()
     | false, _ -> None
 
 let (|Bool|_|) = tryParseWith Boolean.TryParse
 let (|Int|_|) = tryParseWith Int32.TryParse
 let (|Double|_|) text =  
-    match Double.TryParse(text,Globalization.NumberStyles.Any,Globalization.CultureInfo.InvariantCulture) with
-    | true, value -> Some value
+    match Double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture) with
+    | true, _ -> Some()
     | _ -> None
 
 let getConfigValue(key) = 
     let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).AppSettings.Settings
     settings.[key].Value
 
-let internal typedAppSettings (ownerType:TypeProviderForNamespaces) (cfg:TypeProviderConfig) =
+let internal typedAppSettings (ownerType: TypeProviderForNamespaces) (disposing: IEvent<unit>) (cfg: TypeProviderConfig) =
+    let watcher = ref None
+
+    let disposeWatcher() =
+        !watcher |> Option.iter dispose
+        watcher := None
+
+    let watchForChanges (fileName: string) =
+        disposeWatcher()
+        let fileName = File.getFullPath cfg.ResolutionFolder fileName
+        watcher := Some (File.watch false fileName ownerType.Invalidate)
+
+    do disposing.Add disposeWatcher
+
     let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings"
 
     appSettings.DefineStaticParameters(
@@ -34,7 +49,7 @@ let internal typedAppSettings (ownerType:TypeProviderForNamespaces) (cfg:TypePro
             match parameterValues with 
             | [| :? string as configFileName |] ->
                 let typeDef = erasedType<obj> thisAssembly rootNamespace typeName
-                let names = System.Collections.Generic.HashSet<_>()
+                let names = HashSet()
                 try
                     let filePath = findConfigFile cfg.ResolutionFolder configFileName
                     let fileMap = ExeConfigurationFileMap(ExeConfigFilename=filePath)
@@ -44,10 +59,13 @@ let internal typedAppSettings (ownerType:TypeProviderForNamespaces) (cfg:TypePro
                         let name = niceName names key
                         let prop =
                             match (appSettings.Item key).Value with
-                            | Int _ ->      ProvidedProperty(name, typeof<int>, GetterCode = (fun _ -> <@@ Int32.Parse(getConfigValue(key)) @@>))
-                            | Bool _ ->     ProvidedProperty(name, typeof<bool>, GetterCode = (fun _ -> <@@ Boolean.Parse(getConfigValue(key)) @@>))
-                            | Double _ ->   ProvidedProperty(name, typeof<float>, GetterCode = (fun _ -> <@@ Double.Parse(getConfigValue(key), Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture) @@>))
-                            | _ ->          ProvidedProperty(name, typeof<string>, GetterCode = (fun _ -> <@@ getConfigValue(key) @@>))
+                            | Int -> ProvidedProperty(name, typeof<int>, GetterCode = fun _ -> 
+                                <@@ Int32.Parse (getConfigValue key) @@>)
+                            | Bool -> ProvidedProperty(name, typeof<bool>, GetterCode = fun _ -> 
+                                <@@ Boolean.Parse (getConfigValue key) @@>)
+                            | Double -> ProvidedProperty(name, typeof<float>, GetterCode = fun _ -> 
+                                <@@ Double.Parse (getConfigValue key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>)
+                            | _ -> ProvidedProperty(name, typeof<string>, GetterCode = fun _ -> <@@ getConfigValue key @@>)
 
                         prop.IsStatic <- true
                         prop.AddXmlDoc (sprintf "Returns the value from %s with key %s" configFileName key)
@@ -63,6 +81,7 @@ let internal typedAppSettings (ownerType:TypeProviderForNamespaces) (cfg:TypePro
                     prop.AddXmlDoc "Returns the Filename"
 
                     typeDef.AddMember prop
+                    watchForChanges filePath
                     typeDef
                 with 
                 | exn -> typeDef

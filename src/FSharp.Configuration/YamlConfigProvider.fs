@@ -358,12 +358,7 @@ type public YamlConfigProvider (cfg: TypeProviderConfig) as this =
     
     let watchForChanges (fileName: string) =
         disposeWatcher()
-        
-        let fileName =
-            match Path.IsPathRooted fileName with
-            | true -> fileName
-            | _ -> Path.Combine (cfg.ResolutionFolder, fileName)
-        
+        let fileName = File.getFullPath cfg.ResolutionFolder fileName
         watcher <- Some (Helper.File.watch false fileName this.Invalidate)
 
     let newT = ProvidedTypeDefinition(thisAssembly, rootNamespace, "YamlConfig", Some baseTy, IsErased=false, SuppressRelocation=false)
