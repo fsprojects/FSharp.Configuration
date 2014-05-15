@@ -1,4 +1,4 @@
-﻿namespace FSharp.Configuration
+﻿module FSharp.Configuration.YamlConfigTypeProvider
 
 #nowarn "57"
 
@@ -345,35 +345,23 @@ type Root () =
         x.Save writer
         writer.ToString()
 
-[<TypeProvider>]
-type public YamlConfigProvider (cfg: TypeProviderConfig) as this =
-    inherit TypeProviderForNamespaces()
-    let mutable watcher: IDisposable option = None
-
-    let disposeWatcher() =
-        watcher |> Option.iter (fun x -> x.Dispose())
-        watcher <- None
-
+let internal typedYamlConfig (context: Context) =
     let baseTy = typeof<Root>
-    
-    let watchForChanges (fileName: string) =
-        disposeWatcher()
-        let fileName = File.getFullPath cfg.ResolutionFolder fileName
-        watcher <- Some (Helper.File.watch false fileName this.Invalidate)
 
-    let newT = ProvidedTypeDefinition(thisAssembly, rootNamespace, "YamlConfig", Some baseTy, IsErased=false, SuppressRelocation=false)
+    let yamlConfig = ProvidedTypeDefinition(thisAssembly, rootNamespace, "YamlConfig", Some baseTy, IsErased=false, SuppressRelocation=false)
+
     let staticParams = 
         [ ProvidedStaticParameter ("FilePath", typeof<string>, "") 
           ProvidedStaticParameter ("ReadOnly", typeof<bool>, false)
           ProvidedStaticParameter ("YamlText", typeof<string>, "") ]
 
-    do newT.AddXmlDoc 
+    yamlConfig.AddXmlDoc 
         """<summary>Statically typed YAML config.</summary>
            <param name='FilePath'>Path to YAML file.</param>
            <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
            <param name='YamlText'>Yaml as text. Mutually exclusive with FilePath parameter.</param>"""
 
-    do newT.DefineStaticParameters(
+    yamlConfig.DefineStaticParameters(
         parameters = staticParams,
         instantiationFunction = fun typeName paramValues ->
             let createTy yaml readOnly filePath =
@@ -395,14 +383,8 @@ type public YamlConfigProvider (cfg: TypeProviderConfig) as this =
                  | filePath, _ -> 
                       let filePath =
                           if Path.IsPathRooted filePath then filePath 
-                          else Path.Combine(cfg.ResolutionFolder, filePath)
-                      watchForChanges filePath
+                          else Path.Combine(context.ResolutionFolder, filePath)
+                      context.WatchFile filePath
                       createTy (File.ReadAllText filePath) readOnly (Some filePath)
             | _ -> failwith "Wrong parameters")
-    
-    do this.AddNamespace(rootNamespace, [newT])
-    interface IDisposable with 
-        member x.Dispose() = disposeWatcher()
-
-[<TypeProviderAssembly>]
-do ()
+    yamlConfig

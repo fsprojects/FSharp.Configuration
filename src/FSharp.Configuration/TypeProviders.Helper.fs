@@ -1,29 +1,13 @@
 /// Starting to implement some helpers on top of ProvidedTypes API
 [<AutoOpen>]
 module internal FSharp.Configuration.Helper
+
 open System
 open System.IO
 open Samples.FSharp.ProvidedTypes
+open Microsoft.FSharp.Core.CompilerServices
 
-type Context (onChanged : unit -> unit) = 
-    let disposingEvent = Event<_>()
-    let lastChanged = ref (DateTime.Now.AddSeconds -1.0)
-    let sync = obj()
-
-    let trigger() =
-        let shouldTrigger = lock sync (fun _ ->
-            match !lastChanged with
-            | time when DateTime.Now - time <= TimeSpan.FromSeconds 1. -> false
-            | _ -> 
-                lastChanged := DateTime.Now
-                true
-            )
-        if shouldTrigger then onChanged()
-
-    member this.Disposing: IEvent<unit> = disposingEvent.Publish
-    member this.Trigger = trigger
-    interface IDisposable with
-        member x.Dispose() = disposingEvent.Trigger()
+type FilePath = string
 
 // Active patterns & operators for parsing strings
 let (@?) (s:string) i = if i >= s.Length then None else Some s.[i]
@@ -175,3 +159,42 @@ module File =
         match Path.IsPathRooted fileName with
         | true -> fileName
         | _ -> Path.Combine (resolutionFolder, fileName)
+
+type private ContextMessage =
+    | Watch of FilePath
+    | Cancel
+
+type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
+    let watcher: IDisposable option ref = ref None
+
+    let disposeWatcher() =
+        !watcher |> Option.iter (fun x -> x.Dispose())
+        watcher := None
+
+    let watchForChanges (fileName: string) =
+        disposeWatcher()
+        let fileName = File.getFullPath cfg.ResolutionFolder fileName
+        File.watch false fileName provider.Invalidate
+    
+    let agent = MailboxProcessor.Start(fun inbox ->
+        let rec loop (files: Map<string, IDisposable>) = async {
+            let unwatch file =
+                match files |> Map.tryFind file with
+                | Some disposable -> 
+                    disposable.Dispose()
+                    files |> Map.remove file
+                | None -> files
+
+            let! msg = inbox.Receive()
+            match msg with
+            | Watch file -> return! loop (unwatch file |> Map.add file (watchForChanges file))
+            | Cancel -> files |> Map.toSeq |> Seq.map snd |> Seq.iter dispose
+        }
+        loop Map.empty
+    )
+
+    member x.ResolutionFolder = cfg.ResolutionFolder
+    member x.WatchFile (file: FilePath) = agent.Post (Watch file)
+
+    interface IDisposable with
+        member x.Dispose() = agent.Post Cancel
