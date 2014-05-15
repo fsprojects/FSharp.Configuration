@@ -58,6 +58,7 @@
     <Compile Include="ResXProvider.fs" />
     <Compile Include="AppSettingsProvider.fs" />
     <Compile Include="YamlConfigProvider.fs" />
+    <Compile Include="IniFileProvider.fs" />
     <Compile Include="ConfigTypeProvider.fs" />
   </ItemGroup>
   <PropertyGroup>

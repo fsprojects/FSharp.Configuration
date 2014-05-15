@@ -64,6 +64,8 @@
     <Compile Include="AppSettingsProvider.Tests.fs" />
     <Compile Include="ResXProvider.Tests.fs" />
     <Compile Include="YamlProvider.Tests.fs" />
+    <Compile Include="IniFileProvider.Tests.fs" />
+    <None Include="Sample.ini" />
     <EmbeddedResource Include="Resource1.resx" />
     <None Include="paket.references" />
     <None Include="app.config" />
