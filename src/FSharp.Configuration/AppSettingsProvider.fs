@@ -22,6 +22,14 @@ let (|Double|_|) text =
     match Double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture) with
     | true, _ -> Some()
     | _ -> None
+let (|TimeSpan|_|) text =
+    match TimeSpan.TryParse(text, Globalization.CultureInfo.InvariantCulture) with
+    | true, value -> Some value
+    | _ -> None
+let (|DateTime|_|) text =  
+    match DateTime.TryParse(text, Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.AssumeUniversal) with
+    | true, value -> Some value
+    | _ -> None
 
 let getConfigValue(key) = 
     let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).AppSettings.Settings
@@ -49,9 +57,13 @@ let internal typedAppSettings (context: Context) =
                             | Int -> ProvidedProperty(name, typeof<int>, GetterCode = fun _ -> 
                                 <@@ Int32.Parse (getConfigValue key) @@>)
                             | Bool -> ProvidedProperty(name, typeof<bool>, GetterCode = fun _ -> 
-                                <@@ Boolean.Parse (getConfigValue key) @@>)
+                                <@@ Boolean.Parse (getConfigValue key) @@>)                                                                                    
                             | Double -> ProvidedProperty(name, typeof<float>, GetterCode = fun _ -> 
                                 <@@ Double.Parse (getConfigValue key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>)
+                            | TimeSpan _ -> ProvidedProperty(name, typeof<TimeSpan>, GetterCode = (fun _ ->
+                                <@@ TimeSpan.Parse(getConfigValue key, Globalization.CultureInfo.InvariantCulture) @@>))
+                            | DateTime _ -> ProvidedProperty(name, typeof<DateTime>, GetterCode = (fun _ ->
+                                <@@ DateTime.Parse(getConfigValue key, Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.AssumeUniversal) @@>))
                             | _ -> ProvidedProperty(name, typeof<string>, GetterCode = fun _ -> <@@ getConfigValue key @@>)
 
                         prop.IsStatic <- true
