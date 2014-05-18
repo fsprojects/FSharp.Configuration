@@ -20,22 +20,12 @@ module Parser =
         | TimeSpan of TimeSpan
         | Bool of bool
         | Uri of Uri
-        static member Parse (value: string) =
-            let isUri (value: string) = 
-                ["http";"https";"ftp";"ftps";"sftp";"amqp"] 
-                |> List.exists (fun x -> value.Trim().StartsWith(x + ":", StringComparison.InvariantCultureIgnoreCase))
-
-            match bool.TryParse value with
-            | true, x -> Bool x
-            | _ ->
-                match Int32.TryParse value with
-                | true, x -> Int x
-                | _ -> match TimeSpan.TryParse value with
-                        | true, x -> TimeSpan x
-                        | _ -> 
-                            match isUri value, Uri.TryCreate(value, UriKind.Absolute) with
-                            | true, (true, x) -> Uri x 
-                            | _ -> String value
+        static member Parse = function
+            | ValueParser.Bool x -> Bool x
+            | ValueParser.Int x -> Int x
+            | ValueParser.TimeSpan x -> TimeSpan x
+            | ValueParser.Uri x -> Uri x
+            | x -> String x
         member x.UnderlyingType = 
             match x with
             | Int x -> x.GetType()

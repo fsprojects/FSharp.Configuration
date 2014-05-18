@@ -10,27 +10,6 @@ open System.Reflection
 open System.Collections.Generic
 open System.Globalization
 
-/// Converts a function returning bool,value to a function returning value option.
-/// Useful to process TryXX style functions.
-let inline tryParseWith func = func >> function
-    | true, _ -> Some()
-    | false, _ -> None
-
-let (|Bool|_|) = tryParseWith Boolean.TryParse
-let (|Int|_|) = tryParseWith Int32.TryParse
-let (|Double|_|) text =  
-    match Double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture) with
-    | true, _ -> Some()
-    | _ -> None
-let (|TimeSpan|_|) text =
-    match TimeSpan.TryParse(text, Globalization.CultureInfo.InvariantCulture) with
-    | true, value -> Some value
-    | _ -> None
-let (|DateTime|_|) text =  
-    match DateTime.TryParse(text, Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.AssumeUniversal) with
-    | true, value -> Some value
-    | _ -> None
-
 let getConfigValue(key) = 
     let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).AppSettings.Settings
     settings.[key].Value
@@ -54,16 +33,18 @@ let internal typedAppSettings (context: Context) =
                         let name = niceName names key
                         let prop =
                             match (appSettings.Item key).Value with
-                            | Int -> ProvidedProperty(name, typeof<int>, GetterCode = fun _ -> 
+                            | ValueParser.Uri _ -> ProvidedProperty(name, typeof<int>, GetterCode = fun _ -> 
+                                <@@ Uri (getConfigValue key) @@>)
+                            | ValueParser.Int _ -> ProvidedProperty(name, typeof<int>, GetterCode = fun _ -> 
                                 <@@ Int32.Parse (getConfigValue key) @@>)
-                            | Bool -> ProvidedProperty(name, typeof<bool>, GetterCode = fun _ -> 
+                            | ValueParser.Bool _ -> ProvidedProperty(name, typeof<bool>, GetterCode = fun _ -> 
                                 <@@ Boolean.Parse (getConfigValue key) @@>)                                                                                    
-                            | Double -> ProvidedProperty(name, typeof<float>, GetterCode = fun _ -> 
+                            | ValueParser.Float _ -> ProvidedProperty(name, typeof<float>, GetterCode = fun _ ->
                                 <@@ Double.Parse (getConfigValue key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>)
-                            | TimeSpan _ -> ProvidedProperty(name, typeof<TimeSpan>, GetterCode = (fun _ ->
-                                <@@ TimeSpan.Parse(getConfigValue key, Globalization.CultureInfo.InvariantCulture) @@>))
-                            | DateTime _ -> ProvidedProperty(name, typeof<DateTime>, GetterCode = (fun _ ->
-                                <@@ DateTime.Parse(getConfigValue key, Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.AssumeUniversal) @@>))
+                            | ValueParser.TimeSpan _ -> ProvidedProperty(name, typeof<TimeSpan>, GetterCode = (fun _ ->
+                                <@@ TimeSpan.Parse(getConfigValue key, CultureInfo.InvariantCulture) @@>))
+                            | ValueParser.DateTime _ -> ProvidedProperty(name, typeof<DateTime>, GetterCode = (fun _ ->
+                                <@@ DateTime.Parse(getConfigValue key, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal) @@>))
                             | _ -> ProvidedProperty(name, typeof<string>, GetterCode = fun _ -> <@@ getConfigValue key @@>)
 
                         prop.IsStatic <- true
