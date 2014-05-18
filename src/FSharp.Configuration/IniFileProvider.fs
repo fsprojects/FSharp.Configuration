@@ -89,8 +89,9 @@ open Samples.FSharp.ProvidedTypes
 open System.Collections.Generic
 open System
 open System.Globalization
+open Microsoft.FSharp.Quotations
 
-let getValue iniFileName section key = ""
+let getValue (iniFileName: string) (section: string) (key: string) = ""
 
 let internal typedIniFile (context: Context) =
     let iniFile = erasedType<obj> thisAssembly rootNamespace "IniFile"
@@ -101,30 +102,33 @@ let internal typedIniFile (context: Context) =
             match parameterValues with 
             | [| :? string as iniFileName |] ->
                 let typeDef = erasedType<obj> thisAssembly rootNamespace typeName
+                typeDef.HideObjectMethods <- true
                 let names = HashSet()
                 try
                     let filePath = findConfigFile context.ResolutionFolder iniFileName
                     match Parser.parse filePath with
                     | Choice1Of2 sections ->
                         for section in sections do
-                            let sectionTy = erasedType<obj> thisAssembly rootNamespace section.Name
+                            let sectionTy = ProvidedTypeDefinition(section.Name, Some typeof<obj>, HideObjectMethods = true)
                             for setting in section.Settings do
+                                let sectionName = section.Name
+                                let key = setting.Key
                                 let prop =
                                     match setting.Value with
-                                    | Int -> ProvidedProperty(setting.Key, typeof<int>, GetterCode = fun _ -> 
-                                        <@@ Int32.Parse (getValue filePath section setting.Key) @@>)
-                                    | Bool -> ProvidedProperty(setting.Key, typeof<bool>, GetterCode = fun _ -> 
-                                        <@@ Boolean.Parse (getValue filePath section setting.Key) @@>)
-                                    | Double -> ProvidedProperty(setting.Key, typeof<float>, GetterCode = fun _ -> 
-                                        <@@ Double.Parse (getValue filePath section setting.Key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>)
-                                    | _ -> ProvidedProperty(setting.Key, typeof<string>, GetterCode = fun _ -> 
-                                        <@@ getValue filePath section setting.Key @@>)
+                                    | ValueParser.Int _ -> ProvidedProperty(key, typeof<int>, GetterCode = fun _ -> 
+                                        <@@ Int32.Parse (getValue filePath sectionName key) @@>)
+                                    | ValueParser.Bool _ -> ProvidedProperty(key, typeof<bool>, GetterCode = fun _ -> 
+                                        <@@ Boolean.Parse (getValue filePath sectionName key) @@>)
+                                    | ValueParser.Float _ -> ProvidedProperty(key, typeof<float>, GetterCode = fun _ -> 
+                                        <@@ Double.Parse (getValue filePath sectionName key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>)
+                                    | _ -> ProvidedProperty(key, typeof<string>, GetterCode = fun _ -> 
+                                        <@@ getValue filePath sectionName key @@>)
 
                                 prop.IsStatic <- true
                                 prop.AddXmlDoc (sprintf "Returns the value from %s from section %s with key %s" iniFileName section.Name setting.Key)
                                 prop.AddDefinitionLocation(1, 1, filePath)
-
                                 sectionTy.AddMember prop
+
                             typeDef.AddMember sectionTy
                     | Choice2Of2 e -> failwithf "%A" e
 

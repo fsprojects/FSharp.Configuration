@@ -206,13 +206,6 @@ let inline tryParseWith func = func >> function
 
 open System.Globalization
 
-let (|Bool|_|) = tryParseWith Boolean.TryParse
-let (|Int|_|) = tryParseWith Int32.TryParse
-let (|Double|_|) text =  
-    match Double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture) with
-    | true, _ -> Some()
-    | _ -> None
-
 module File =
     let tryOpenFile filePath =
         try Some (new FileStream (filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

@@ -8,8 +8,7 @@ type IniFileType = IniFile<"Sample.ini">
 
 [<Test>] 
 let ``Can return a string from the config file``() =   
-    IniFileType.Test2.GetType() |> should equal typeof<string>   
-    IniFileType.Test2 |> should equal "Some Test Value 5"
+    IniFileType.Section1.key1 |> should equal "value1"
 
 [<Test>] 
 let ``Can return an integer from the config file``() =
