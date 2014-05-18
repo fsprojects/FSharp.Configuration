@@ -1,5 +1,6 @@
 module FSharp.Configuration.Tests.AppSettingsTests
 
+open System
 open FSharp.Configuration
 open NUnit.Framework
 open FsUnit
@@ -25,3 +26,14 @@ let ``Can return a double from the config file``() =
 let ``Can return a boolean from the config file``() =
     Settings.TestBool.GetType() |> should equal typeof<bool>
     Settings.TestBool |> should equal true
+
+[<Test>] 
+let ``Can return a TimeSpan from the config file``() =
+    Settings.TestTimeSpan.GetType() |> should equal typeof<TimeSpan>
+    Settings.TestTimeSpan |> should equal (TimeSpan.Parse "2.01:02:03.444")
+
+[<Test>]
+let ``Cat return a DateTime from the config file``() =
+    Settings.TestDateTime.GetType() |> should equal typeof<DateTime>
+    Settings.TestDateTime.ToUniversalTime() |> should equal (DateTime (2014, 2, 1, 3, 4, 5, 777))
+
