@@ -27,6 +27,33 @@ let (|LetterDigit|_|) = satisfies Char.IsLetterOrDigit
 let (|Upper|_|) = satisfies Char.IsUpper
 let (|Lower|_|) = satisfies Char.IsLower
 
+[<RequireQualifiedAccess>]
+module ValueParser =
+    open System.Globalization
+
+    /// Converts a function returning bool,value to a function returning value option.
+    /// Useful to process TryXX style functions.
+    let inline private tryParseWith func = func >> function
+        | true, value -> Some value
+        | false, _ -> None
+
+    let (|Bool|_|) = tryParseWith Boolean.TryParse
+    let (|Int|_|) = tryParseWith Int32.TryParse
+    let (|Float|_|) = tryParseWith (fun x -> Double.TryParse(x, NumberStyles.Any, CultureInfo.InvariantCulture))
+    let (|TimeSpan|_|) = tryParseWith (fun x -> TimeSpan.TryParse(x, CultureInfo.InvariantCulture))
+    
+    let (|DateTime|_|) =  
+        tryParseWith (fun x -> DateTime.TryParse(x, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal))
+
+    let (|Uri|_|) (text: string) = 
+        ["http"; "https"; "ftp"; "ftps"; "sftp"; "amqp"] 
+        |> List.tryPick (fun x -> 
+            if text.Trim().StartsWith(x + ":", StringComparison.InvariantCultureIgnoreCase) then
+                match System.Uri.TryCreate(text, UriKind.Absolute) with
+                | true, uri -> Some uri
+                | _ -> None
+            else None)
+
 /// Turns a string into a nice PascalCase identifier
 let niceName (set:System.Collections.Generic.HashSet<_>) =     
     fun (s: string) ->
