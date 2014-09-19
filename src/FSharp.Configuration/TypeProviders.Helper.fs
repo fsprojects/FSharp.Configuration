@@ -218,12 +218,12 @@ module File =
                     | 0, x -> return x
                     | _, "" -> 
                         printfn "Attempt %d of %d: %s is empty. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
-                        return! sleepAndRun (attempt - 1)
+                        return! sleepAndRun attempt
                     | _, content -> return content 
                 finally file.Dispose() 
             | None -> 
                 printfn "Attempt %d of %d: cannot read %s. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
-                return! sleepAndRun (attempt - 1) }
+                return! sleepAndRun attempt }
         loop maxAttempts |> Async.RunSynchronously
 
     type private State = 
