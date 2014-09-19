@@ -136,13 +136,17 @@ module private Parser =
 
         and updateMap (target: obj) name (updaters: (string * Node) list) =
             let target = 
-                match name with
-                | Some name ->
+                maybe {
+                    let! name = name 
                     let ty = target.GetType()
-                    let mapProp = ty.GetProperty name
-                    if mapProp = null then failwithf "Type %s does not contain %s property." ty.Name name
-                    mapProp.GetValue (target, [||])
-                | None -> target
+                    let mapProp = Option.ofNull (ty.GetProperty name)
+                    return! 
+                        match mapProp with
+                        | None ->
+                            debug "Type %s does not contain %s property." ty.Name name
+                            None
+                        | Some prop -> Some (prop.GetValue (target, [||]))
+                } |> Option.getOrElse target
 
             match updaters |> List.collect (fun (name, node) -> update target (Some name) node) with
             | [] -> []
