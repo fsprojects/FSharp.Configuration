@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------
-// FAKE build script 
+// FAKE build script
 // --------------------------------------------------------------------------------------
 #I  @"packages/FAKE/tools/"
 #r @"packages/FAKE/tools/FakeLib.dll"
@@ -10,6 +10,15 @@ open Fake.ReleaseNotesHelper
 open System
 
 let projects = [|"FSharp.Configuration"|]
+
+
+// Git configuration (used for publishing documentation in gh-pages branch)
+// The profile where the project is posted
+let gitOwner = "fsprojects"
+let gitHome = "https://github.com/" + gitOwner
+
+// The name of the project on GitHub
+let gitName = "FSharp.Configuration"
 
 let summary = "Type providers for the configuration of .NET projects."
 let description = "The FSharp.Configuration project contains type providers for the configuration of .NET projects."
@@ -128,16 +137,15 @@ Target "GenerateDocs" (fun _ ->
 // Release Scripts
 
 Target "ReleaseDocs" (fun _ ->
-    let ghPages      = "gh-pages"
-    let ghPagesLocal = "temp/gh-pages"
-    Repository.clone "temp" (cloneUrl) ghPages
-    Branches.checkoutBranch ghPagesLocal ghPages
-    fullclean "temp/gh-pages"
-    CopyRecursive "docs/output" ghPagesLocal true |> printfn "%A"
-    CommandHelper.runSimpleGitCommand ghPagesLocal "add ." |> printfn "%s"
-    let cmd = sprintf """commit -a -m "Update generated documentation for version %s""" release.NugetVersion
-    CommandHelper.runSimpleGitCommand ghPagesLocal cmd |> printfn "%s"
-    Branches.push ghPagesLocal
+    let tempDocsDir = "temp/gh-pages"
+    CleanDir tempDocsDir
+    Repository.cloneSingleBranch "" (gitHome + "/" + gitName + ".git") "gh-pages" tempDocsDir
+
+    fullclean tempDocsDir
+    CopyRecursive "docs/output" tempDocsDir true |> tracefn "%A"
+    StageAll tempDocsDir
+    Git.Commit.Commit tempDocsDir (sprintf "Update generated documentation for version %s" release.NugetVersion)
+    Branches.push tempDocsDir
 )
 
 Target "Release" DoNothing
