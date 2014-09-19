@@ -1,3 +1,7 @@
+#### 0.3.0 - 19.09.2014
+* Making config settings writable -https://github.com/fsprojects/FSharp.Configuration/pull/29
+* Relax yaml tp loading rules - https://github.com/fsprojects/FSharp.Configuration/pull/32
+
 #### 0.2.2 - 17.01.2013
 * Allows to read bitmaps from resources
 
