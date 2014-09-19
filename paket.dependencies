@@ -1,0 +1,5 @@
+source http://nuget.org/api/v2
+
+nuget NUnit.Runners
+nuget FSharp.Formatting 
+nuget NUnit
