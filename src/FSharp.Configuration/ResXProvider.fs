@@ -3,13 +3,11 @@
 open System
 open System.IO
 open System.Reflection
-open Microsoft.FSharp.Core.CompilerServices
 open Samples.FSharp.ProvidedTypes
 open FSharp.Configuration.Helper
 open System.Resources
 open System.ComponentModel.Design
 open System.Collections
-open Microsoft.FSharp.Quotations
 
 let readValue (filePath: FilePath, name) =
     use reader = new ResXResourceReader(filePath)
@@ -30,7 +28,7 @@ let internal toProperties (resXFilePath:string) =
         let name = node.Name
         let typ = node.GetValueTypeName(Unchecked.defaultof<ITypeResolutionService>) |> System.Type.GetType
         let comment = node.Comment
-        let getter args = <@@ readValue(resXFilePath, name) @@>
+        let getter _args = <@@ readValue(resXFilePath, name) @@>
         let resource = ProvidedProperty(name, typ, IsStatic=true, GetterCode=getter)                          
         if not(String.IsNullOrEmpty(comment)) then resource.AddXmlDoc(node.Comment)
         resource :> MemberInfo ]

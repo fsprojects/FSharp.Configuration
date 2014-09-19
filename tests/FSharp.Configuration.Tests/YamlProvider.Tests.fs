@@ -149,6 +149,20 @@ Mail:
     settings.DB.ConnectionString |> should equal "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;"
     settings.DB.NumberOfDeadlockRepeats |> should equal 5
     settings.DB.DefaultTimeout |> should equal (TimeSpan.FromMinutes 5.)
+
+[<Test>]
+let ``Can load settings containing unknown nodes``() =
+    let settings = Settings()
+    settings.LoadText """
+Mail:
+  Smtp:
+    Port: 4430
+    NestedUnknown: value1
+TopLevelUnknown:
+  Value: 1
+
+"""
+    settings.Mail.Smtp.Port |> should equal 4430
     
 [<Test>]
 let ``Can load empty lists``() =
