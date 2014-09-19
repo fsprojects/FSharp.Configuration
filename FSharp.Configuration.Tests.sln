@@ -4,11 +4,6 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Configuration.Tests", "tests\FSharp.Configuration.Tests\FSharp.Configuration.Tests.fsproj", "{E789C72A-5CFD-436B-8EF1-61AA2852A89F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B54F3458-A0F1-4DF9-9E35-845FF8E5F4B0}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7E6FF935-2C19-4DF3-A4C4-FAA1915D091A}"
 	ProjectSection(SolutionItems) = preProject
 		docs\content\app.config = docs\content\app.config
