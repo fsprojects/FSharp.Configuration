@@ -3,7 +3,6 @@
 #nowarn "57"
 
 open System.Reflection
-open Microsoft.FSharp.Core.CompilerServices
 open Samples.FSharp.ProvidedTypes
 open System
 open System.IO
@@ -13,7 +12,7 @@ open Microsoft.FSharp.Quotations
 open System.Collections.Generic
 open FSharp.Configuration.Helper
 
-module Parser =
+module private Parser =
     type Scalar =
         | Int of int
         | String of string
@@ -33,6 +32,13 @@ module Parser =
             | Bool x -> x.GetType()
             | TimeSpan x -> x.GetType()
             | Uri x -> x.GetType()
+        member x.BoxedValue =
+            match x with
+            | Int x -> box x
+            | String x -> box x
+            | TimeSpan x -> box x
+            | Bool x -> box x
+            | Uri x -> box x
         
     type Node =
         | Scalar of Scalar
@@ -57,19 +63,13 @@ module Parser =
         fun text -> serializer.Deserialize(fromText=text) |> loop
 
     let update (target: 'a) (updater: Node) =
-        let getBoxedNodeValue =
-            function
-            | Int x -> box x
-            | String x -> box x
-            | TimeSpan x -> box x
-            | Bool x -> box x
-            | Uri x -> box x
-
-        let getField o name =
+        let tryGetField o name =
             let ty = o.GetType()
             let field = ty.GetField(name, BindingFlags.Instance ||| BindingFlags.NonPublic)
-            if field = null then failwithf "Field %s was not found in %s." name ty.Name
-            field
+            if field = null then 
+                debug "Field %s was not found in %s." name ty.Name
+                None
+            else Some field
 
         let getChangedDelegate x = 
             x.GetType().GetField("_changed", BindingFlags.Instance ||| BindingFlags.NonPublic).GetValue x :?> MulticastDelegate 
@@ -82,53 +82,57 @@ module Parser =
             | None, _ -> failwithf "Only Maps are allowed at the root level."
     
         and updateScalar (target: obj) name (node: Scalar) =
-            match name with
-            | Some name -> 
-                let field = getField target ("_" + name)
-        
+            maybe {
+                let! name = name
+                let! field = tryGetField target ("_" + name)
+
                 if field.FieldType <> node.UnderlyingType then 
                     failwithf "Cannot assign value of type %s to field of %s: %s." node.UnderlyingType.Name name field.FieldType.Name
 
                 let oldValue = field.GetValue(target)
-                let newValue = getBoxedNodeValue node
+                let newValue = node.BoxedValue
         
-                if oldValue <> newValue then
-                    field.SetValue(target, newValue)
-                    [getChangedDelegate target]
-                else []
-            | _ -> []
+                return! 
+                    if oldValue <> newValue then 
+                        field.SetValue(target, newValue)
+                        Some (getChangedDelegate target)
+                    else None
+            } |> function Some dlg -> [dlg] | None -> []
 
         and updateList (target: obj) name (updaters: Node list) =
-            let updaters = updaters |> List.choose (function Scalar x -> Some x | _ -> None)
+            maybe {
+                let updaters = updaters |> List.choose (function Scalar x -> Some x | _ -> None)
 
-            let field = getField target ("_" + name)
+                let! field = tryGetField target ("_" + name)
         
-            let fieldType = 
-                match updaters |> Seq.groupBy (fun n -> n.UnderlyingType) |> Seq.map fst |> Seq.toList with
-                | [] -> field.FieldType
-                | [ty] -> typedefof<ResizeArray<_>>.MakeGenericType ty
-                | types -> failwithf "List cannot contain elements of heterohenius types (attempt to mix types: %A)." types
+                let fieldType = 
+                    match updaters |> Seq.groupBy (fun n -> n.UnderlyingType) |> Seq.map fst |> Seq.toList with
+                    | [] -> field.FieldType
+                    | [ty] -> typedefof<ResizeArray<_>>.MakeGenericType ty
+                    | types -> failwithf "List cannot contain elements of heterohenius types (attempt to mix types: %A)." types
 
-            if field.FieldType <> fieldType then failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
+                if field.FieldType <> fieldType then failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
 
-            let sort (xs: obj seq) = 
-                xs 
-                |> Seq.sortBy (function
-                   | :? Uri as uri -> uri.OriginalString :> IComparable
-                   | :? IComparable as x -> x
-                   | x -> failwithf "%A is not comparable, so it cannot be included into a list."  x)
-                |> Seq.toList
+                let sort (xs: obj seq) = 
+                    xs 
+                    |> Seq.sortBy (function
+                       | :? Uri as uri -> uri.OriginalString :> IComparable
+                       | :? IComparable as x -> x
+                       | x -> failwithf "%A is not comparable, so it cannot be included into a list."  x)
+                    |> Seq.toList
 
-            let oldValues = field.GetValue(target) :?> Collections.IEnumerable |> Seq.cast<obj> |> sort
-            let newValues = updaters |> List.map getBoxedNodeValue |> sort
+                let oldValues = field.GetValue(target) :?> Collections.IEnumerable |> Seq.cast<obj> |> sort
+                let newValues = updaters |> List.map (fun x -> x.BoxedValue) |> sort
 
-            if oldValues <> newValues then
-                let list = Activator.CreateInstance fieldType
-                let addMethod = fieldType.GetMethod("Add", [|fieldType.GetGenericArguments().[0]|])
-                updaters |> List.iter (fun x -> addMethod.Invoke(list, [|getBoxedNodeValue x|]) |> ignore)
-                field.SetValue(target, list)
-                [getChangedDelegate target]
-            else []
+                return!
+                    if oldValues <> newValues then
+                        let list = Activator.CreateInstance fieldType
+                        let addMethod = fieldType.GetMethod("Add", [|fieldType.GetGenericArguments().[0]|])
+                        updaters |> List.iter (fun x -> addMethod.Invoke(list, [| x.BoxedValue |]) |> ignore)
+                        field.SetValue(target, list)
+                        Some (getChangedDelegate target)
+                    else None
+            } |> function Some dlg -> [dlg] | None -> []
 
         and updateMap (target: obj) name (updaters: (string * Node) list) =
             let target = 
@@ -151,7 +155,7 @@ module Parser =
         //|> fun x -> printfn "Updated. %d events to raise: %A" (Seq.length x) x; Seq.toList x
         |> Seq.iter (fun h -> h.Method.Invoke(h.Target, [|box target; EventArgs.Empty|]) |> ignore)
 
-module TypesFactory =
+module private TypesFactory =
     open Parser
 
     type Scalar with
@@ -217,7 +221,8 @@ module TypesFactory =
             children 
             |> List.map (function
                | Scalar x -> { MainType = Some x.UnderlyingType; Types = []; Init = fun _ -> x.ToExpr() }
-               | Map m -> transformMap readOnly None m)
+               | Map m -> transformMap readOnly None m
+               | List _ -> failwith "Nested lists are not supported.")
 
         let elementType = 
             match elements |> Seq.groupBy (fun n -> n.MainType) |> Seq.map fst |> Seq.toList with
@@ -278,16 +283,17 @@ type Root () =
                                EmitAlias=false,
                                ComparerForKeySorting=null)
 
-        settings.RegisterSerializer(typeof<System.Uri>, 
-                                    { new ScalarSerializerBase() with
-                                        member x.ConvertFrom (ctx, scalar) = 
-                                                match System.Uri.TryCreate(scalar.Value, UriKind.Absolute) with
-                                                | true, uri -> box uri
-                                                | _ -> null
-                                        member x.ConvertTo ctx = 
-                                                match ctx.Instance with
-                                                | :? Uri as uri -> uri.OriginalString
-                                                | _ -> "" })
+        settings.RegisterSerializer(
+            typeof<System.Uri>, 
+            { new ScalarSerializerBase() with
+                member __.ConvertFrom (_, scalar) = 
+                        match System.Uri.TryCreate(scalar.Value, UriKind.Absolute) with
+                        | true, uri -> box uri
+                        | _ -> null
+                member __.ConvertTo ctx = 
+                        match ctx.Instance with
+                        | :? Uri as uri -> uri.OriginalString
+                        | _ -> "" })
         Serializer(settings)
 
     let mutable lastLoadedFrom = None
@@ -354,7 +360,7 @@ let internal typedYamlConfig (context: Context) =
     yamlConfig.DefineStaticParameters(
         parameters = staticParams,
         instantiationFunction = fun typeName paramValues ->
-            let createTy yaml readOnly filePath =
+            let createTy yaml readOnly =
                 let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, Some baseTy, IsErased=false, 
                                                  SuppressRelocation=false, HideObjectMethods=true)
                 let types = TypesFactory.transform readOnly None (Parser.parse yaml)
@@ -369,12 +375,12 @@ let internal typedYamlConfig (context: Context) =
             | [| :? string as filePath; :? bool as readOnly; :? string as yamlText |] -> 
                  match filePath, yamlText with
                  | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
-                 | "", yamlText -> createTy yamlText readOnly None
+                 | "", yamlText -> createTy yamlText readOnly
                  | filePath, _ -> 
                       let filePath =
                           if Path.IsPathRooted filePath then filePath 
                           else Path.Combine(context.ResolutionFolder, filePath)
                       context.WatchFile filePath
-                      createTy (File.ReadAllText filePath) readOnly (Some filePath)
+                      createTy (File.ReadAllText filePath) readOnly
             | _ -> failwith "Wrong parameters")
     yamlConfig

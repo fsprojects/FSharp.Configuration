@@ -1,12 +1,9 @@
 module FSharp.Configuration.AppSettingsTypeProvider
 
 open FSharp.Configuration.Helper
-open Microsoft.FSharp.Core.CompilerServices
 open Samples.FSharp.ProvidedTypes
 open System
 open System.Configuration
-open System.IO
-open System.Reflection
 open System.Collections.Generic
 open System.Globalization
 
@@ -63,7 +60,6 @@ let internal typedAppSettings (context: Context) =
                     typeDef.AddMember prop
                     context.WatchFile filePath
                     typeDef
-                with 
-                | exn -> typeDef
+                with _ -> typeDef
             | x -> failwithf "unexpected parameter values %A" x))
     appSettings

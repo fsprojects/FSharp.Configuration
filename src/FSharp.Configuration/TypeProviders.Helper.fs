@@ -6,6 +6,7 @@ open System
 open System.IO
 open Samples.FSharp.ProvidedTypes
 open Microsoft.FSharp.Core.CompilerServices
+open Microsoft.FSharp.Core.Printf
 
 type FilePath = string
 
@@ -18,6 +19,7 @@ let inline satisfies predicate (charOption:option<char>) =
     | _ -> None
 
 let dispose (x: IDisposable) = if x = null then () else x.Dispose()
+let inline debug msg = Printf.kprintf Diagnostics.Debug.WriteLine msg
 
 let (|EOF|_|) = function 
     | Some _ -> None
@@ -26,6 +28,68 @@ let (|EOF|_|) = function
 let (|LetterDigit|_|) = satisfies Char.IsLetterOrDigit
 let (|Upper|_|) = satisfies Char.IsUpper
 let (|Lower|_|) = satisfies Char.IsLower
+
+/// Maybe computation expression builder, copied from ExtCore library
+/// https://github.com/jack-pappas/ExtCore/blob/master/ExtCore/Control.fs
+[<Sealed>]
+type MaybeBuilder () =
+    // 'T -> M<'T>
+    member inline __.Return value: 'T option =
+        Some value
+
+    // M<'T> -> M<'T>
+    member inline __.ReturnFrom value: 'T option =
+        value
+
+    // unit -> M<'T>
+    member inline __.Zero (): unit option =
+        Some ()     // TODO: Should this be None?
+
+    // (unit -> M<'T>) -> M<'T>
+    member __.Delay (f: unit -> 'T option): 'T option =
+        f ()
+
+    // M<'T> -> M<'T> -> M<'T>
+    // or
+    // M<unit> -> M<'T> -> M<'T>
+    member inline __.Combine (r1, r2: 'T option): 'T option =
+        match r1 with
+        | None ->
+            None
+        | Some () ->
+            r2
+
+    // M<'T> * ('T -> M<'U>) -> M<'U>
+    member inline __.Bind (value, f: 'T -> 'U option): 'U option =
+        Option.bind f value
+
+    // 'T * ('T -> M<'U>) -> M<'U> when 'U :> IDisposable
+    member __.Using (resource: ('T :> System.IDisposable), body: _ -> _ option): _ option =
+        try body resource
+        finally
+            if not <| obj.ReferenceEquals (null, box resource) then
+                resource.Dispose ()
+
+    // (unit -> bool) * M<'T> -> M<'T>
+    member x.While (guard, body: _ option): _ option =
+        if guard () then
+            // OPTIMIZE: This could be simplified so we don't need to make calls to Bind and While.
+            x.Bind (body, (fun () -> x.While (guard, body)))
+        else
+            x.Zero ()
+
+    // seq<'T> * ('T -> M<'U>) -> M<'U>
+    // or
+    // seq<'T> * ('T -> M<'U>) -> seq<M<'U>>
+    member x.For (sequence: seq<_>, body: 'T -> unit option): _ option =
+        // OPTIMIZE: This could be simplified so we don't need to make calls to Using, While, Delay.
+        x.Using (sequence.GetEnumerator (), fun enum ->
+            x.While (
+                enum.MoveNext,
+                x.Delay (fun () ->
+                    body enum.Current)))
+
+let maybe = MaybeBuilder()
 
 [<RequireQualifiedAccess>]
 module ValueParser =
@@ -113,18 +177,9 @@ let findConfigFile resolutionFolder configFileName =
 let erasedType<'T> assemblyName rootNamespace typeName = 
     ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>))
 
-let generalTypeSet = System.Collections.Generic.HashSet()
-
-let runtimeType<'T> typeName = ProvidedTypeDefinition(niceName generalTypeSet typeName, Some typeof<'T>)
-
-let seqType ty = typedefof<seq<_>>.MakeGenericType[| ty |]
-let listType ty = typedefof<list<_>>.MakeGenericType[| ty |]
-let optionType ty = typedefof<option<_>>.MakeGenericType[| ty |]
-
 // Get the assembly and namespace used to house the provided types
 let thisAssembly = System.Reflection.Assembly.GetExecutingAssembly()
 let rootNamespace = "FSharp.Configuration"
-let missingValue = "@@@missingValue###"
 
 module File =
     let tryOpenFile filePath =
@@ -162,7 +217,7 @@ module File =
         let getLastWrite() = File.GetLastWriteTime filePath
         let state = ref { LastFileWriteTime = getLastWrite(); Updated = DateTime.Now }
         
-        let changed (args: FileSystemEventArgs) =
+        let changed (_: FileSystemEventArgs) =
             let curr = getLastWrite()
             // log (sprintf "%A. Last = %A, Curr = %A" args.ChangeType !lastWrite curr)
             if curr <> (!state).LastFileWriteTime && DateTime.Now - (!state).Updated > TimeSpan.FromMilliseconds 500. then
@@ -220,8 +275,8 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
         loop Map.empty
     )
 
-    member x.ResolutionFolder = cfg.ResolutionFolder
-    member x.WatchFile (file: FilePath) = agent.Post (Watch file)
+    member __.ResolutionFolder = cfg.ResolutionFolder
+    member __.WatchFile (file: FilePath) = agent.Post (Watch file)
 
     interface IDisposable with
-        member x.Dispose() = agent.Post Cancel
+        member __.Dispose() = agent.Post Cancel

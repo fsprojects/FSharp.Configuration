@@ -4,9 +4,6 @@ open FSharp.Configuration.Helper
 open Microsoft.FSharp.Core.CompilerServices
 open Samples.FSharp.ProvidedTypes
 open System
-open System.Configuration
-open System.IO
-open System.Reflection
 
 [<TypeProvider>]
 type public FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
@@ -18,7 +15,7 @@ type public FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
           ResXProvider.typedResources context
           YamlConfigTypeProvider.typedYamlConfig context ])
     interface IDisposable with 
-        member x.Dispose() = dispose context
+        member __.Dispose() = dispose context
 
 [<TypeProviderAssembly>]
 do ()
