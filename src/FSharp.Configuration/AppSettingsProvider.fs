@@ -14,6 +14,11 @@ let getConfigValue(key) =
     let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).AppSettings.Settings
     settings.[key].Value
 
+let setConfigValue(key, value) = 
+    let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None)
+    settings.AppSettings.Settings.[key].Value <- value
+    settings.Save()
+
 let internal typedAppSettings (context: Context) =
     let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings"
 
@@ -33,19 +38,34 @@ let internal typedAppSettings (context: Context) =
                         let name = niceName names key
                         let prop =
                             match (appSettings.Item key).Value with
-                            | ValueParser.Uri _ -> ProvidedProperty(name, typeof<int>, GetterCode = fun _ -> 
-                                <@@ Uri (getConfigValue key) @@>)
-                            | ValueParser.Int _ -> ProvidedProperty(name, typeof<int>, GetterCode = fun _ -> 
-                                <@@ Int32.Parse (getConfigValue key) @@>)
-                            | ValueParser.Bool _ -> ProvidedProperty(name, typeof<bool>, GetterCode = fun _ -> 
-                                <@@ Boolean.Parse (getConfigValue key) @@>)                                                                                    
-                            | ValueParser.Float _ -> ProvidedProperty(name, typeof<float>, GetterCode = fun _ ->
-                                <@@ Double.Parse (getConfigValue key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>)
-                            | ValueParser.TimeSpan _ -> ProvidedProperty(name, typeof<TimeSpan>, GetterCode = (fun _ ->
-                                <@@ TimeSpan.Parse(getConfigValue key, CultureInfo.InvariantCulture) @@>))
-                            | ValueParser.DateTime _ -> ProvidedProperty(name, typeof<DateTime>, GetterCode = (fun _ ->
-                                <@@ DateTime.Parse(getConfigValue key, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal) @@>))
-                            | _ -> ProvidedProperty(name, typeof<string>, GetterCode = fun _ -> <@@ getConfigValue key @@>)
+                            | ValueParser.Uri _ ->
+                                ProvidedProperty(name, typeof<int>,
+                                    GetterCode = (fun _ -> <@@ Uri (getConfigValue key) @@>),
+                                    SetterCode = fun args -> <@@ setConfigValue(key, string ((%%args.[0]):Uri)) @@>)
+                            | ValueParser.Int _ ->
+                                ProvidedProperty(name, typeof<int>,
+                                    GetterCode = (fun _ -> <@@ Int32.Parse (getConfigValue key) @@>),
+                                    SetterCode = fun args -> <@@ setConfigValue(key, string ((%%args.[0]):Int32)) @@>)
+                            | ValueParser.Bool _ ->
+                                ProvidedProperty(name, typeof<bool>,
+                                    GetterCode = (fun _ -> <@@ Boolean.Parse (getConfigValue key) @@>),
+                                    SetterCode = fun args -> <@@ setConfigValue(key, string ((%%args.[0]):Boolean)) @@>)                                                                                    
+                            | ValueParser.Float _ ->
+                                ProvidedProperty(name, typeof<float>,
+                                    GetterCode = (fun _ -> <@@ Double.Parse (getConfigValue key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>),
+                                    SetterCode = fun args -> <@@ setConfigValue(key, string ((%%args.[0]):float)) @@>)
+                            | ValueParser.TimeSpan _ ->
+                                ProvidedProperty(name, typeof<TimeSpan>,
+                                    GetterCode = (fun _ -> <@@ TimeSpan.Parse(getConfigValue key, CultureInfo.InvariantCulture) @@>),
+                                    SetterCode = fun args -> <@@ setConfigValue(key, string ((%%args.[0]):TimeSpan)) @@>)
+                            | ValueParser.DateTime _ ->
+                                ProvidedProperty(name, typeof<DateTime>,
+                                    GetterCode = (fun _ -> <@@ DateTime.Parse(getConfigValue key, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal) @@>),
+                                    SetterCode = fun args -> <@@ setConfigValue(key, ((%%args.[0]):DateTime).ToString("o")) @@>)
+                            | _ ->
+                                ProvidedProperty(name, typeof<string>,
+                                    GetterCode = (fun _ -> <@@ getConfigValue key @@>),
+                                    SetterCode = fun args -> <@@ setConfigValue(key, %%args.[0]) @@>)
 
                         prop.IsStatic <- true
                         prop.AddXmlDoc (sprintf "Returns the value from %s with key %s" configFileName key)
