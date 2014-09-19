@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Scalar - FSharp.Configuration</title>
+    <title>Root - FSharp.Configuration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Steffen Forkmann">
@@ -35,79 +35,23 @@
 
 
 
-<h1>Scalar</h1>
+<h1>Root</h1>
 <div class="xmldoc">
 </div>
-  <h3>Union Cases</h3>
+  <h3>Constructors</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Union Case</td><td>Description</td></tr>
+      <tr><td>Constructor</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '18', 18)" onmouseover="showTip(event, '18', 18)">
-            Bool
+          <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
+            new()
           </code>
-          <div class="tip" id="18">
-            <strong>Signature:</strong>bool<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-        
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '19', 19)" onmouseover="showTip(event, '19', 19)">
-            Int
-          </code>
-          <div class="tip" id="19">
-            <strong>Signature:</strong>int<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-        
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '20', 20)" onmouseover="showTip(event, '20', 20)">
-            String
-          </code>
-          <div class="tip" id="20">
-            <strong>Signature:</strong>string<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-        
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '21', 21)" onmouseover="showTip(event, '21', 21)">
-            TimeSpan
-          </code>
-          <div class="tip" id="21">
-            <strong>Signature:</strong>TimeSpan<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-        
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '22', 22)" onmouseover="showTip(event, '22', 22)">
-            Uri
-          </code>
-          <div class="tip" id="22">
-            <strong>Signature:</strong>Uri<br />
+          <div class="tip" id="4">
+            <strong>Signature:</strong>unit -&gt; Root<br />
                       </div>
         </td>
         <td class="xmldoc">
@@ -125,37 +69,124 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '37', 37)" onmouseover="showTip(event, '37', 37)">
-            UnderlyingType
+          <code onmouseout="hideTip(event, '11', 11)" onmouseover="showTip(event, '11', 11)">
+            Load(filePath)
           </code>
-          <div class="tip" id="37">
-            <strong>Signature:</strong>Type<br />
+          <div class="tip" id="11">
+            <strong>Signature:</strong>filePath:string -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-        
+        <p>Load Yaml config from a file and update itself with it.</p>
+
         </td>
       </tr>
-    </tbody>
-  </table>
-  <h3>Static members</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Static member</td><td>Description</td></tr>
-    </thead>
-    <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '38', 38)" onmouseover="showTip(event, '38', 38)">
-            Parse(value)
+          <code onmouseout="hideTip(event, '12', 12)" onmouseover="showTip(event, '12', 12)">
+            Load(reader)
           </code>
-          <div class="tip" id="38">
-            <strong>Signature:</strong>value:string -&gt; Scalar<br />
+          <div class="tip" id="12">
+            <strong>Signature:</strong>reader:TextReader -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-        
+        <p>Load Yaml config from a TextReader and update itself with it.</p>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '13', 13)" onmouseover="showTip(event, '13', 13)">
+            LoadAndWatch(filePath)
+          </code>
+          <div class="tip" id="13">
+            <strong>Signature:</strong>filePath:string -&gt; IDisposable<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        <p>Load Yaml config from a file, update itself with it, then start watching it for changes.
+If it detects any change, it reloads the file.</p>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '14', 14)" onmouseover="showTip(event, '14', 14)">
+            LoadText(yamlText)
+          </code>
+          <div class="tip" id="14">
+            <strong>Signature:</strong>yamlText:string -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        <p>Load Yaml config as text and update itself with it.</p>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '15', 15)" onmouseover="showTip(event, '15', 15)">
+            Save()
+          </code>
+          <div class="tip" id="15">
+            <strong>Signature:</strong>unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        <p>Saves configuration as Yaml text into the last file it was loaded (if any).
+Throws InvalidOperationException if configuration has not been loaded at all or if it has loaded from 
+a different kind of source (string or TextReader).</p>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '16', 16)" onmouseover="showTip(event, '16', 16)">
+            Save(filePath)
+          </code>
+          <div class="tip" id="16">
+            <strong>Signature:</strong>filePath:string -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        <p>Saves configuration as Yaml text into a file.</p>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '17', 17)" onmouseover="showTip(event, '17', 17)">
+            Save(writer)
+          </code>
+          <div class="tip" id="17">
+            <strong>Signature:</strong>writer:TextWriter -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        <p>Saves configuration as Yaml text into a TextWriter.</p>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '18', 18)" onmouseover="showTip(event, '18', 18)">
+            Save(stream)
+          </code>
+          <div class="tip" id="18">
+            <strong>Signature:</strong>stream:Stream -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+        <p>Saves configuration as Yaml text into a stream.</p>
+
         </td>
       </tr>
     </tbody>
