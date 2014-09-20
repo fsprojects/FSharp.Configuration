@@ -6,7 +6,7 @@
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Type providers for the configuration of .NET projects.">
-    <meta name="author" content="Steffen Forkmann">
+    <meta name="author" content="FSProjects team">
 
     <script src="http://code.jquery.com/jquery-1.8.0.js"></script>
     <script src="http://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
@@ -33,7 +33,7 @@
       <div class="row">
         <div class="span9" id="main">
           
-<h1>The YamlConfig type provider</h1>
+<h1><a name="The-YamlConfig-type-provider" class="anchor" href="#The-YamlConfig-type-provider">The YamlConfig type provider</a></h1>
 
 <p>This tutorial shows the use of the YamlConfig type provider.</p>
 
@@ -45,11 +45,11 @@
 
 <p>When you push a system into production, you can modify the configs with scripts written in F# in safe, statically typed way with full intellisense.</p>
 
-<h2>Using Yaml type provider from F# scripts</h2>
+<h2><a name="Using-Yaml-type-provider-from-F-scripts" class="anchor" href="#Using-Yaml-type-provider-from-F-scripts">Using Yaml type provider from F# scripts</a></h2>
 
 <p>Create a <code>Config.yaml</code> file like this:</p>
 
-<pre lang="yaml">Mail:
+<table class="pre"><tr><td><pre lang="yaml">Mail:
     Smtp:
         Host: smtp.sample.com
         Port: 25
@@ -67,7 +67,7 @@
 DB:
     ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
     NumberOfDeadlockRepeats: 5
-    DefaultTimeout: 00:05:00</pre>
+    DefaultTimeout: 00:05:00</pre></td></tr></table>
 
 <p>Reference the type provider assembly and configure it to use your yaml file:</p>
 
@@ -93,7 +93,7 @@ DB:
 
 <p><img src="img/YamlConfigProvider.png" alt="alt text" title="Intellisense for YamlConfig" /></p>
 
-<h2>Reading and writing from the config</h2>
+<h2><a name="Reading-and-writing-from-the-config" class="anchor" href="#Reading-and-writing-from-the-config">Reading and writing from the config</a></h2>
 
 <table class="pre"><tr><td class="lines"><pre class="fssnip">
 <span class="l"> 1: </span>
@@ -129,11 +129,11 @@ DB:
 </tr>
 </table>
 
-<h2>Using configuration from C#</h2>
+<h2><a name="Using-configuration-from-C" class="anchor" href="#Using-configuration-from-C">Using configuration from C#</a></h2>
 
 <p>Let's create a F# project named <code>Config</code>, add reference to <code>FSharp.Configuration.dll</code>, then add the following <code>Config.yaml</code> file:</p>
 
-<pre lang="yaml">Mail:
+<table class="pre"><tr><td><pre lang="yaml">Mail:
   Smtp:
     Host: smtp.sample.com
     Port: 25
@@ -151,7 +151,7 @@ DB:
 DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
-  DefaultTimeout: 00:05:00</pre>
+  DefaultTimeout: 00:05:00</pre></td></tr></table>
 
 <p>Declare a YamlConfig type and point it to the file above:</p>
 
@@ -175,12 +175,12 @@ DB:
 
 <p>First, we'll try to create an instance of our generated <code>Config</code> type and check that all the values are there:</p>
 
-<pre lang="csharp"><span class="k">var</span> config = <span class="k">new</span> Config.Config();
-Console.WriteLine(<span class="k">string</span>.Format(<span class="s">"Default configuration:\n{0}"</span>, config));</pre>
+<table class="pre"><tr><td><pre lang="csharp"><span class="k">var</span> config <span class="o">=</span> <span class="k">new</span> Config.Config();
+Console.WriteLine(<span class="k">string</span>.Format(<span class="s">"Default configuration:\n{0}"</span>, config));</pre></td></tr></table>
 
 <p>It should outputs this:</p>
 
-<pre lang="yaml">Default settings:
+<table class="pre"><tr><td><pre lang="yaml">Default settings:
 Mail:
   Smtp:
     Host: smtp.sample.com
@@ -199,7 +199,7 @@ Mail:
 DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
-  DefaultTimeout: 00:05:00</pre>
+  DefaultTimeout: 00:05:00</pre></td></tr></table>
 
 <p>And, of course, we now able to access all the config data in a nice typed way like this:</p>
 
@@ -224,7 +224,7 @@ DB:
 <p>It's not very interesting so far, as the main purpose of any configuration is to be loaded from a config file at runtime. 
 So, add the following <code>RuntimeConfig.yaml</code> into the C# console project:</p>
 
-<pre lang="yaml">Mail:
+<table class="pre"><tr><td><pre lang="yaml">Mail:
   Smtp:
     Host: smtp2.sample.com
     Port: 26
@@ -243,18 +243,18 @@ So, add the following <code>RuntimeConfig.yaml</code> into the C# console projec
 DB:
   ConnectionString: Data Source=server2;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
-  DefaultTimeout: 00:10:00</pre>
+  DefaultTimeout: 00:10:00</pre></td></tr></table>
 
 <p>We changed almost every setting here. Update our default config with this file:</p>
 
-<pre lang="csharp"><span class="c">// ...as before</span>
+<table class="pre"><tr><td><pre lang="csharp"><span class="c">// ...as before</span>
 config.Load(<span class="s">@"RuntimeConfig.yaml"</span>);
 Console.WriteLine(<span class="k">string</span>.Format(<span class="s">"Loaded config:\n{0}"</span>, config));
-Console.ReadLine();</pre>
+Console.ReadLine();</pre></td></tr></table>
 
 <p>The output should be:</p>
 
-<pre lang="yaml">Loaded settings:
+<table class="pre"><tr><td><pre lang="yaml">Loaded settings:
 Mail:
   Smtp:
     Host: smtp2.sample.com
@@ -274,11 +274,11 @@ Mail:
 DB:
   ConnectionString: Data Source=server2;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
-  DefaultTimeout: 00:10:00</pre>
+  DefaultTimeout: 00:10:00</pre></td></tr></table>
 
 <p>Great! Values have been updated properly, the new user has been added into <code>ErrorNotificationRecipients</code> list.</p>
 
-<h2>The Changed event</h2>
+<h2><a name="The-Changed-event" class="anchor" href="#The-Changed-event">The Changed event</a></h2>
 
 <p>Every type in the hierarchy contains <code>Changed: EventHandler</code> event. It's raised when an instance is updated (<code>Load</code>ed), not when the writable properties are assigned.</p>
 
@@ -358,9 +358,9 @@ DB:
 
 <p>The output is as follows:</p>
 
-<pre lang="text">ROOT changed!
+<table class="pre"><tr><td><pre lang="text">ROOT changed!
 Mail changed!
-Mail.Smtp changed!</pre>
+Mail.Smtp changed!</pre></td></tr></table>
 
 <p>So, we can see that all the events have been raised from the root's one down to the most close to the changed value one. And note that there're no duplicates - even though two value was changed in Mail.Smpt map, its Changed event has been raised only once.</p>
 

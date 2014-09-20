@@ -6,7 +6,7 @@
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Type providers for the configuration of .NET projects.">
-    <meta name="author" content="Steffen Forkmann">
+    <meta name="author" content="FSProjects team">
 
     <script src="http://code.jquery.com/jquery-1.8.0.js"></script>
     <script src="http://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
@@ -33,16 +33,16 @@
       <div class="row">
         <div class="span9" id="main">
           
-<h1>The AppSettings type provider</h1>
+<h1><a name="The-AppSettings-type-provider" class="anchor" href="#The-AppSettings-type-provider">The AppSettings type provider</a></h1>
 
 <p>This tutorial shows the use of the AppSettings type provider. 
 It allows to access app.config files in a strongly typed way.</p>
 
-<h2>Using App.Settings from F# scripts</h2>
+<h2><a name="Using-App-Settings-from-F-scripts" class="anchor" href="#Using-App-Settings-from-F-scripts">Using App.Settings from F# scripts</a></h2>
 
 <p>Create a config file called <code>app.config</code> like this:</p>
 
-<pre lang="xml"><span class="prep">&lt;?</span>xml version=<span class="s">"1.0"</span> encoding=<span class="s">"utf-8"</span> <span class="prep">?&gt;</span>
+<table class="pre"><tr><td><pre lang="xml"><span class="prep">&lt;?</span>xml version=<span class="s">"1.0"</span> encoding=<span class="s">"utf-8"</span> <span class="prep">?&gt;</span>
 <span class="k">&lt;</span><span class="i">configuration</span><span class="k">&gt;</span>
   <span class="k">&lt;</span><span class="i">appSettings</span><span class="k">&gt;</span>
     <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="test2"</span> <span class="o">value</span><span class="k">="Some Test Value 5"</span><span class="k">/&gt;</span>
@@ -52,7 +52,7 @@ It allows to access app.config files in a strongly typed way.</p>
     <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestDateTime"</span> <span class="o">value</span><span class="k">="2014-05-18 11:14:28Z"</span><span class="k">/&gt;</span>
     <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestTimeSpan"</span> <span class="o">value</span><span class="k">="00:12:30"</span><span class="k">/&gt;</span>
   <span class="k">&lt;/</span><span class="i">appSettings</span><span class="k">&gt;</span>
-<span class="k">&lt;/</span><span class="i">configuration</span><span class="k">&gt;</span></pre>
+<span class="k">&lt;/</span><span class="i">configuration</span><span class="k">&gt;</span></pre></td></tr></table>
 
 <p>Reference the type provider assembly and configure it to use your app.settings file:</p>
 
@@ -78,7 +78,7 @@ It allows to access app.config files in a strongly typed way.</p>
 
 <p><img src="img/AppSettingsProvider.png" alt="alt text" title="Intellisense for the App.Settings" /></p>
 
-<h2>Reading and writing from the config</h2>
+<h2><a name="Reading-and-writing-from-the-config" class="anchor" href="#Reading-and-writing-from-the-config">Reading and writing from the config</a></h2>
 
 <table class="pre"><tr><td class="lines"><pre class="fssnip">
 <span class="l">1: </span>
