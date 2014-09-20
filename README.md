@@ -12,7 +12,7 @@ The FSharp.Configuration project contains type providers for the configuration o
 
 ## Building
 
-* Run build.cmd
+* Build in Visual Studio or run build.bat (build.sh on Mono)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/eljpus4w1t7b0jic)](https://ci.appveyor.com/project/vasily-kirichenko/fsharp-configuration)
 

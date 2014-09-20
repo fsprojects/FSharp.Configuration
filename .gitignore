@@ -174,5 +174,5 @@ nuget/
 
 # Nuget outputs
 nuget/*.nupkg
-paket.exe
 *.bak
+.paket/paket.exe

@@ -101,6 +101,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="$(SolutionDir)\.paket\paket.targets" />
   <Choose>
     <When Condition="true">
       <ItemGroup>
