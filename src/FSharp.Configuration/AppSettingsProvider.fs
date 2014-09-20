@@ -7,7 +7,7 @@ open System.Configuration
 open System.Collections.Generic
 open System.Globalization
 
-let getConfigValue(key) = 
+let getConfigValue(key) =
     let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).AppSettings.Settings
     settings.[key].Value
 

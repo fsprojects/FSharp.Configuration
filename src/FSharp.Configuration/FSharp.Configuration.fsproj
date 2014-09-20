@@ -26,7 +26,7 @@
     </DocumentationFile>
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</StartProgram>
-    <StartArguments>C:\Code\FSharp.Configuration\FSharp.Configuration.Tests.sln</StartArguments>
+    <StartArguments>l:\git\FSharp.Configuration\FSharp.Configuration.Tests.sln</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -58,6 +58,7 @@
     <Compile Include="ResXProvider.fs" />
     <Compile Include="AppSettingsProvider.fs" />
     <Compile Include="YamlConfigProvider.fs" />
+    <Compile Include="IniFileProvider.fs" />
     <Compile Include="ConfigTypeProvider.fs" />
   </ItemGroup>
   <PropertyGroup>

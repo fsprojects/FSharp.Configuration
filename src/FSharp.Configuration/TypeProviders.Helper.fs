@@ -198,6 +198,14 @@ let erasedType<'T> assemblyName rootNamespace typeName =
 let thisAssembly = System.Reflection.Assembly.GetExecutingAssembly()
 let rootNamespace = "FSharp.Configuration"
 
+/// Converts a function returning bool,value to a function returning value option.
+/// Useful to process TryXX style functions.
+let inline tryParseWith func = func >> function
+    | true, _ -> Some()
+    | false, _ -> None
+
+open System.Globalization
+
 module File =
     let tryOpenFile filePath =
         try Some (new FileStream (filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

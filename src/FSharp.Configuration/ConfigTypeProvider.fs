@@ -13,7 +13,8 @@ type public FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
         rootNamespace, 
         [ AppSettingsTypeProvider.typedAppSettings context
           ResXProvider.typedResources context
-          YamlConfigTypeProvider.typedYamlConfig context ])
+          YamlConfigTypeProvider.typedYamlConfig context 
+          IniFileProvider.typedIniFile context ])
     interface IDisposable with 
         member __.Dispose() = dispose context
 
