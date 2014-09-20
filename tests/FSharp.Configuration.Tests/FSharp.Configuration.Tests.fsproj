@@ -65,7 +65,9 @@
     <Compile Include="ResXProvider.Tests.fs" />
     <Compile Include="YamlProvider.Tests.fs" />
     <Compile Include="IniFileProvider.Tests.fs" />
-    <None Include="Sample.ini" />
+    <None Include="Sample.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="Resource1.resx" />
     <None Include="paket.references" />
     <None Include="app.config" />
