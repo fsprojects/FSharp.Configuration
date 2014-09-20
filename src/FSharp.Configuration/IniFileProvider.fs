@@ -91,7 +91,7 @@ open System
 open System.Globalization
 
 let getValue (iniFileName: string) (section: string) (key: string) = 
-    match Parser.parse iniFileName with
+    match Parser.parse (Path.GetFileName iniFileName) with
     | Choice1Of2 sections ->
         maybe {
             let! section = sections |> List.tryFind (fun s -> s.Name = section)
