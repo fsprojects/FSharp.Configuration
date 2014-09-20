@@ -3,7 +3,7 @@
 
 (**
 The YamlConfig type provider
-======================
+============================
 
 This tutorial shows the use of the YamlConfig type provider. 
 
