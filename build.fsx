@@ -1,16 +1,56 @@
 // --------------------------------------------------------------------------------------
 // FAKE build script
 // --------------------------------------------------------------------------------------
-#I  @"packages/FAKE/tools/"
+
+#r @"packages/Octokit/lib/net45/Octokit.dll"
 #r @"packages/FAKE/tools/FakeLib.dll"
-open Fake 
+open Fake
 open Fake.Git
 open Fake.AssemblyInfoFile
 open Fake.ReleaseNotesHelper
+open Octokit
+open System.IO
 open System
+#if MONO
+#else
+#load "packages/SourceLink.Fake/Tools/Fake.fsx"
+open SourceLink
+#endif
 
-let projects = [|"FSharp.Configuration"|]
 
+// --------------------------------------------------------------------------------------
+// START TODO: Provide project-specific details below
+// --------------------------------------------------------------------------------------
+
+// Information about the project are used
+//  - for version and project name in generated AssemblyInfo file
+//  - by the generated NuGet package
+//  - to run tests and to publish documentation on GitHub gh-pages
+//  - for documentation, you also need to edit info in "docs/tools/generate.fsx"
+
+// The name of the project
+// (used by attributes in AssemblyInfo, name of a NuGet package and directory in 'src')
+let project = "FSharp.Configuration"
+
+// Short summary of the project
+// (used as description in AssemblyInfo and as a short summary for NuGet package)
+let summary = "The FSharp.Configuration project contains type providers for the configuration of .NET projects."
+
+// Longer description of the project
+// (used as a description for NuGet package; line breaks are automatically cleaned up)
+let description = "The FSharp.Configuration project contains type providers for the configuration of .NET projects."
+
+// List of author names (for NuGet package)
+let authors = ["Steffen Forkmann"; "Sergey Tihon"; "Daniel Mohl"; "Tomas Petricek"; "Ryan Riley"; "Mauricio Scheffer"; "Phil Trelford"; "Vasily Kirichenko"; "Reed Copsey, Jr."]
+
+// Tags for your project (for NuGet package)
+let tags = "appsettings, YAML, F#, ResX, Ini, config"
+
+// File system information
+let solutionFile  = "FSharp.Configuration"
+
+// Pattern specifying assemblies to be tested using NUnit
+let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
 
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted
@@ -20,40 +60,55 @@ let gitHome = "https://github.com/" + gitOwner
 // The name of the project on GitHub
 let gitName = "FSharp.Configuration"
 
-let summary = "Type providers for the configuration of .NET projects."
-let description = "The FSharp.Configuration project contains type providers for the configuration of .NET projects."
-let authors = ["Steffen Forkmann"; "Sergey Tihon"; "Daniel Mohl"; "Tomas Petricek"; "Ryan Riley"; "Mauricio Scheffer"; "Phil Trelford"; "Vasily Kirichenko"; "Reed Copsey, Jr."]
-let tags = "F# fsharp typeproviders Management PowerShell"
+// The url for the raw files hosted
+let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/fsprojects"
 
-let solutionFile  = "FSharp.Configuration"
+// --------------------------------------------------------------------------------------
+// END TODO: The rest of the file includes standard build steps
+// --------------------------------------------------------------------------------------
 
-let testAssemblies = "tests/**/bin/Release/*.Tests*.dll"
-let cloneUrl = "git@github.com:fsprojects/FSharp.Configuration.git"
+let buildDir = "bin"
 let nugetDir = "./nuget/"
 
+
 // Read additional information from the release notes document
-Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
-let release = parseReleaseNotes (IO.File.ReadAllLines "RELEASE_NOTES.md")
+let release = LoadReleaseNotes "RELEASE_NOTES.md"
+
+let genFSAssemblyInfo (projectPath) =
+    let projectName = System.IO.Path.GetFileNameWithoutExtension(projectPath)
+    let basePath = "src/" + projectName
+    let fileName = basePath + "/AssemblyInfo.fs"
+    CreateFSharpAssemblyInfo fileName
+      [ Attribute.Title (projectName)
+        Attribute.Product project
+        Attribute.Description summary
+        Attribute.Version release.AssemblyVersion
+        Attribute.FileVersion release.AssemblyVersion ]
+
+let genCSAssemblyInfo (projectPath) =
+    let projectName = System.IO.Path.GetFileNameWithoutExtension(projectPath)
+    let basePath = "src/" + projectName + "/Properties"
+    let fileName = basePath + "/AssemblyInfo.cs"
+    CreateCSharpAssemblyInfo fileName
+      [ Attribute.Title (projectName)
+        Attribute.Product project
+        Attribute.Description summary
+        Attribute.Version release.AssemblyVersion
+        Attribute.FileVersion release.AssemblyVersion ]
 
 // Generate assembly info files with the right version & up-to-date information
 Target "AssemblyInfo" (fun _ ->
-  for project in projects do
-    let fileName = "src/" + project + "/AssemblyInfo.fs"
-    CreateFSharpAssemblyInfo fileName
-        [ Attribute.Title project
-          Attribute.Product project
-          Attribute.Description summary
-          Attribute.Version release.AssemblyVersion
-          Attribute.FileVersion release.AssemblyVersion ] 
+  let fsProjs =  !! "src/**/*.fsproj"
+  let csProjs = !! "src/**/*.csproj"
+  fsProjs |> Seq.iter genFSAssemblyInfo
+  csProjs |> Seq.iter genCSAssemblyInfo
 )
 
 // --------------------------------------------------------------------------------------
 // Clean build results & restore NuGet packages
 
-Target "RestorePackages" RestorePackages
-
 Target "Clean" (fun _ ->
-    CleanDirs ["bin"; "temp"; nugetDir]
+    CleanDirs [buildDir; "temp"; nugetDir]
 )
 
 Target "CleanDocs" (fun _ ->
@@ -74,11 +129,9 @@ Target "Build" (fun _ ->
 )
 
 // --------------------------------------------------------------------------------------
-// Run the unit tests using test runner & kill test runner when complete
+// Run the unit tests using test runner
 
 Target "RunTests" (fun _ ->
-    ActivateFinalTarget "CloseTestRunner"
-
     !! testAssemblies
     |> NUnit (fun p ->
         { p with
@@ -87,20 +140,32 @@ Target "RunTests" (fun _ ->
             OutputFile = "TestResults.xml" })
 )
 
-FinalTarget "CloseTestRunner" (fun _ ->  
-    ProcessHelper.killProcess "nunit-agent.exe"
+#if MONO
+#else
+// --------------------------------------------------------------------------------------
+// SourceLink allows Source Indexing on the PDB generated by the compiler, this allows
+// the ability to step through the source code of external libraies https://github.com/ctaggart/SourceLink
+
+Target "SourceLink" (fun _ ->
+    let baseUrl = sprintf "%s/%s/{0}/%%var2%%" gitRaw (project.ToLower())
+    use repo = new GitRepo(__SOURCE_DIRECTORY__)
+    !! "src/**/*.fsproj"
+    |> Seq.iter (fun f ->
+        let proj = VsProj.LoadRelease f
+        logfn "source linking %s" proj.OutputFilePdb
+        let files = proj.Compiles -- "**/AssemblyInfo.fs"
+        repo.VerifyChecksums files
+        proj.VerifyPdbChecksums files
+        proj.CreateSrcSrv baseUrl repo.Revision (repo.Paths files)
+        Pdbstr.exec proj.OutputFilePdb proj.OutputFilePdbSrcSrv
+    )
 )
+#endif
 
 // --------------------------------------------------------------------------------------
 // Build a NuGet package
 
 Target "NuGet" (fun _ ->
-    // Format the description to fit on a single line (remove \r\n and double-spaces)
-    let description = description.Replace("\r", "")
-                                 .Replace("\n", "")
-                                 .Replace("  ", " ")
-    let project = projects.[0]
-
     let nugetDocsDir = nugetDir @@ "docs"
     let nugetlibDir = nugetDir @@ "lib/net40"
 
@@ -129,9 +194,17 @@ Target "NuGet" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Generate the documentation
 
-Target "GenerateDocs" (fun _ ->
-    executeFSIWithArgs "docs/tools" "generate.fsx" ["--define:RELEASE"] [] |> ignore
+Target "GenerateReferenceDocs" (fun _ ->
+    if not <| executeFSIWithArgs "docs/tools" "generate.fsx" ["--define:RELEASE"; "--define:REFERENCE"] [] then
+      failwith "generating reference documentation failed"
 )
+
+Target "GenerateHelp" (fun _ ->
+    if not <| executeFSIWithArgs "docs/tools" "generate.fsx" ["--define:RELEASE"; "--define:HELP"] [] then
+      failwith "generating help documentation failed"
+)
+
+Target "GenerateDocs" DoNothing
 
 // --------------------------------------------------------------------------------------
 // Release Scripts
@@ -148,7 +221,72 @@ Target "ReleaseDocs" (fun _ ->
     Branches.push tempDocsDir
 )
 
-Target "Release" DoNothing
+type Draft = 
+    { Client : GitHubClient
+      DraftRelease : Release }
+
+let createClient user password = 
+    async { 
+        let github = new GitHubClient(new ProductHeaderValue("FAKE"))
+        github.Credentials <- Credentials(user, password)
+        return github
+    }
+
+let createDraft owner project releaseNotes (client : Async<GitHubClient>) = 
+    async { 
+        let data = new ReleaseUpdate(releaseNotes.NugetVersion)
+        data.Name <- releaseNotes.NugetVersion
+        data.Body <- toLines releaseNotes.Notes
+        data.Draft <- true
+        data.Prerelease <- false
+        let! client' = client
+        let! draft = Async.AwaitTask <| client'.Release.Create(owner, project, data)
+        tracefn "Created draft release id %d" draft.Id
+        return { Client = client'
+                 DraftRelease = draft }
+    }
+
+let uploadFile fileName (draft : Async<Draft>) = 
+    async { 
+        let fi = FileInfo(fileName)
+        let archiveContents = File.OpenRead(fi.FullName)
+        let assetUpload = new ReleaseAssetUpload()
+        assetUpload.FileName <- fi.Name
+        assetUpload.ContentType <- "application/octet-stream"
+        assetUpload.RawData <- archiveContents
+        let! draft' = draft
+        let! asset = Async.AwaitTask <| draft'.Client.Release.UploadAsset(draft'.DraftRelease, assetUpload)
+        tracefn "Uploaded %s" asset.Name
+        return draft'
+    }
+
+let releaseDraft (draft : Async<Draft>) = 
+    async { 
+        let! draft' = draft
+        let update = draft'.DraftRelease.ToUpdate()
+        update.Draft <- false
+        let! released = Async.AwaitTask <| draft'.Client.Release.Edit(gitOwner, gitName, draft'.DraftRelease.Id, update)
+        tracefn "Released %d on github" released.Id
+    }
+
+Target "Release" (fun _ ->
+    StageAll ""
+    Git.Commit.Commit "" (sprintf "Bump version to %s" release.NugetVersion)
+    Branches.push ""
+
+    Branches.tag "" release.NugetVersion
+    Branches.pushTag "" "origin" release.NugetVersion
+
+    // release on github
+    createClient (getBuildParamOrDefault "github-user" "") (getBuildParamOrDefault "github-pw" "")
+    |> createDraft gitOwner gitName release
+    |> uploadFile "./bin/merged/paket.exe"
+    |> uploadFile "./bin/paket.bootstrapper.exe"
+    |> releaseDraft
+    |> Async.RunSynchronously
+)
+
+Target "BuildPackage" DoNothing
 
 // --------------------------------------------------------------------------------------
 // Run all targets by default. Invoke 'build <Target>' to override
@@ -156,17 +294,31 @@ Target "Release" DoNothing
 Target "All" DoNothing
 
 "Clean"
-  ==> "RestorePackages"
   ==> "AssemblyInfo"
   ==> "Build"
-  ==> "RunTests"
+  ==> "RunTests"  
+  =?> ("GenerateReferenceDocs",isLocalBuild && not isMono)
+  =?> ("GenerateDocs",isLocalBuild && not isMono)
   ==> "All"
+  =?> ("ReleaseDocs",isLocalBuild && not isMono)
 
 "All" 
-  ==> "CleanDocs"
-  ==> "GenerateDocs"
-  ==> "ReleaseDocs"
+#if MONO
+#else
+  =?> ("SourceLink", Pdbstr.tryFind().IsSome )
+#endif
   ==> "NuGet"
+  ==> "BuildPackage"
+
+"CleanDocs"
+  ==> "GenerateHelp"
+  ==> "GenerateReferenceDocs"
+  ==> "GenerateDocs"
+    
+"ReleaseDocs"
+  ==> "Release"
+
+"BuildPackage"
   ==> "Release"
 
 RunTargetOrDefault "All"

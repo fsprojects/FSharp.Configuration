@@ -8,12 +8,14 @@ let referenceBinaries = [ "FSharp.Configuration.dll" ]
 // Web site location for the generated documentation
 let website = "/FSharp.Configuration"
 
+let githubLink = "http://github.com/fsprojects/FSharp.Configuration"
+
 // Specify more information about your project
 let info =
   [ "project-name", "FSharp.Configuration"
-    "project-author", "Steffen Forkmann"
+    "project-author", "FSProjects team"
     "project-summary", "Type providers for the configuration of .NET projects."
-    "project-github", "http://github.com/fsprojects/FSharp.Configuration"
+    "project-github", githubLink
     "project-nuget", "https://www.nuget.org/packages/FSharp.Configuration" ]
 
 // --------------------------------------------------------------------------------------
@@ -21,8 +23,10 @@ let info =
 // --------------------------------------------------------------------------------------
 
 #I "../../packages/FSharp.Formatting/lib/net40"
-#I "../../packages/RazorEngine/lib/net40/"
+#I "../../packages/RazorEngine/lib/net40"
+#I "../../packages/FSharp.Compiler.Service/lib/net40"
 #r "../../packages/Microsoft.AspNet.Razor/lib/net40/System.Web.Razor.dll"
+#r "../../packages/FAKE/tools/NuGet.Core.dll"
 #r "../../packages/FAKE/tools/FakeLib.dll"
 #r "RazorEngine.dll"
 #r "FSharp.Literate.dll"
@@ -48,7 +52,7 @@ let content    = __SOURCE_DIRECTORY__ @@ "../content"
 let output     = __SOURCE_DIRECTORY__ @@ "../output"
 let files      = __SOURCE_DIRECTORY__ @@ "../files"
 let templates  = __SOURCE_DIRECTORY__ @@ "templates"
-let formatting = __SOURCE_DIRECTORY__ @@ "../../packages/FSharp.Formatting.2.2.11-beta/"
+let formatting = __SOURCE_DIRECTORY__ @@ "../../packages/FSharp.Formatting/"
 let docTemplate = formatting @@ "templates/docpage.cshtml"
 
 // Where to look for *.csproj templates (in this order)
@@ -57,7 +61,7 @@ let layoutRoots =
     formatting @@ "templates/reference" ]
 
 // Copy static files and CSS + JS from F# Formatting
-let copyFiles () =  
+let copyFiles () =
   CopyRecursive files output true |> Log "Copying file: "
   ensureDirectory (output @@ "content")
   CopyRecursive (formatting @@ "styles") (output @@ "content") true 
@@ -66,10 +70,15 @@ let copyFiles () =
 // Build API reference from XML comments
 let buildReference () =
   CleanDir (output @@ "reference")
-  for lib in referenceBinaries do
-    MetadataFormat.Generate
-      ( bin @@ lib, output @@ "reference", layoutRoots, 
-        parameters = ("root", root)::info )
+  let binaries =
+    referenceBinaries
+    |> List.map (fun lib-> bin @@ lib)
+  MetadataFormat.Generate
+    ( binaries, output @@ "reference", layoutRoots, 
+      parameters = ("root", root)::info,
+      sourceRepo = githubLink @@ "tree/master",
+      sourceFolder = __SOURCE_DIRECTORY__ @@ ".." @@ "..",
+      publicOnly = true )
 
 // Build documentation from `fsx` and `md` files in `docs/content`
 let buildDocumentation () =
@@ -78,9 +87,14 @@ let buildDocumentation () =
     let sub = if dir.Length > content.Length then dir.Substring(content.Length + 1) else "."
     Literate.ProcessDirectory
       ( dir, docTemplate, output @@ sub, replacements = ("root", root)::info,
-        layoutRoots = layoutRoots )
+        layoutRoots = layoutRoots,
+        generateAnchors = true )
 
 // Generate
 copyFiles()
+#if HELP
 buildDocumentation()
+#endif
+#if REFERENCE
 buildReference()
+#endif
