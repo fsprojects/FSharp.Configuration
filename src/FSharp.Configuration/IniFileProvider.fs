@@ -89,9 +89,16 @@ open Samples.FSharp.ProvidedTypes
 open System.Collections.Generic
 open System
 open System.Globalization
-open Microsoft.FSharp.Quotations
 
-let getValue (iniFileName: string) (section: string) (key: string) = ""
+let getValue (iniFileName: string) (section: string) (key: string) = 
+    match Parser.parse iniFileName with
+    | Choice1Of2 sections ->
+        maybe {
+            let! section = sections |> List.tryFind (fun s -> s.Name = section)
+            let! setting = section.Settings |> List.tryFind (fun s -> s.Key = key)
+            return setting.Value
+        }
+    | Choice2Of2 _ -> None
 
 let internal typedIniFile (context: Context) =
     let iniFile = erasedType<obj> thisAssembly rootNamespace "IniFile"
@@ -115,14 +122,30 @@ let internal typedIniFile (context: Context) =
                                 let key = setting.Key
                                 let prop =
                                     match setting.Value with
-                                    | ValueParser.Int _ -> ProvidedProperty(key, typeof<int>, GetterCode = fun _ -> 
-                                        <@@ Int32.Parse (getValue filePath sectionName key) @@>)
-                                    | ValueParser.Bool _ -> ProvidedProperty(key, typeof<bool>, GetterCode = fun _ -> 
-                                        <@@ Boolean.Parse (getValue filePath sectionName key) @@>)
-                                    | ValueParser.Float _ -> ProvidedProperty(key, typeof<float>, GetterCode = fun _ -> 
-                                        <@@ Double.Parse (getValue filePath sectionName key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>)
-                                    | _ -> ProvidedProperty(key, typeof<string>, GetterCode = fun _ -> 
-                                        <@@ getValue filePath sectionName key @@>)
+                                    | ValueParser.Int value -> ProvidedProperty(key, typeof<int>, GetterCode = fun _ -> 
+                                        <@@ 
+                                            match getValue filePath sectionName key with 
+                                            | Some v -> Int32.Parse v
+                                            | None -> value
+                                         @@>)
+                                    | ValueParser.Bool value -> ProvidedProperty(key, typeof<bool>, GetterCode = fun _ -> 
+                                        <@@ 
+                                            match getValue filePath sectionName key with
+                                            | Some v -> Boolean.Parse v
+                                            | None -> value
+                                         @@>)
+                                    | ValueParser.Float value -> ProvidedProperty(key, typeof<float>, GetterCode = fun _ -> 
+                                        <@@ 
+                                            match getValue filePath sectionName key with
+                                            | Some v -> Double.Parse (v, NumberStyles.Any, CultureInfo.InvariantCulture)
+                                            | None -> value
+                                         @@>)
+                                    | value -> ProvidedProperty(key, typeof<string>, GetterCode = fun _ -> 
+                                        <@@ 
+                                            match getValue filePath sectionName key with
+                                            | Some v -> v
+                                            | None -> value
+                                         @@>)
 
                                 prop.IsStatic <- true
                                 prop.AddXmlDoc (sprintf "Returns the value from %s from section %s with key %s" iniFileName section.Name setting.Key)
@@ -142,7 +165,6 @@ let internal typedIniFile (context: Context) =
                     typeDef.AddMember prop
                     context.WatchFile filePath
                     typeDef
-                with 
-                | exn -> typeDef
+                with _ -> typeDef
             | x -> failwithf "unexpected parameter values %A" x))
     iniFile
