@@ -6,3 +6,4 @@ nuget FSharp.Formatting
 nuget NUnit
 nuget Octokit
 nuget SourceLink.Fake
+nuget NuGet.CommandLine
