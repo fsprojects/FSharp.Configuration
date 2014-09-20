@@ -280,8 +280,6 @@ Target "Release" (fun _ ->
     // release on github
     createClient (getBuildParamOrDefault "github-user" "") (getBuildParamOrDefault "github-pw" "")
     |> createDraft gitOwner gitName release
-    |> uploadFile "./bin/merged/paket.exe"
-    |> uploadFile "./bin/paket.bootstrapper.exe"
     |> releaseDraft
     |> Async.RunSynchronously
 )
