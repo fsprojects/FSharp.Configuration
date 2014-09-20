@@ -1,4 +1,4 @@
-#### 0.4.0 - 20.09.2014
+#### 0.4.1 - 20.09.2014
 * IniFile provider - https://github.com/fsprojects/FSharp.Configuration/pull/34
 
 #### 0.3.0 - 19.09.2014
