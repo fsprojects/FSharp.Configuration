@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="FsUnit.fs" />
     <Compile Include="AppSettingsProvider.Tests.fs" />
+    <Compile Include="ConnectionStringProvider.Tests.fs" />
     <Compile Include="ResXProvider.Tests.fs" />
     <Compile Include="YamlProvider.Tests.fs" />
     <Compile Include="IniFileProvider.Tests.fs" />

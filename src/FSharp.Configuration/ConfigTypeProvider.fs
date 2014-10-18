@@ -12,6 +12,7 @@ type public FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
     do this.AddNamespace (
         rootNamespace, 
         [ AppSettingsTypeProvider.typedAppSettings context
+          ConnectionStringsTypeProvider.typedConnectionStrings context
           ResXProvider.typedResources context
           YamlConfigTypeProvider.typedYamlConfig context 
           IniFileProvider.typedIniFile context ])
