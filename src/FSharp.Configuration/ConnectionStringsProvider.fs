@@ -31,14 +31,15 @@ let internal typedConnectionStrings (context: Context) =
                     let connectionStrings = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None).ConnectionStrings.ConnectionStrings
 
                     for connectionString in connectionStrings do
-                        let name = niceName names connectionString.Name
+                        let niceName = niceName names connectionString.Name
+                        let name = connectionString.Name
                         let prop = 
-                            ProvidedProperty(name, typeof<string>,
-                                GetterCode = (fun _ -> <@@ getConfigValue connectionString.Name @@>),
-                                SetterCode = fun args -> <@@ setConfigValue(connectionString.Name, %%args.[0]) @@>)
+                            ProvidedProperty(niceName, typeof<string>,
+                                GetterCode = (fun _ -> <@@ getConfigValue name @@>),
+                                SetterCode = fun args -> <@@ setConfigValue(name, %%args.[0]) @@>)
 
                         prop.IsStatic <- true
-                        prop.AddXmlDoc (sprintf "Returns the connection string from %s with name %s" configFileName connectionString.Name)
+                        prop.AddXmlDoc (sprintf "Returns the connection string from %s with name %s" configFileName name)
                         prop.AddDefinitionLocation(1,1,filePath)
 
                         typeDef.AddMember prop
