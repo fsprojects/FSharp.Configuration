@@ -4,6 +4,7 @@ FSharp.Configuration
 The FSharp.Configuration project contains type providers for the configuration of .NET projects.
 
 * [AppSettings](http://fsprojects.github.io/FSharp.Configuration/AppSettingsProvider.html)
+* [ConnectionStrings](http://fsprojects.github.io/FSharp.Configuration/ConnectionStringsProvider.html)
 * [ResX](http://fsprojects.github.io/FSharp.Configuration/ResXProvider.html)
 * [Yaml](http://fsprojects.github.io/FSharp.Configuration/YamlProvider.html)
 * [Ini](http://fsprojects.github.io/FSharp.Configuration/IniTypeProvider.html)
