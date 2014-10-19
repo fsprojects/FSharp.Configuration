@@ -1,6 +1,5 @@
 ﻿module FSharp.Configuration.Tests.ConnectionStringProviderTests
 
-open System
 open FSharp.Configuration
 open NUnit.Framework
 open FsUnit
