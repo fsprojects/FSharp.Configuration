@@ -10,3 +10,6 @@ type Settings = ConnectionStrings<"app.config">
 let ``Can return a connection string from the config file``() =   
     Settings.Test1 |> should equal "Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;"
 
+[<Test>] 
+let ``Can read multiple connection strings from the config file``() =   
+    Settings.Test1 |> should not' (equal Settings.Test2)
