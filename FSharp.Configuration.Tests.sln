@@ -8,7 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7E6FF935-2
 	ProjectSection(SolutionItems) = preProject
 		docs\content\app.config = docs\content\app.config
 		docs\content\AppSettingsProvider.fsx = docs\content\AppSettingsProvider.fsx
-		docs\content\ConnectionStringsProvider.fsx = docs\content\ConnectionStringsProvider.fsx
 		docs\content\index.fsx = docs\content\index.fsx
 		docs\content\Resource1.resx = docs\content\Resource1.resx
 		docs\content\ResXProvider.fsx = docs\content\ResXProvider.fsx
