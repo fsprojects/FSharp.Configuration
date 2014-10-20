@@ -1,11 +1,14 @@
 module FSharp.Configuration.AppSettingsTypeProvider
 
+#nowarn "57"
+
 open FSharp.Configuration.Helper
 open Samples.FSharp.ProvidedTypes
 open System
 open System.Configuration
 open System.Collections.Generic
 open System.Globalization
+open System.IO
 
 let getConfigValue(key) =
     let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).AppSettings.Settings
@@ -16,12 +19,47 @@ let setConfigValue(key, value) =
     settings.AppSettings.Settings.[key].Value <- value
     settings.Save()
 
+let getConnectionString(key: string) =
+    let connectionStrings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).ConnectionStrings.ConnectionStrings
+    connectionStrings.[key].ConnectionString
+
+let setConnectionString(key:string, value) =
+    let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None)
+    settings.ConnectionStrings.ConnectionStrings.[key].ConnectionString <- value
+    settings.Save()
+
 let internal typedAppSettings (context: Context) =
     let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings"
 
     appSettings.DefineStaticParameters(
-        parameters = [ProvidedStaticParameter("configFileName", typeof<string>)], 
+        parameters = [ProvidedStaticParameter("configFileName", typeof<string>)],
         instantiationFunction = (fun typeName parameterValues ->
+            let typedConnectionStrings (config:Configuration, filePath, configFileName) =
+                let typeDef = ProvidedTypeDefinition (thisAssembly, rootNamespace, "ConnectionString", Some typeof<obj>, IsErased=false,
+                                                        SuppressRelocation=false, HideObjectMethods=true)
+                let names = HashSet()
+
+                let connectionStrings = config.ConnectionStrings.ConnectionStrings
+                for connectionString in connectionStrings do
+                    let key = connectionString.Name
+                    let name = niceName names key
+                    let prop =
+                        ProvidedProperty(name, typeof<string>,
+                                        GetterCode = (fun _ -> <@@ getConnectionString key @@>),
+                                        SetterCode = fun args -> <@@ setConnectionString(key, %%args.[0]) @@>)
+
+                    prop.IsStatic <- true
+                    prop.AddXmlDoc (sprintf "Returns the connection string from %s with name %s" configFileName name)
+                    prop.AddDefinitionLocation(1,1,filePath)
+                    typeDef.AddMember prop
+
+                let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
+                let assembly = ProvidedAssembly assemblyPath
+                assembly.AddTypes [typeDef]
+
+                typeDef
+
+
             match parameterValues with 
             | [| :? string as configFileName |] ->
                 let typeDef = erasedType<obj> thisAssembly rootNamespace typeName
@@ -29,7 +67,8 @@ let internal typedAppSettings (context: Context) =
                 try
                     let filePath = findConfigFile context.ResolutionFolder configFileName
                     let fileMap = ExeConfigurationFileMap(ExeConfigFilename=filePath)
-                    let appSettings = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None).AppSettings.Settings
+                    let config = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None)
+                    let appSettings = config.AppSettings.Settings
 
                     for key in appSettings.AllKeys do
                         let name = niceName names key
@@ -46,7 +85,7 @@ let internal typedAppSettings (context: Context) =
                             | ValueParser.Bool _ ->
                                 ProvidedProperty(name, typeof<bool>,
                                     GetterCode = (fun _ -> <@@ Boolean.Parse (getConfigValue key) @@>),
-                                    SetterCode = fun args -> <@@ setConfigValue(key, string ((%%args.[0]):Boolean)) @@>)                                                                                    
+                                    SetterCode = fun args -> <@@ setConfigValue(key, string ((%%args.[0]):Boolean)) @@>)
                             | ValueParser.Float _ ->
                                 ProvidedProperty(name, typeof<float>,
                                     GetterCode = (fun _ -> <@@ Double.Parse (getConfigValue key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>),
@@ -78,8 +117,15 @@ let internal typedAppSettings (context: Context) =
                     prop.AddXmlDoc "Returns the Filename"
 
                     typeDef.AddMember prop
+
+                    let connectionStringTypeDefinition = typedConnectionStrings(config,filePath,configFileName)
+                    let connectionStringProperty = ProvidedProperty("ConnectionString", connectionStringTypeDefinition, GetterCode = (fun _ -> <@@ connectionStringTypeDefinition @@>))
+                    connectionStringProperty.IsStatic <- true
+                    typeDef.AddMember connectionStringProperty
+
                     context.WatchFile filePath
                     typeDef
                 with _ -> typeDef
             | x -> failwithf "unexpected parameter values %A" x))
+
     appSettings
