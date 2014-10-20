@@ -57,7 +57,6 @@
     <Compile Include="TypeProviders.Helper.fs" />
     <Compile Include="ResXProvider.fs" />
     <Compile Include="AppSettingsProvider.fs" />
-    <Compile Include="ConnectionStringsProvider.fs" />
     <Compile Include="YamlConfigProvider.fs" />
     <Compile Include="IniFileProvider.fs" />
     <Compile Include="ConfigTypeProvider.fs" />

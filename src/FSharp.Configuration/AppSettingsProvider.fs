@@ -35,8 +35,8 @@ let internal typedAppSettings (context: Context) =
         parameters = [ProvidedStaticParameter("configFileName", typeof<string>)],
         instantiationFunction = (fun typeName parameterValues ->
             let typedConnectionStrings (config:Configuration, filePath, configFileName) =
-                let typeDef = ProvidedTypeDefinition (thisAssembly, rootNamespace, "ConnectionString", Some typeof<obj>, IsErased=false,
-                                                        SuppressRelocation=false, HideObjectMethods=true)
+                let typeDef = ProvidedTypeDefinition("ConnectionStrings", Some typeof<obj>, HideObjectMethods = true)
+                typeDef.AddXmlDoc (sprintf "Represents the available connection strings from %s" configFileName)
                 let names = HashSet()
 
                 let connectionStrings = config.ConnectionStrings.ConnectionStrings
@@ -52,10 +52,6 @@ let internal typedAppSettings (context: Context) =
                     prop.AddXmlDoc (sprintf "Returns the connection string from %s with name %s" configFileName name)
                     prop.AddDefinitionLocation(1,1,filePath)
                     typeDef.AddMember prop
-
-                let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
-                let assembly = ProvidedAssembly assemblyPath
-                assembly.AddTypes [typeDef]
 
                 typeDef
 
@@ -119,9 +115,7 @@ let internal typedAppSettings (context: Context) =
                     typeDef.AddMember prop
 
                     let connectionStringTypeDefinition = typedConnectionStrings(config,filePath,configFileName)
-                    let connectionStringProperty = ProvidedProperty("ConnectionString", connectionStringTypeDefinition, GetterCode = (fun _ -> <@@ connectionStringTypeDefinition @@>))
-                    connectionStringProperty.IsStatic <- true
-                    typeDef.AddMember connectionStringProperty
+                    typeDef.AddMember connectionStringTypeDefinition
 
                     context.WatchFile filePath
                     typeDef
