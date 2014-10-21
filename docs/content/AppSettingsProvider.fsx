@@ -24,6 +24,9 @@ Create a config file called `app.config` like this:
         <add key="TestDateTime" value="2014-05-18 11:14:28Z"/>
         <add key="TestTimeSpan" value="00:12:30"/>
       </appSettings>
+      <connectionStrings>
+        <add name="Test" connectionString="Server=.;Database=SomeDatabase;Integrated Security=true"/>
+      </connectionStrings>
     </configuration>
 
 Reference the type provider assembly and configure it to use your app.settings file:
@@ -54,3 +57,7 @@ Settings.Test2
 // verify the file name
 Settings.ConfigFileName
 // [fsi:val it : string = "C:\Code\FSharp.Configuration\docs\content\app.config"]
+
+// read a connection string from the config
+Settings.ConnectionStrings.Test
+// [fsi:val it : string = "Server=.;Database=SomeDatabase;Integrated Security=true"]

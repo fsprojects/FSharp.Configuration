@@ -37,3 +37,11 @@ let ``Cat return a DateTime from the config file``() =
     Settings.TestDateTime.GetType() |> should equal typeof<DateTime>
     Settings.TestDateTime.ToUniversalTime() |> should equal (DateTime (2014, 2, 1, 3, 4, 5, 777))
 
+[<Test>] 
+let ``Can return a connection string from the config file``() =   
+    Settings.ConnectionStrings.Test1 |> should equal "Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;"
+
+[<Test>] 
+let ``Can read multiple connection strings from the config file``() =   
+    Settings.ConnectionStrings.Test1 |> should not' (equal Settings.ConnectionStrings.Test2)
+
