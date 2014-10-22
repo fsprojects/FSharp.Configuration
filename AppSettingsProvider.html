@@ -52,6 +52,9 @@ It allows to access app.config files in a strongly typed way.</p>
     <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestDateTime"</span> <span class="o">value</span><span class="k">="2014-05-18 11:14:28Z"</span><span class="k">/&gt;</span>
     <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestTimeSpan"</span> <span class="o">value</span><span class="k">="00:12:30"</span><span class="k">/&gt;</span>
   <span class="k">&lt;/</span><span class="i">appSettings</span><span class="k">&gt;</span>
+  <span class="k">&lt;</span><span class="i">connectionStrings</span><span class="k">&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">name</span><span class="k">="Test"</span> <span class="o">connectionString</span><span class="k">="Server=.;Database=SomeDatabase;Integrated Security=true"</span><span class="k">/&gt;</span>
+  <span class="k">&lt;/</span><span class="i">connectionStrings</span><span class="k">&gt;</span>
 <span class="k">&lt;/</span><span class="i">configuration</span><span class="k">&gt;</span></pre></td></tr></table>
 
 <p>Reference the type provider assembly and configure it to use your app.settings file:</p>
@@ -81,13 +84,17 @@ It allows to access app.config files in a strongly typed way.</p>
 <h2><a name="Reading-and-writing-from-the-config" class="anchor" href="#Reading-and-writing-from-the-config">Reading and writing from the config</a></h2>
 
 <table class="pre"><tr><td class="lines"><pre class="fssnip">
-<span class="l">1: </span>
-<span class="l">2: </span>
-<span class="l">3: </span>
-<span class="l">4: </span>
-<span class="l">5: </span>
-<span class="l">6: </span>
-<span class="l">7: </span>
+<span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
 </pre>
 </td>
 <td class="snippet"><pre class="fssnip">
@@ -97,7 +104,11 @@ It allows to access app.config files in a strongly typed way.</p>
 
 <span class="c">// verify the file name</span>
 <span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="i">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">ConfigFileName</span>
-<span class="fsi">val it : string = &quot;C:\Code\FSharp.Configuration\docs\content\app.config&quot;</span></pre>
+<span class="fsi">val it : string = &quot;C:\Code\FSharp.Configuration\docs\content\app.config&quot;</span>
+
+<span class="c">// read a connection string from the config</span>
+<span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="i">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">ConnectionStrings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">Test</span>
+<span class="fsi">val it : string = &quot;Server=.;Database=SomeDatabase;Integrated Security=true&quot;</span></pre>
 </td>
 </tr>
 </table>
@@ -108,6 +119,8 @@ It allows to access app.config files in a strongly typed way.</p>
 <div class="tip" id="fs4">type AppSettings<br /><br />Full name: FSharp.Configuration.AppSettings</div>
 <div class="tip" id="fs5">property AppSettings&lt;...&gt;.Test2: string<br /><em><br /><br />Returns the value from app.config with key test2</em></div>
 <div class="tip" id="fs6">property AppSettings&lt;...&gt;.ConfigFileName: string<br /><em><br /><br />Returns the Filename</em></div>
+<div class="tip" id="fs7">type ConnectionStrings =<br />&#160;&#160;static member LocalSqlServer : string with get, set<br />&#160;&#160;static member Test : string with get, set<br /><br />Full name: FSharp.Configuration.AppSettings,configFileName=&quot;app.config&quot;.ConnectionStrings<br /><em><br /><br />Represents the available connection strings from app.config</em></div>
+<div class="tip" id="fs8">property AppSettings&lt;...&gt;.ConnectionStrings.Test: string<br /><em><br /><br />Returns the connection string from app.config with name Test</em></div>
 
         </div>
         <div class="span3">
