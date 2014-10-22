@@ -1,3 +1,6 @@
+#### 0.4.4 - 22.10.2014
+* Add support for connection strings to AppSettings TP
+
 #### 0.4.3 - 20.09.2014
 * IniFile provider - https://github.com/fsprojects/FSharp.Configuration/pull/34
 
