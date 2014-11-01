@@ -11,7 +11,7 @@ open System.IO
 open System
 #if MONO
 #else
-#load "packages/SourceLink.Fake/Tools/Fake.fsx"
+#load "packages/SourceLink.Fake/tools/Fake.fsx"
 open SourceLink
 #endif
 
@@ -169,12 +169,12 @@ Target "NuGet" (fun _ ->
 
     CleanDir nugetDocsDir
     CleanDir nugetlibDir
-        
+
     CopyDir nugetlibDir "bin" (fun file -> file.Contains "FSharp.Core." |> not)
     CopyDir nugetDocsDir "./docs/output" allFiles
-    
-    NuGet (fun p -> 
-        { p with   
+
+    NuGet (fun p ->
+        { p with
             Authors = authors
             Project = project
             Summary = summary
@@ -229,7 +229,7 @@ Target "Release" (fun _ ->
 
     Branches.tag "" release.NugetVersion
     Branches.pushTag "" "origin" release.NugetVersion
-    
+
     // release on github
     createClient (getBuildParamOrDefault "github-user" "") (getBuildParamOrDefault "github-pw" "")
     |> createDraft gitOwner gitName release.NugetVersion (release.SemVer.PreRelease <> None) release.Notes
@@ -247,13 +247,13 @@ Target "All" DoNothing
 "Clean"
   ==> "AssemblyInfo"
   ==> "Build"
-  ==> "RunTests"  
+  ==> "RunTests"
   =?> ("GenerateReferenceDocs",isLocalBuild && not isMono)
   =?> ("GenerateDocs",isLocalBuild && not isMono)
   ==> "All"
   =?> ("ReleaseDocs",isLocalBuild && not isMono)
 
-"All" 
+"All"
 #if MONO
 #else
   =?> ("SourceLink", Pdbstr.tryFind().IsSome )
@@ -265,7 +265,7 @@ Target "All" DoNothing
   ==> "GenerateHelp"
   ==> "GenerateReferenceDocs"
   ==> "GenerateDocs"
-    
+
 "ReleaseDocs"
   ==> "Release"
 
