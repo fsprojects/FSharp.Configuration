@@ -22,3 +22,8 @@ NUGET
     RazorEngine (3.3.0)
       Microsoft.AspNet.Razor (>= 2.0.30506.0)
     SourceLink.Fake (0.4.0)
+GITHUB
+  remote: fsharp/FAKE
+  specs:
+    modules/Octokit/Octokit.fsx (217f34087728301d0aac3754ae5f14ec1bc508a4)
+      Octokit (>= 0)

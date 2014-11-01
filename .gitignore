@@ -176,3 +176,4 @@ nuget/
 nuget/*.nupkg
 *.bak
 .paket/paket.exe
+paket-files
