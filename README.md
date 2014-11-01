@@ -10,11 +10,12 @@ The FSharp.Configuration project contains type providers for the configuration o
 
 <a href="http://fsprojects.github.io/FSharp.Configuration" target="_blank">Documentation available here.</a>
 
-## Building
+## Build status
 
-* Build in Visual Studio or run build.bat (build.sh on Mono)
-
-[![Build status](https://ci.appveyor.com/api/projects/status/eljpus4w1t7b0jic)](https://ci.appveyor.com/project/vasily-kirichenko/fsharp-configuration)
+|  |  BuildScript | Status of last build |
+| :------ | :------: | :------: |
+| **Mono** | [build.sh](https://github.com/fsprojects/FSharp.Configuration/blob/master/build.sh) | [![Travis build status](https://travis-ci.org/fsprojects/FSharp.Configuration.png)](https://travis-ci.org/fsprojects/FSharp.Configuration) |
+| **Windows** | [build.cmd](https://github.com/fsprojects/FSharp.Configuration/blob/master/build.cmd) | [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/eljpus4w1t7b0jic)](https://ci.appveyor.com/project/vasily-kirichenko/fsharp-configuration) |
 
 ## Testing
 
