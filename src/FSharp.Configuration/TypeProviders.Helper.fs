@@ -217,21 +217,22 @@ module File =
             do! Async.Sleep 1000
             return! loop (attempt - 1) }
 
-        and loop attempt = async {
+        and loop attemptsLeft = async {
+            let attempt = maxAttempts - attemptsLeft + 1
             match tryOpenFile filePath with
             | Some file ->
                 try
                     use reader = new StreamReader (file)
-                    match attempt, reader.ReadToEnd() with
+                    match attemptsLeft, reader.ReadToEnd() with
                     | 0, x -> return x
                     | _, "" -> 
                         printfn "Attempt %d of %d: %s is empty. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
-                        return! sleepAndRun attempt
+                        return! sleepAndRun attemptsLeft
                     | _, content -> return content 
                 finally file.Dispose() 
-            | None -> 
+            | None ->  
                 printfn "Attempt %d of %d: cannot read %s. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
-                return! sleepAndRun attempt }
+                return! sleepAndRun attemptsLeft }
         loop maxAttempts |> Async.RunSynchronously
 
     type private State = 
