@@ -8,16 +8,21 @@ open System
 open System.Configuration
 open System.Collections.Generic
 open System.Globalization
-open System.IO
+
+let private getConfig() =
+    if Web.HttpContext.Current <> null && not (Web.HttpContext.Current.Request.PhysicalPath = "") then
+        Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
+    else
+        ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None)
 
 let getConfigValue(key) =
-    let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).AppSettings.Settings
+    let settings = getConfig().AppSettings.Settings
     settings.[key].Value
 
 let setConfigValue(key, value) = 
-    let settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None)
-    settings.AppSettings.Settings.[key].Value <- value
-    settings.Save()
+    let config = getConfig() 
+    config.AppSettings.Settings.[key].Value <- value
+    config.Save()
 
 let getConnectionString(key: string) =
     let connectionStrings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).ConnectionStrings.ConnectionStrings
