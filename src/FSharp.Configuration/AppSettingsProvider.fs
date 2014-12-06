@@ -71,7 +71,7 @@ let internal typedAppSettings (context: Context) =
                         let prop =
                             match (appSettings.Item key).Value with
                             | ValueParser.Uri _ ->
-                                ProvidedProperty(name, typeof<int>,
+                                ProvidedProperty(name, typeof<Uri>,
                                     GetterCode = (fun _ -> <@@ Uri (getConfigValue key) @@>),
                                     SetterCode = fun args -> <@@ setConfigValue(key, string ((%%args.[0]):Uri)) @@>)
                             | ValueParser.Int _ ->

@@ -23,6 +23,7 @@ Create a config file called `app.config` like this:
         <add key="TestDouble" value="10.01"/>
         <add key="TestDateTime" value="2014-05-18 11:14:28Z"/>
         <add key="TestTimeSpan" value="00:12:30"/>
+        <add key="TestUri" value="http://fsharp.org" />
       </appSettings>
       <connectionStrings>
         <add name="Test" connectionString="Server=.;Database=SomeDatabase;Integrated Security=true"/>

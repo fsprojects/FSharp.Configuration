@@ -1,3 +1,6 @@
+#### 0.4.5 - 06.12.2014
+* Fixed: AppSettingsProvider infers URLs as ints
+
 #### 0.4.4 - 22.10.2014
 * Add support for connection strings to AppSettings TP
 
