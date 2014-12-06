@@ -1,3 +1,6 @@
+#### 0.4.6 - 06.12.2014
+* Fixed: AppSettingsProvider does not find web.config at runtime
+
 #### 0.4.5 - 06.12.2014
 * Fixed: AppSettingsProvider infers URLs as ints
 
