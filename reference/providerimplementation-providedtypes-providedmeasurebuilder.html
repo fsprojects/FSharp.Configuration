@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Root - FSharp.Configuration</title>
+    <title>ProvidedMeasureBuilder - FSharp.Configuration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="FSProjects team">
@@ -35,35 +35,10 @@
 
 
 
-<h1>Root</h1>
+<h1>ProvidedMeasureBuilder</h1>
 <div class="xmldoc">
+<p>Helps create erased provided unit-of-measure annotations.</p>
 </div>
-  <h3>Constructors</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Constructor</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '29', 29)" onmouseover="showTip(event, '29', 29)">
-            new()
-          </code>
-          <div class="tip" id="29">
-            <strong>Signature:</strong> unit -&gt; Root<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/YamlConfigProvider.fs#L281-281" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-    </tbody>
-  </table>
   <h3>Instance members</h3>
   <table class="table table-bordered member-list">
     <thead>
@@ -73,155 +48,198 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '30', 30)" onmouseover="showTip(event, '30', 30)">
-            Load(filePath)
+          <code onmouseout="hideTip(event, '82', 82)" onmouseover="showTip(event, '82', 82)">
+            AnnotateType(basic, argument)
           </code>
-          <div class="tip" id="30">
-            <strong>Signature:</strong> filePath:string -&gt; unit<br />
+          <div class="tip" id="82">
+            <strong>Signature:</strong> (basic:Type * argument:Type list) -&gt; Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/YamlConfigProvider.fs#L310-310" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1127-1127" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Load Yaml config from a file and update itself with it.</p>
+          <p>e.g. float<kg>, Vector<int, kg></p>
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '31', 31)" onmouseover="showTip(event, '31', 31)">
-            Load(reader)
+          <code onmouseout="hideTip(event, '84', 84)" onmouseover="showTip(event, '84', 84)">
+            Inverse(denominator)
           </code>
-          <div class="tip" id="31">
-            <strong>Signature:</strong> reader:TextReader -&gt; unit<br />
+          <div class="tip" id="84">
+            <strong>Signature:</strong> denominator:Type -&gt; Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/YamlConfigProvider.fs#L308-308" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1100-1100" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Load Yaml config from a TextReader and update itself with it.</p>
+          <p>e.g. 1 / kg</p>
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
-            LoadAndWatch(filePath)
+          <code onmouseout="hideTip(event, '85', 85)" onmouseover="showTip(event, '85', 85)">
+            One
           </code>
-          <div class="tip" id="32">
-            <strong>Signature:</strong> filePath:string -&gt; IDisposable<br />
+          <div class="tip" id="85">
+            <strong>Signature:</strong> Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/YamlConfigProvider.fs#L315-315" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1098-1098" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Load Yaml config from a file, update itself with it, then start watching it for changes.
-If it detects any change, it reloads the file.</p>
+          <p>e.g. 1</p>
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '33', 33)" onmouseover="showTip(event, '33', 33)">
-            LoadText(yamlText)
+          <code onmouseout="hideTip(event, '86', 86)" onmouseover="showTip(event, '86', 86)">
+            One
           </code>
-          <div class="tip" id="33">
-            <strong>Signature:</strong> yamlText:string -&gt; unit<br />
+          <div class="tip" id="86">
+            <strong>Signature:</strong> Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/YamlConfigProvider.fs#L306-306" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1098-1098" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Load Yaml config as text and update itself with it.</p>
+          <p>e.g. 1</p>
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
-            Save()
+          <code onmouseout="hideTip(event, '87', 87)" onmouseover="showTip(event, '87', 87)">
+            Product(measure1, measure1)
           </code>
-          <div class="tip" id="34">
-            <strong>Signature:</strong> unit -&gt; unit<br />
+          <div class="tip" id="87">
+            <strong>Signature:</strong> (measure1:Type * measure1:Type) -&gt; Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/YamlConfigProvider.fs#L338-338" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1099-1099" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Saves configuration as Yaml text into the last file it was loaded (if any).
-Throws InvalidOperationException if configuration has not been loaded at all or if it has loaded from 
-a different kind of source (string or TextReader).</p>
+          <p>e.g. m * kg</p>
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '35', 35)" onmouseover="showTip(event, '35', 35)">
-            Save(filePath)
+          <code onmouseout="hideTip(event, '88', 88)" onmouseover="showTip(event, '88', 88)">
+            Ratio(numerator, denominator)
           </code>
-          <div class="tip" id="35">
-            <strong>Signature:</strong> filePath:string -&gt; unit<br />
+          <div class="tip" id="88">
+            <strong>Signature:</strong> (numerator:Type * denominator:Type) -&gt; Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/YamlConfigProvider.fs#L331-331" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1101-1101" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Saves configuration as Yaml text into a file.</p>
+          <p>e.g. kg / m</p>
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '36', 36)" onmouseover="showTip(event, '36', 36)">
-            Save(writer)
+          <code onmouseout="hideTip(event, '89', 89)" onmouseover="showTip(event, '89', 89)">
+            SI(arg1)
           </code>
-          <div class="tip" id="36">
-            <strong>Signature:</strong> writer:TextWriter -&gt; unit<br />
+          <div class="tip" id="89">
+            <strong>Signature:</strong> string -&gt; Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/YamlConfigProvider.fs#L329-329" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1107-1107" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Saves configuration as Yaml text into a TextWriter.</p>
+          <p>the SI unit from the F# core library, where the string is in capitals and US spelling, e.g. Meter</p>
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '37', 37)" onmouseover="showTip(event, '37', 37)">
-            Save(stream)
+          <code onmouseout="hideTip(event, '90', 90)" onmouseover="showTip(event, '90', 90)">
+            Square(measure)
           </code>
-          <div class="tip" id="37">
-            <strong>Signature:</strong> stream:Stream -&gt; unit<br />
+          <div class="tip" id="90">
+            <strong>Signature:</strong> measure:Type -&gt; Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/YamlConfigProvider.fs#L325-325" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1102-1102" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Saves configuration as Yaml text into a stream.</p>
+          <p>e.g. m * m</p>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Static members</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Static member</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '95', 95)" onmouseover="showTip(event, '95', 95)">
+            Default
+          </code>
+          <div class="tip" id="95">
+            <strong>Signature:</strong> ProvidedMeasureBuilder<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1097-1097" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The ProvidedMeasureBuilder for building measures.</p>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '96', 96)" onmouseover="showTip(event, '96', 96)">
+            Default
+          </code>
+          <div class="tip" id="96">
+            <strong>Signature:</strong> ProvidedMeasureBuilder<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1097-1097" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The ProvidedMeasureBuilder for building measures.</p>
 
         </td>
       </tr>

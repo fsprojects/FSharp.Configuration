@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>TypeProviderForNamespaces - FSharp.Configuration</title>
+    <title>ProvidedTypeBuilder - FSharp.Configuration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="FSProjects team">
@@ -35,91 +35,51 @@
 
 
 
-<h1>TypeProviderForNamespaces</h1>
+<h1>ProvidedTypeBuilder</h1>
 <div class="xmldoc">
-<p>A base type providing default implementations of type provider functionality when all provided 
-types are of type ProvidedTypeDefinition.</p>
+<p>Provides symbolic provided types</p>
 </div>
-  <h3>Instance members</h3>
+  <h3>Static members</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
+      <tr><td>Static member</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '47', 47)" onmouseover="showTip(event, '47', 47)">
-            Invalidate()
+          <code onmouseout="hideTip(event, '99', 99)" onmouseover="showTip(event, '99', 99)">
+            MakeGenericMethod(...)
           </code>
-          <div class="tip" id="47">
-            <strong>Signature:</strong> unit -&gt; unit<br />
+          <div class="tip" id="99">
+            <strong>Signature:</strong> (genericMethodDefinition:MethodInfo * genericArguments:Type list) -&gt; MethodInfo<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2134-2134" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1078-1078" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Invalidate the information provided by the provider</p>
+          <p>Like methodInfo.MakeGenericMethod, but will also work with unit-annotated types and provided types</p>
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '48', 48)" onmouseover="showTip(event, '48', 48)">
-            RegisterProbingFolder(folder)
+          <code onmouseout="hideTip(event, '100', 100)" onmouseover="showTip(event, '100', 100)">
+            MakeGenericType(...)
           </code>
-          <div class="tip" id="48">
-            <strong>Signature:</strong> folder:string -&gt; unit<br />
+          <div class="tip" id="100">
+            <strong>Signature:</strong> (genericTypeDefinition:Type * genericArguments:Type list) -&gt; Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2121-2121" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1077-1077" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Registers custom probing path that can be used for probing assemblies</p>
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '49', 49)" onmouseover="showTip(event, '49', 49)">
-            RegisterRuntimeAssemblyLocationAsProbingFolder(...)
-          </code>
-          <div class="tip" id="49">
-            <strong>Signature:</strong> cfg:TypeProviderConfig -&gt; unit<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2125-2125" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Registers location of RuntimeAssembly (from TypeProviderConfig) as probing folder</p>
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '50', 50)" onmouseover="showTip(event, '50', 50)">
-            ResolveAssembly(arg1)
-          </code>
-          <div class="tip" id="50">
-            <strong>Signature:</strong> ResolveEventArgs -&gt; Assembly<br />
-              <strong>Modifiers:</strong> abstract<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2110-2110" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>AssemblyResolve handler. Default implementation searches <assemblyname>.dll file in registered folders</p>
+          <p>Like typ.MakeGenericType, but will also work with unit-annotated types</p>
 
         </td>
       </tr>
