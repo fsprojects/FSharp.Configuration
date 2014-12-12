@@ -3,7 +3,6 @@
 open FSharp.Configuration.Helper
 open Microsoft.FSharp.Core.CompilerServices
 open ProviderImplementation.ProvidedTypes
-open System
 
 [<TypeProvider>]
 type FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
