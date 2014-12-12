@@ -4,7 +4,7 @@ module internal FSharp.Configuration.Helper
 
 open System
 open System.IO
-open Samples.FSharp.ProvidedTypes
+open ProviderImplementation.ProvidedTypes
 open Microsoft.FSharp.Core.CompilerServices
 open Microsoft.FSharp.Core.Printf
 

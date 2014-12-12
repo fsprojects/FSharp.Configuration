@@ -2,21 +2,21 @@
 
 open FSharp.Configuration.Helper
 open Microsoft.FSharp.Core.CompilerServices
-open Samples.FSharp.ProvidedTypes
-open System
+open ProviderImplementation.ProvidedTypes
 
 [<TypeProvider>]
-type public FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
-    inherit TypeProviderForNamespaces()
-    let context = new Context(this, cfg)
-    do this.AddNamespace (
-        rootNamespace, 
-        [ AppSettingsTypeProvider.typedAppSettings context
-          ResXProvider.typedResources context
-          YamlConfigTypeProvider.typedYamlConfig context 
-          IniFileProvider.typedIniFile context ])
-    interface IDisposable with 
-        member __.Dispose() = dispose context
+type FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
+    class
+        inherit TypeProviderForNamespaces()
+        let context = new Context(this, cfg)
+        do this.AddNamespace (
+            rootNamespace, 
+            [ AppSettingsTypeProvider.typedAppSettings context
+              ResXProvider.typedResources context
+              YamlConfigTypeProvider.typedYamlConfig context 
+              IniFileProvider.typedIniFile context ])
+        do this.Disposing.Add (fun _ -> dispose context)
+    end
 
 [<TypeProviderAssembly>]
 do ()

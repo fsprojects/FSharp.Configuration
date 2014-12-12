@@ -3,7 +3,7 @@ module FSharp.Configuration.AppSettingsTypeProvider
 #nowarn "57"
 
 open FSharp.Configuration.Helper
-open Samples.FSharp.ProvidedTypes
+open ProviderImplementation.ProvidedTypes
 open System
 open System.Configuration
 open System.Collections.Generic
