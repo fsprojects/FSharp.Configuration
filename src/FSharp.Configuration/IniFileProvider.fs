@@ -85,7 +85,7 @@ module Parser =
 //    | Setting (setting, s) -> printfn "Success %A, %A" setting s
 //    | x -> printfn "Error: %A" x
 
-open Samples.FSharp.ProvidedTypes
+open ProviderImplementation.ProvidedTypes
 open System.Collections.Generic
 open System
 open System.Globalization

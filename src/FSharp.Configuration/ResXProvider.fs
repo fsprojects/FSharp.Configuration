@@ -3,7 +3,7 @@
 open System
 open System.IO
 open System.Reflection
-open Samples.FSharp.ProvidedTypes
+open ProviderImplementation.ProvidedTypes
 open FSharp.Configuration.Helper
 open System.Resources
 open System.ComponentModel.Design

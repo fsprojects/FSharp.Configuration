@@ -3,7 +3,7 @@
 #nowarn "57"
 
 open System.Reflection
-open Samples.FSharp.ProvidedTypes
+open ProviderImplementation.ProvidedTypes
 open System
 open System.IO
 open SharpYaml.Serialization
