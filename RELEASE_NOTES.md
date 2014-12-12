@@ -1,3 +1,6 @@
+#### 0.4.7 - 12.12.2014
+* Fixed design time memory leaks in all providers https://github.com/fsprojects/FSharp.Configuration/pull/48
+
 #### 0.4.6 - 06.12.2014
 * Fixed: AppSettingsProvider does not find web.config at runtime
 
