@@ -8,9 +8,10 @@ open System
 open System.Configuration
 open System.Collections.Generic
 open System.Globalization
+open System.Web.Hosting
 
 let private getConfig() =
-    if Web.HttpContext.Current <> null && not (Web.HttpContext.Current.Request.PhysicalPath = "") then
+    if HostingEnvironment.IsHosted then
         Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
     else
         ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None)

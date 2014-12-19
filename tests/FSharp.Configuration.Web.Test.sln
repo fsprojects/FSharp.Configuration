@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Configuration.Web.Test", "FSharp.Configuration.Web.Test\FSharp.Configuration.Web.Test.fsproj", "{9B08B114-8CB6-4258-8FA7-840704B61046}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A4AE81FD-F936-498F-AA49-4FAD3B2005F9}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B08B114-8CB6-4258-8FA7-840704B61046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B08B114-8CB6-4258-8FA7-840704B61046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B08B114-8CB6-4258-8FA7-840704B61046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B08B114-8CB6-4258-8FA7-840704B61046}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
