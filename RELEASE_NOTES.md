@@ -1,3 +1,6 @@
+#### 0.4.9 - 06.01.2014
+* Fixed: AppSettings type provider does not read connection strings at runtime
+
 #### 0.4.8 - 19.12.2014
 * Use HostingEnvironment.IsHosted to determine that AppSettings type provider is used in a Web application
 
