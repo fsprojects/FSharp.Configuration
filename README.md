@@ -1,3 +1,6 @@
+[![Issue Stats](http://issuestats.com/github/fsprojects/FSharp.Configuration/badge/issue)](http://issuestats.com/github/fsprojects/FSharp.Configuration)
+[![Issue Stats](http://issuestats.com/github/fsprojects/FSharp.Configuration/badge/pr)](http://issuestats.com/github/fsprojects/FSharp.Configuration)
+
 FSharp.Configuration
 ===========================
 
@@ -16,6 +19,8 @@ The FSharp.Configuration project contains type providers for the configuration o
 | :------ | :------: | :------: |
 | **Mono** | [build.sh](https://github.com/fsprojects/FSharp.Configuration/blob/master/build.sh) | [![Travis build status](https://travis-ci.org/fsprojects/FSharp.Configuration.png)](https://travis-ci.org/fsprojects/FSharp.Configuration) |
 | **Windows** | [build.cmd](https://github.com/fsprojects/FSharp.Configuration/blob/master/build.cmd) | [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/eljpus4w1t7b0jic)](https://ci.appveyor.com/project/vasily-kirichenko/fsharp-configuration) |
+
+[![NuGet Status](http://img.shields.io/nuget/v/FSharp.Configuration.svg?style=flat)](https://www.nuget.org/packages/FSharp.Configuration/)
 
 ## Testing
 
