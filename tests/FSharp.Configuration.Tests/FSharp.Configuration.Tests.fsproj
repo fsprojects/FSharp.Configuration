@@ -102,6 +102,7 @@
   </Target>
   -->
   <Import Project="$(SolutionDir)\.paket\paket.targets" />
+  <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
@@ -109,5 +110,4 @@
       <Paket>True</Paket>
     </Reference>
   </ItemGroup>
-  <Import Project="..\..\.paket\paket.targets" />
 </Project>
