@@ -24,6 +24,7 @@ let info =
 
 #I "../../packages/FSharp.Formatting/lib/net40"
 #I "../../packages/FSharp.Compiler.Service/lib/net40"
+#I "../../packages/FSharpVSPowerTools.Core/lib/net45"
 #r "../../packages/FAKE/tools/NuGet.Core.dll"
 #r "../../packages/FAKE/tools/FakeLib.dll"
 #r "RazorEngine.dll"
@@ -31,6 +32,7 @@ let info =
 #r "FSharp.Literate.dll"
 #r "FSharp.CodeFormat.dll"
 #r "FSharp.MetadataFormat.dll"
+#r "FSharpVSPowerTools.Core.dll"
 open Fake
 open System.IO
 open Fake.FileHelper
