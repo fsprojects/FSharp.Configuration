@@ -5,38 +5,36 @@
 /*--------------------------------------------------------------------------*/
 
 /* identifier */
-span.i { color:#000000; }
+span.i { color:#d1d1d1; }
 /* string */
-span.s { color:#a31515; }
+span.s { color:#d4b43c; }
 /* keywords */
-span.k { color:#0000ff; }
+span.k { color:#569cd6; }
 /* comment */
-span.c { color:#008000; }
+span.c { color:#96C71D; }
 /* operators */
-span.o { color:#000000; }
+span.o { color:#af75c1; }
 /* numbers */
-span.n { color:#000000; }
+span.n { color:#b5cea8; }
 /* line number */
-span.l { color:#96c2cd; }
+span.l { color:#80b0b0; }
 /* type or module */
-span.t { color:#2b91af; }
+span.t { color:#4ec9b0; }
 /* function */
-span.f { color:#0000a0; }
+span.f { color:#e1e1e1; }
 /* DU case or active pattern */
-span.p { color:#800080; }
+span.p { color:#d778dc; }
 /* mutable var or ref cell */
-span.v { color:#000000; font-weight: bold; }
+span.v { color:#d1d1d1; font-weight: bold; }
 /* printf formatters */
-span.pf { color:#2b91af; }
+span.pf { color:#4ec9b0; }
 /* escaped chars */
 span.e { color:#ff0080; }
 /* mutable var or ref cell */
-
-
 /* inactive code */
 span.inactive { color:#808080; }
 /* preprocessor */
-span.prep { color:#0000ff; }
+span.prep { color:#af75c1; }
 /* fsi output */
 span.fsi { color:#808080; }
 
@@ -49,12 +47,12 @@ span.omitted {
 }
 /* tool tip */
 div.tip {
-	background:#e5e5e5;
+	background:#475b5f;
   border-radius:4px;
-  font:9pt 'Droid Sans', arial, sans-serif;
+  font:11pt 'Droid Sans', arial, sans-serif;
 	padding:6px 8px 6px 8px;
 	display:none;
-  color:#000000;
+  color:#d1d1d1;
 }
 table.pre pre {
   padding:0px;
@@ -66,13 +64,13 @@ table.pre, pre.fssnip, pre {
   border:1px solid #d8d8d8;
   border-collapse:separate;
   white-space:pre;
-  font: 10pt consolas,monospace;
+  font: 9pt 'Droid Sans Mono',consolas,monospace;
   width:90%;
   margin:10px 20px 20px 20px;
-  background-color:#fdfdfd;
+  background-color:#212d30;
   padding:10px;
   border-radius:5px;
-  color:#000000;  
+  color:#d1d1d1;  
 }
 table.pre pre {
   padding:0px;
