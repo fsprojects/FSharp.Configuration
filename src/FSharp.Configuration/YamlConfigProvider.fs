@@ -60,7 +60,12 @@ module private Parser =
 
         let settings = SerializerSettings(EmitDefaultValues=true, EmitTags=false, SortKeyForMapping=false)
         let serializer = Serializer(settings)
-        fun text -> serializer.Deserialize(fromText=text) |> loop
+        fun text -> 
+          try serializer.Deserialize(fromText=text) |> loop
+          with
+            | :? SharpYaml.YamlException as e when e.InnerException <> null ->
+              raise e.InnerException // inner exceptions are much more informative
+            | _ -> reraise()
 
     let update (target: 'a) (updater: Node) =
         let tryGetField o name =
