@@ -1,3 +1,6 @@
+#### 0.4.10 - 06.02.2015
+* Better YamlConfigProvider error reporting in case of duplicated keys
+
 #### 0.4.9 - 06.01.2014
 * Fixed: AppSettings type provider does not read connection strings at runtime
 
