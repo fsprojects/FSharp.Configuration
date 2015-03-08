@@ -219,3 +219,19 @@ Mail:
      pop3Listener.Events
      smtpListener.Events] 
     |> should equal [1; 1; 1; 1]
+
+
+type Lists = YamlConfig<"Lists.yaml">
+
+[<Test>]
+let ``Can load some items``() =
+    let settings = Lists()
+    settings.LoadText """
+items:
+    - part_no:   A4786
+      descrip:   Water Bucket (Filled)
+      price:     1.47
+      quantity:  4
+"""
+    settings.items.Count |> should equal 0
+    settings.Archive.Count |> should equal 3

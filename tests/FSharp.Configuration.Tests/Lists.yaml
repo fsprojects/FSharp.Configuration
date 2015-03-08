@@ -1,0 +1,42 @@
+﻿
+items:
+    - part_no:   A4786
+      descrip:   Water Bucket (Filled)
+      price:     1.47
+      quantity:  4
+
+    - part_no:   E1628
+      descrip:   High Heeled "Ruby" Slippers
+      size:      8
+      price:     100.27
+      quantity:  1
+
+Components:
+  - Domain: gtalk.devel-xmpp
+    Secret: secret_gtalk
+  - Domain: facebook.devel-xmpp
+    Secret: secret_facebook
+
+EmptyList:
+  -
+    Domain: gtalk.devel-xmpp
+    Secret: secret_gtalk 
+  - Domain: facebook.devel-xmpp
+    Secret: secret_facebook
+
+Authentication:
+  - Type: ldap
+    MapUserId: "uid={0},ou=People"
+  - {Type: sql, MapUserId: "{0}"}
+
+
+Archive:
+  - Type: imap
+    Writeonly: true
+    ConnectionString: "Server=imap.domain.de;Uid=user;Pwd=password;Folder=user.{0}.Chats.Xmpp;"
+  - Type: mysql
+    Writeonly: false
+    ConnectionString: Server=localhost;Database=message_archive;Uid=xmpp;Pwd=password
+  - Type: mssql
+    Writeonly: false
+    ConnectionString: Data Source=server1;Initial Catalog=message_archive;Integrated Security=SSPI;
