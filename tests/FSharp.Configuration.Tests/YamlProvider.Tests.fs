@@ -224,14 +224,53 @@ Mail:
 type Lists = YamlConfig<"Lists.yaml">
 
 [<Test>]
-let ``Can load some items``() =
+let ``Can load sequence of maps (single item)``() =
     let settings = Lists()
     settings.LoadText """
 items:
+    - part_no:   Test
+      descrip:   Some description
+      price:     3.47
+      quantity:  14
+"""
+    settings.items.Count |> should equal 1
+    settings.items.[0].part_no |> should equal "Test"
+    settings.items.[0].descrip |> should equal "Some description"
+    settings.items.[0].quantity |> should equal 14 
+
+
+[<Test>]
+let ``Can load sequence of maps (multiple items)``() =
+    let settings = Lists()
+    settings.LoadText """
+items:
+    - part_no:   Test
+      descrip:   Some description
+      price:     3.47
+      quantity:  14
     - part_no:   A4786
       descrip:   Water Bucket (Filled)
       price:     1.47
       quantity:  4
+
+    - part_no:   E1628
+      descrip:   High Heeled "Ruby" Slippers
+      size:      8
+      price:     100.27
+      quantity:  1
 """
-    settings.items.Count |> should equal 0
+    settings.items.Count |> should equal 3
+    settings.items.[0].part_no |> should equal "Test"
+    settings.items.[0].descrip |> should equal "Some description"
+    settings.items.[0].quantity |> should equal 14
+    
+    settings.items.[2].part_no |> should equal "E1628"
+    settings.items.[2].descrip |> should equal "High Heeled \"Ruby\" Slippers"
+    settings.items.[2].quantity |> should equal 1
+
+[<Ignore>]
+[<Test>]
+let ``Check that list defaults are OK``() =
+    let settings = Lists()
+    settings.items.Count |> should equal 2
     settings.Archive.Count |> should equal 3
