@@ -230,14 +230,13 @@ let ``Can load sequence of maps (single item)``() =
 items:
     - part_no:   Test
       descrip:   Some description
-      price:     3.47
+      price:     347
       quantity:  14
 """
     settings.items.Count |> should equal 1
     settings.items.[0].part_no |> should equal "Test"
     settings.items.[0].descrip |> should equal "Some description"
     settings.items.[0].quantity |> should equal 14 
-
 
 [<Test>]
 let ``Can load sequence of maps (multiple items)``() =

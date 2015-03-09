@@ -1,3 +1,6 @@
+#### 0.5.0 - 09.03.2015
+* YamlConfigProvider supports sequence of maps
+
 #### 0.4.10 - 06.02.2015
 * Better YamlConfigProvider error reporting in case of duplicated keys
 
