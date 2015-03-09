@@ -12,6 +12,9 @@ open Microsoft.FSharp.Quotations
 open System.Collections.Generic
 open FSharp.Configuration.Helper
 
+type Helper () =
+    static member CreateResizeArray<'a>(data : 'a seq) :ResizeArray<'a> = ResizeArray<'a>(data)
+
 module private Parser =
     type Scalar =
         | Int of int
@@ -106,18 +109,33 @@ module private Parser =
 
         and updateList (target: obj) name (updaters: Node list) =
             maybe {
-                let updaters = updaters |> List.choose (function Scalar x -> Some x | _ -> None)
-
                 let! field = tryGetField target ("_" + name)
         
                 let fieldType = 
-                    match updaters |> Seq.groupBy (fun n -> n.UnderlyingType) |> Seq.map fst |> Seq.toList with
+                    match updaters |> List.choose (function Scalar x -> Some x | _ -> None) 
+                                   |> Seq.groupBy (fun n -> n.UnderlyingType) |> Seq.map fst |> Seq.toList with
                     | [] -> field.FieldType
                     | [ty] -> typedefof<ResizeArray<_>>.MakeGenericType ty
                     | types -> failwithf "List cannot contain elements of heterohenius types (attempt to mix types: %A)." types
 
-                if field.FieldType <> fieldType then failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
+                let updaters = updaters |> List.choose (function 
+                    | Scalar x -> Some x.BoxedValue 
+                    | Map m -> 
+                        let mapItem = Activator.CreateInstance (fieldType.GetGenericArguments().[0])
+                        updateMap mapItem None m |> ignore
+                        Some mapItem
+                    | _ -> None)
 
+                if field.FieldType <> fieldType then failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
+                let isComparable: obj -> bool = function
+                   | :? Uri as uri -> true
+                   | :? IComparable as x -> true
+                   | _ -> false
+                let values = field.GetValue(target) :?> Collections.IEnumerable |> Seq.cast<obj>
+                // NOTE: another solution would be to make our provided type implement IComparable
+                // On the other side I'm not completely sure why we sort at all.
+                // What if the ordering of the item matters for the user?
+                let isSortable = values |> Seq.forall isComparable
                 let sort (xs: obj seq) = 
                     xs 
                     |> Seq.sortBy (function
@@ -125,15 +143,16 @@ module private Parser =
                        | :? IComparable as x -> x
                        | x -> failwithf "%A is not comparable, so it cannot be included into a list."  x)
                     |> Seq.toList
-
-                let oldValues = field.GetValue(target) :?> Collections.IEnumerable |> Seq.cast<obj> |> sort
-                let newValues = updaters |> List.map (fun x -> x.BoxedValue) |> sort
+                let oldValues, newValues =
+                    if isSortable then
+                        sort values, sort updaters
+                    else values |> Seq.toList, updaters
 
                 return!
-                    if oldValues <> newValues then
+                    if not isSortable || oldValues <> newValues then
                         let list = Activator.CreateInstance fieldType
                         let addMethod = fieldType.GetMethod("Add", [|fieldType.GetGenericArguments().[0]|])
-                        updaters |> List.iter (fun x -> addMethod.Invoke(list, [| x.BoxedValue |]) |> ignore)
+                        updaters |> List.iter (fun x -> addMethod.Invoke(list, [| x |]) |> ignore)
                         field.SetValue(target, list)
                         Some (getChangedDelegate target)
                     else None
@@ -233,20 +252,49 @@ module private TypesFactory =
                | Map m -> transformMap readOnly None m
                | List _ -> failwith "Nested lists are not supported.")
 
-        let elementType = 
+        let elements, elementType = 
             match elements |> Seq.groupBy (fun n -> n.MainType) |> Seq.map fst |> Seq.toList with
-            | [Some ty] -> ty
+            | [Some ty] -> elements, ty
+            | [None] ->
+                // Sequence of maps: https://github.com/fsprojects/FSharp.Configuration/issues/51
+                // TODOL Construct the type from all the elements (instead of only the first entry)
+                let headChildren = match children |> Seq.head with Map m -> m | _ -> failwith "expected a sequence of maps."
+                
+                let childTypes, childInits = foldChildren readOnly headChildren
+                let eventField, event = generateChangedEvent()
+                
+                let mapTy = ProvidedTypeDefinition(name + "_Item_Type", Some typeof<obj>, HideObjectMethods=true, 
+                                                   IsErased=false, SuppressRelocation=false)
+                
+                let ctr = ProvidedConstructor([], InvokeCode = (fun [me] -> childInits me))
+                mapTy.AddMembers (ctr :> MemberInfo :: childTypes)
+                mapTy.AddMember eventField
+                mapTy.AddMember event
+                let t =
+                    { MainType = Some (mapTy :> _)
+                      Types = [mapTy :> MemberInfo]
+                      Init = fun _ -> Expr.NewObject(ctr, []) }
+
+                [ t ], mapTy :> _ 
             | types -> failwithf "List cannot contain elements of heterogeneous types (attempt to mix types: %A)." 
                                  (types |> List.map (Option.map (fun x -> x.Name)))
 
-        let fieldType = typedefof<ResizeArray<_>>.MakeGenericType elementType
-        let propType = typedefof<IList<_>>.MakeGenericType elementType
+        let fieldType = ProvidedTypeBuilder.MakeGenericType(typedefof<ResizeArray<_>>, [elementType])
+        let propType = ProvidedTypeBuilder.MakeGenericType(typedefof<IList<_>>, [elementType])
+        let ctrType = ProvidedTypeBuilder.MakeGenericType(typedefof<seq<_>>, [elementType])
+
         let field = ProvidedField("_" + name, fieldType)
         let prop = ProvidedProperty (name, propType, IsStatic=false, GetterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)))
-        let listCtr = fieldType.GetConstructor([|typedefof<seq<_>>.MakeGenericType elementType|])
-        if not readOnly then prop.SetterCode <- fun [me;v] -> Expr.FieldSet(me, field, Expr.NewObject(listCtr, [v]))
+        let listCtr =
+            let meth = typeof<Helper>.GetMethod("CreateResizeArray")
+            ProvidedTypeBuilder.MakeGenericMethod(meth, [elementType])
+        if not readOnly then prop.SetterCode <- fun [me;v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.Call(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))
         let childTypes = elements |> List.collect (fun x -> x.Types)
-        let initValue me = Expr.NewObject(listCtr, [Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me))])
+        let initValue me = 
+            Expr.Coerce(
+                Expr.Call(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)),ctrType)]),
+                fieldType)
+
 
         { MainType = Some fieldType
           Types = childTypes @ [field :> MemberInfo; prop :> MemberInfo]
@@ -372,11 +420,11 @@ let internal typedYamlConfig (context: Context) =
             let createTy yaml readOnly =
                 let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, Some baseTy, IsErased=false, 
                                                  SuppressRelocation=false, HideObjectMethods=true)
+                let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
+                let assembly = ProvidedAssembly assemblyPath
                 let types = TypesFactory.transform readOnly None (Parser.parse yaml)
                 let ctr = ProvidedConstructor ([], InvokeCode = fun [me] -> types.Init me)
-                ty.AddMembers (ctr :> MemberInfo :: types.Types)
-                let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
-                let assembly = ProvidedAssembly assemblyPath 
+                ty.AddMembers (ctr :> MemberInfo :: types.Types) 
                 assembly.AddTypes [ty]
                 ty
 
