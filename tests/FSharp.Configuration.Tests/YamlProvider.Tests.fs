@@ -246,17 +246,17 @@ let ``Can load sequence of maps (multiple items)``() =
 items:
     - part_no:   Test
       descrip:   Some description
-      price:     3.47
+      price:     347
       quantity:  14
     - part_no:   A4786
       descrip:   Water Bucket (Filled)
-      price:     1.47
+      price:     147
       quantity:  4
 
     - part_no:   E1628
       descrip:   High Heeled "Ruby" Slippers
       size:      8
-      price:     100.27
+      price:     10027
       quantity:  1
 """
     settings.items.Count |> should equal 3
