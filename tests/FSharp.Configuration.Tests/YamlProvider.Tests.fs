@@ -21,6 +21,12 @@ let ``Can return an int from the settings file``() =
     settings.DB.NumberOfDeadlockRepeats |> should equal 5
 
 [<Test>] 
+let ``Can return an double from the settings file``() =   
+    let settings = Settings()
+    settings.JustStuff.SomeDoubleValue.GetType() |> should equal typeof<double>   
+    settings.JustStuff.SomeDoubleValue |> should equal 0.5
+
+[<Test>] 
 let ``Can return a TimeSpan from the settings file``() =   
     let settings = Settings()
     settings.DB.DefaultTimeout.GetType() |> should equal typeof<System.TimeSpan>   
@@ -45,6 +51,12 @@ let ``Can write to an int in the settings file``() =
     settings.DB.NumberOfDeadlockRepeats <- 6
     settings.DB.NumberOfDeadlockRepeats |> should equal 6
 
+[<Test>] 
+let ``Can write to an double in the settings file``() =
+    let settings = Settings()
+    settings.JustStuff.SomeDoubleValue <- 0.5
+    settings.JustStuff.SomeDoubleValue |> should equal 0.5
+
 let private assertFilesAreEqual expected actual =
     let read file = (File.ReadAllText file).Replace("\r\n", "\n")
     read expected |> should equal (read actual)
@@ -54,6 +66,7 @@ let ``Can save a settings file to a specified location``() =
     let settings = Settings()
     settings.DB.NumberOfDeadlockRepeats <- 11
     settings.DB.DefaultTimeout <- System.TimeSpan.FromMinutes 6.
+    settings.JustStuff.SomeDoubleValue <- 0.5
     settings.Save("SettingsModifed.yaml")
     assertFilesAreEqual "SettingsModifed.yaml" "Settings2.yaml"
 
