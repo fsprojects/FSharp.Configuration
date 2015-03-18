@@ -1,3 +1,6 @@
+#### 0.5.1 - 18.03.2015
+* fixed: YamlConfigProvider does not always parse floating point scalars 
+
 #### 0.5.0 - 09.03.2015
 * YamlConfigProvider supports sequence of maps
 
