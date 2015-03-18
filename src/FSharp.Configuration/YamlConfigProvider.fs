@@ -24,13 +24,11 @@ module private Parser =
         | Uri of Uri
         | Float of double
         static member ParseStr = function
-            //| ValueParser.Bool x -> Bool x
-            //| ValueParser.Int x -> Int x
-            //| ValueParser.Float x -> Float x
             | ValueParser.TimeSpan x -> TimeSpan x
             | ValueParser.Uri x -> Uri x
             | x -> String x
         static member FromObj : obj -> Scalar = function
+            | null -> String ""
             | :? System.Boolean as b -> Bool b
             | :? System.Int32 as i -> Int i
             | :? System.Double as d -> Float d
@@ -70,7 +68,6 @@ module private Parser =
                     | :? string as key -> Some (key, loop p.Value)
                     | _ -> None) |> Seq.toList)
             | scalar ->
-                let scalar = if scalar = null then "" :> obj else  scalar
                 Scalar (Scalar.FromObj scalar)
 
         let settings = SerializerSettings(EmitDefaultValues=true, EmitTags=false, SortKeyForMapping=false)
