@@ -9,11 +9,13 @@
     Port: 331
     User: user2
     Password: pass2
-    CheckPeriod: 00:01:00
+    CheckPeriod: 00:01:00.0000000
   ErrorNotificationRecipients:
     - user1@sample.com
     - user2@sample.com
 DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
-  DefaultTimeout: 00:05:00
+  DefaultTimeout: 00:05:00.0000000
+JustStuff:
+  SomeDoubleValue: 0.5

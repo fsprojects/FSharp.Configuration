@@ -22,12 +22,19 @@ module private Parser =
         | TimeSpan of TimeSpan
         | Bool of bool
         | Uri of Uri
-        static member Parse = function
-            | ValueParser.Bool x -> Bool x
-            | ValueParser.Int x -> Int x
+        | Float of double
+        static member ParseStr = function
             | ValueParser.TimeSpan x -> TimeSpan x
             | ValueParser.Uri x -> Uri x
             | x -> String x
+        static member FromObj : obj -> Scalar = function
+            | null -> String ""
+            | :? System.Boolean as b -> Bool b
+            | :? System.Int32 as i -> Int i
+            | :? System.Double as d -> Float d
+            | :? System.String as s ->
+                Scalar.ParseStr s
+            |t -> failwith "Unknown type %s" (string t)
         member x.UnderlyingType = 
             match x with
             | Int x -> x.GetType()
@@ -35,6 +42,7 @@ module private Parser =
             | Bool x -> x.GetType()
             | TimeSpan x -> x.GetType()
             | Uri x -> x.GetType()
+            | Float x -> x.GetType()
         member x.BoxedValue =
             match x with
             | Int x -> box x
@@ -42,6 +50,8 @@ module private Parser =
             | TimeSpan x -> box x
             | Bool x -> box x
             | Uri x -> box x
+            | Float x -> box x
+        
         
     type Node =
         | Scalar of Scalar
@@ -58,8 +68,7 @@ module private Parser =
                     | :? string as key -> Some (key, loop p.Value)
                     | _ -> None) |> Seq.toList)
             | scalar ->
-                let scalar = if scalar = null then "" else scalar.ToString()
-                Scalar (Scalar.Parse scalar)
+                Scalar (Scalar.FromObj scalar)
 
         let settings = SerializerSettings(EmitDefaultValues=true, EmitTags=false, SortKeyForMapping=false)
         let serializer = Serializer(settings)
@@ -192,6 +201,7 @@ module private TypesFactory =
             | Int x -> Expr.Value x
             | String x -> Expr.Value x
             | Bool x -> Expr.Value x
+            | Float x -> Expr.Value x
             | TimeSpan x -> 
                 let parse = typeof<TimeSpan>.GetMethod("Parse", [|typeof<string>|])
                 Expr.Call(parse, [Expr.Value (x.ToString())])
