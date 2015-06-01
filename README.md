@@ -33,4 +33,4 @@ The FSharp.Configuration project contains type providers for the configuration o
 - [@vasily-kirichenko](https://github.com/vasily-kirichenko)
 - [@dtchepak](https://github.com/dtchepak)
 
-The default maintainer account for projects under "fsprojects" is [@fsgit](https://github.com/fsgit) - F# Community Project Incubation Space (repo management)
+The default maintainer account for projects under "fsprojects" is [@fsprojectsgit](https://github.com/fsprojectsgit) - F# Community Project Incubation Space (repo management)
