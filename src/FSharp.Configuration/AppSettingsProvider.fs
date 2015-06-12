@@ -17,8 +17,9 @@ let private getConfig() =
     else ConfigurationManager.OpenExeConfiguration ConfigurationUserLevel.None
 
 let getConfigValue key =
-    let settings = getConfig().AppSettings.Settings
-    settings.[key].Value
+    match getConfig().AppSettings.Settings.[key] with
+    | null -> raise <| KeyNotFoundException(message = sprintf "Cannot find name %s in <appSettings> section of config file." key)
+    | settings -> settings.Value
 
 let setConfigValue (key, value) = 
     let config = getConfig() 
@@ -26,7 +27,9 @@ let setConfigValue (key, value) =
     config.Save()
 
 let getConnectionString (key: string) =
-    getConfig().ConnectionStrings.ConnectionStrings.[key].ConnectionString
+    match getConfig().ConnectionStrings.ConnectionStrings.[key] with
+    | null -> raise <| KeyNotFoundException(message = sprintf "Cannot find name %s in <connectionStrings> section of config file." key)
+    | section -> section.ConnectionString
 
 let setConnectionString (key: string, value) =
     let config = getConfig()

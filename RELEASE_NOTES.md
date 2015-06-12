@@ -1,3 +1,6 @@
+#### 0.5.3 - 12.06.2015
+* AppConfig type provider raises better exception if a settings or connection string is missing at runtime.
+
 #### 0.5.2 - 12.06.2015
 * Add caching into all type providers
 
