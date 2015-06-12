@@ -11,6 +11,7 @@ open SharpYaml.Serialization.Serializers
 open Microsoft.FSharp.Quotations
 open System.Collections.Generic
 open FSharp.Configuration.Helper
+open System.Runtime.Caching
 
 type Helper () =
     static member CreateResizeArray<'a>(data : 'a seq) :ResizeArray<'a> = ResizeArray<'a>(data)
@@ -136,10 +137,7 @@ module private Parser =
                     | _ -> None)
 
                 if field.FieldType <> fieldType then failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
-                let isComparable: obj -> bool = function
-                   | :? Uri as uri -> true
-                   | :? IComparable as x -> true
-                   | _ -> false
+                let isComparable (x: obj) = x :? Uri || x :? IComparable
                 let values = field.GetValue(target) :?> Collections.IEnumerable |> Seq.cast<obj>
                 // NOTE: another solution would be to make our provided type implement IComparable
                 // On the other side I'm not completely sure why we sort at all.
@@ -424,30 +422,35 @@ let internal typedYamlConfig (context: Context) =
            <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
            <param name='YamlText'>Yaml as text. Mutually exclusive with FilePath parameter.</param>"""
 
+    let cache = new MemoryCache("YamlConfigProvider")
+    context.AddDisposable cache
+
     yamlConfig.DefineStaticParameters(
         parameters = staticParams,
         instantiationFunction = fun typeName paramValues ->
-            let createTy yaml readOnly =
-                let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, Some baseTy, IsErased=false, 
-                                                 SuppressRelocation=false, HideObjectMethods=true)
-                let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
-                let assembly = ProvidedAssembly assemblyPath
-                let types = TypesFactory.transform readOnly None (Parser.parse yaml)
-                let ctr = ProvidedConstructor ([], InvokeCode = fun [me] -> types.Init me)
-                ty.AddMembers (ctr :> MemberInfo :: types.Types) 
-                assembly.AddTypes [ty]
-                ty
-
-            match paramValues with
-            | [| :? string as filePath; :? bool as readOnly; :? string as yamlText |] -> 
-                 match filePath, yamlText with
-                 | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
-                 | "", yamlText -> createTy yamlText readOnly
-                 | filePath, _ -> 
-                      let filePath =
-                          if Path.IsPathRooted filePath then filePath 
-                          else Path.Combine(context.ResolutionFolder, filePath)
-                      context.WatchFile filePath
-                      createTy (File.ReadAllText filePath) readOnly
-            | _ -> failwith "Wrong parameters")
+            let value = lazy (
+                let createTy yaml readOnly =
+                    let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, Some baseTy, IsErased=false, 
+                                                     SuppressRelocation=false, HideObjectMethods=true)
+                    let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
+                    let assembly = ProvidedAssembly assemblyPath
+                    let types = TypesFactory.transform readOnly None (Parser.parse yaml)
+                    let ctr = ProvidedConstructor ([], InvokeCode = fun [me] -> types.Init me)
+                    ty.AddMembers (ctr :> MemberInfo :: types.Types) 
+                    assembly.AddTypes [ty]
+                    ty
+                
+                match paramValues with
+                | [| :? string as filePath; :? bool as readOnly; :? string as yamlText |] -> 
+                     match filePath, yamlText with
+                     | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
+                     | "", yamlText -> createTy yamlText readOnly
+                     | filePath, _ -> 
+                          let filePath =
+                              if Path.IsPathRooted filePath then filePath 
+                              else Path.Combine(context.ResolutionFolder, filePath)
+                          context.WatchFile filePath
+                          createTy (File.ReadAllText filePath) readOnly
+                | _ -> failwith "Wrong parameters")
+            cache.GetOrAdd (typeName, value))
     yamlConfig

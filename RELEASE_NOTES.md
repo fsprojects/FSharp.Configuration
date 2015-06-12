@@ -1,3 +1,6 @@
+#### 0.5.2 - 12.06.2015
+* Add caching into all type providers
+
 #### 0.5.1 - 18.03.2015
 * fixed: YamlConfigProvider does not always parse floating point scalars 
 

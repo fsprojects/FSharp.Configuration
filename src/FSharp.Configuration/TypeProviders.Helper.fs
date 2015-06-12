@@ -11,7 +11,8 @@ open Microsoft.FSharp.Core.Printf
 type FilePath = string
 
 // Active patterns & operators for parsing strings
-let (@?) (s:string) i = if i >= s.Length then None else Some s.[i]
+type String with
+    member x.TryGetChar i = if i >= x.Length then None else Some x.[i]
 
 let inline satisfies predicate (charOption:option<char>) = 
     match charOption with 
@@ -33,12 +34,6 @@ let (|Lower|_|) = satisfies Char.IsLower
 module Option =
     let inline ofNull value =
         if obj.ReferenceEquals(value, null) then None else Some value
-
-    /// Gets the option if Some x, otherwise the supplied default value.
-    let inline orElse v =
-        function
-        | Some x -> Some x
-        | None -> v
 
     /// Gets the value associated with the option or the supplied default value.
     let inline getOrElse v =
@@ -141,7 +136,7 @@ let niceName (set:System.Collections.Generic.HashSet<_>) =
         if s = s.ToUpper() then s else
         // Starting to parse a new segment 
         let rec restart i = seq {
-            match s @? i with 
+            match s.TryGetChar i with 
             | EOF -> ()
             | LetterDigit _ & Upper _ -> yield! upperStart i (i + 1)
             | LetterDigit _ -> yield! consume i false (i + 1)
@@ -149,13 +144,13 @@ let niceName (set:System.Collections.Generic.HashSet<_>) =
 
         // Parsed first upper case letter, continue either all lower or all upper
         and upperStart from i = seq {
-            match s @? i with 
+            match s.TryGetChar i with 
             | Upper _ -> yield! consume from true (i + 1) 
             | Lower _ -> yield! consume from false (i + 1) 
             | _ -> yield! restart (i + 1) }
         // Consume are letters of the same kind (either all lower or all upper)
         and consume from takeUpper i = seq {
-            match s @? i with
+            match s.TryGetChar i with
             | Lower _ when not takeUpper -> yield! consume from takeUpper (i + 1)
             | Upper _ when takeUpper -> yield! consume from takeUpper (i + 1)
             | _ -> 
@@ -197,14 +192,6 @@ let erasedType<'T> assemblyName rootNamespace typeName =
 // Get the assembly and namespace used to house the provided types
 let thisAssembly = System.Reflection.Assembly.GetExecutingAssembly()
 let rootNamespace = "FSharp.Configuration"
-
-/// Converts a function returning bool,value to a function returning value option.
-/// Useful to process TryXX style functions.
-let inline tryParseWith func = func >> function
-    | true, _ -> Some()
-    | false, _ -> None
-
-open System.Globalization
 
 module File =
     let tryOpenFile filePath =
@@ -270,6 +257,7 @@ module File =
 
 type private ContextMessage =
     | Watch of FilePath
+    | AddDisposable of IDisposable
     | Cancel
 
 type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
@@ -285,7 +273,7 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
         File.watch false fileName provider.Invalidate
     
     let agent = MailboxProcessor.Start(fun inbox ->
-        let rec loop (files: Map<string, IDisposable>) = async {
+        let rec loop (files: Map<string, IDisposable>) (disposables: IDisposable list) = async {
             let unwatch file =
                 match files |> Map.tryFind file with
                 | Some disposable -> 
@@ -295,14 +283,30 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
 
             let! msg = inbox.Receive()
             match msg with
-            | Watch file -> return! loop (unwatch file |> Map.add file (watchForChanges file))
-            | Cancel -> files |> Map.toSeq |> Seq.map snd |> Seq.iter dispose
+            | Watch file -> return! loop (unwatch file |> Map.add file (watchForChanges file)) disposables
+            | AddDisposable x -> return! loop files (x :: disposables)
+            | Cancel -> 
+                files |> Map.toSeq |> Seq.map snd |> Seq.iter dispose
+                disposables |> List.iter dispose
         }
-        loop Map.empty
+        loop Map.empty []
     )
 
     member __.ResolutionFolder = cfg.ResolutionFolder
     member __.WatchFile (file: FilePath) = agent.Post (Watch file)
+    member __.AddDisposable x = agent.Post (AddDisposable x) 
 
     interface IDisposable with
         member __.Dispose() = agent.Post Cancel
+
+open System.Runtime.Caching
+
+type MemoryCache with 
+    member x.GetOrAdd(key, value: Lazy<_>, ?expiration) = 
+        let policy = CacheItemPolicy()
+        policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
+        match x.AddOrGetExisting(key, value, policy) with
+        | :? Lazy<ProvidedTypeDefinition> as item -> item.Value 
+        | x -> 
+            assert(x = null)
+            value.Value

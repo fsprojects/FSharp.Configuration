@@ -8,6 +8,7 @@ open FSharp.Configuration.Helper
 open System.Resources
 open System.ComponentModel.Design
 open System.Collections
+open System.Runtime.Caching
 
 let readValue (filePath: FilePath, name) =
     use reader = new ResXResourceReader(filePath)
@@ -49,17 +50,20 @@ let internal createResXProvider typeName resXFilePath =
 
 let internal typedResources (context: Context) =
     let resXType = erasedType<obj> thisAssembly rootNamespace "ResXProvider"
+    let cache = new MemoryCache("ResXProvider")
+    context.AddDisposable cache    
 
     resXType.DefineStaticParameters(
         parameters = [ ProvidedStaticParameter ("file", typeof<string>) ], 
         instantiationFunction = (fun typeName parameterValues ->
-            match parameterValues with 
-            | [| :? string as resourcePath|] ->
-                let filePath = findConfigFile context.ResolutionFolder resourcePath
-                if not (File.Exists filePath) then invalidArg "file" "Resouce file not found"
-                let providedType = createResXProvider typeName filePath
-                context.WatchFile filePath
-                providedType
-            | _ -> failwith "unexpected parameter values"))
-
+            let value = lazy (
+                match parameterValues with 
+                | [| :? string as resourcePath|] ->
+                    let filePath = findConfigFile context.ResolutionFolder resourcePath
+                    if not (File.Exists filePath) then invalidArg "file" "Resouce file not found"
+                    let providedType = createResXProvider typeName filePath
+                    context.WatchFile filePath
+                    providedType
+                | _ -> failwith "unexpected parameter values")
+            cache.GetOrAdd (typeName, value)))
     resXType

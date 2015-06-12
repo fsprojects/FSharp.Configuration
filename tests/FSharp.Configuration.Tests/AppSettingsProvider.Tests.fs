@@ -45,7 +45,7 @@ let ``Can return a Uri from the config file``() =
 [<Test>] 
 let ``Can return a connection string from the config file``() =   
     Settings.ConnectionStrings.Test1 |> should equal "Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;"
-
+     
 [<Test>] 
 let ``Can read multiple connection strings from the config file``() =   
     Settings.ConnectionStrings.Test1 |> should not' (equal Settings.ConnectionStrings.Test2)
