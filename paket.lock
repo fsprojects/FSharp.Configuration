@@ -19,9 +19,10 @@ NUGET
     NUnit.Runners (2.6.4)
     Octokit (0.7.2)
       Microsoft.Net.Http
+    SharpYaml (1.5.0)
     SourceLink.Fake (0.4.2)
 GITHUB
   remote: fsharp/FAKE
   specs:
-    modules/Octokit/Octokit.fsx (8c43fc5a6b2af40e207e38eb37159454b238c10d)
+    modules/Octokit/Octokit.fsx (b5b55ccbe81c9fda6e025e6c16f041601b8c76df)
       Octokit
