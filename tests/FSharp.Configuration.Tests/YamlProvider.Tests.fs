@@ -8,50 +8,50 @@ open System.IO
 
 type Settings = YamlConfig<"Settings.yaml">
 
-[<Test>] 
-let ``Can return a string from the settings file``() = 
-    let settings = Settings()  
-    settings.DB.ConnectionString.GetType() |> should equal typeof<string>   
+[<Test>]
+let ``Can return a string from the settings file``() =
+    let settings = Settings()
+    settings.DB.ConnectionString.GetType() |> should equal typeof<string>
     settings.DB.ConnectionString |> should equal "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;"
 
-[<Test>] 
-let ``Can return an int from the settings file``() =   
+[<Test>]
+let ``Can return an int from the settings file``() =
     let settings = Settings()
-    settings.DB.NumberOfDeadlockRepeats.GetType() |> should equal typeof<int>   
+    settings.DB.NumberOfDeadlockRepeats.GetType() |> should equal typeof<int>
     settings.DB.NumberOfDeadlockRepeats |> should equal 5
 
-[<Test>] 
-let ``Can return an double from the settings file``() =   
+[<Test>]
+let ``Can return an double from the settings file``() =
     let settings = Settings()
-    settings.JustStuff.SomeDoubleValue.GetType() |> should equal typeof<double>   
+    settings.JustStuff.SomeDoubleValue.GetType() |> should equal typeof<double>
     settings.JustStuff.SomeDoubleValue |> should equal 0.5
 
-[<Test>] 
-let ``Can return a TimeSpan from the settings file``() =   
+[<Test>]
+let ``Can return a TimeSpan from the settings file``() =
     let settings = Settings()
-    settings.DB.DefaultTimeout.GetType() |> should equal typeof<System.TimeSpan>   
+    settings.DB.DefaultTimeout.GetType() |> should equal typeof<System.TimeSpan>
     settings.DB.DefaultTimeout |> should equal (System.TimeSpan.FromMinutes 5.)
 
-[<Test>] 
-let ``Can return a list from the settings file``() = 
+[<Test>]
+let ``Can return a list from the settings file``() =
     let settings = Settings()
     settings.Mail.ErrorNotificationRecipients.Count |> should equal 2
     settings.Mail.ErrorNotificationRecipients.[0] |> should equal "user1@sample.com"
     settings.Mail.ErrorNotificationRecipients.[1] |> should equal "user2@sample.com"
 
-[<Test>] 
+[<Test>]
 let ``Can write to a string in the settings file``() =
     let settings = Settings()
     settings.DB.ConnectionString <- "Data Source=server2"
     settings.DB.ConnectionString |> should equal "Data Source=server2"
 
-[<Test>] 
+[<Test>]
 let ``Can write to an int in the settings file``() =
     let settings = Settings()
     settings.DB.NumberOfDeadlockRepeats <- 6
     settings.DB.NumberOfDeadlockRepeats |> should equal 6
 
-[<Test>] 
+[<Test>]
 let ``Can write to an double in the settings file``() =
     let settings = Settings()
     settings.JustStuff.SomeDoubleValue <- 0.5
@@ -61,7 +61,7 @@ let private assertFilesAreEqual expected actual =
     let read file = (File.ReadAllText file).Replace("\r\n", "\n")
     read expected |> should equal (read actual)
 
-[<Test>] 
+[<Test>]
 let ``Can save a settings file to a specified location``() =
     let settings = Settings()
     settings.DB.NumberOfDeadlockRepeats <- 11
@@ -70,7 +70,7 @@ let ``Can save a settings file to a specified location``() =
     settings.Save("SettingsModifed.yaml")
     assertFilesAreEqual "SettingsModifed.yaml" "Settings2.yaml"
 
-[<Test>] 
+[<Test>]
 let ``Can save settings to the file it was loaded from last time``() =
     let settings = Settings()
     let tempFile = Path.GetTempFileName()
@@ -83,12 +83,12 @@ let ``Can save settings to the file it was loaded from last time``() =
         assertFilesAreEqual tempFile "Settings2.yaml"
     finally File.Delete tempFile
 
-[<Test>] 
+[<Test>]
 let ``Throws exception during saving if it was not loaded from a file and location is not specified``() =
     let settings = Settings()
     (fun() -> settings.Save()) |> should throw typeof<InvalidOperationException>
-    
-[<Test>] 
+
+[<Test>]
 let ``Can loads full settings``() =
     let settings = Settings()
     settings.LoadText """
@@ -124,7 +124,7 @@ DB:
     settings.Mail.Pop3.Password |> should equal "pass2*"
     settings.Mail.Pop3.CheckPeriod |> should equal (TimeSpan.FromMinutes 2.)
 
-    Assert.That(settings.Mail.ErrorNotificationRecipients, 
+    Assert.That(settings.Mail.ErrorNotificationRecipients,
                 Is.EquivalentTo ["user1@sample.com*"; "user2@sample.com*"; "user3@sample.com"])
 
     settings.DB.ConnectionString |> should equal "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;*"
@@ -156,7 +156,7 @@ Mail:
     settings.Mail.Pop3.Password |> should equal "pass2"
     settings.Mail.Pop3.CheckPeriod |> should equal (TimeSpan.FromMinutes 2.)
 
-    Assert.That(settings.Mail.ErrorNotificationRecipients, 
+    Assert.That(settings.Mail.ErrorNotificationRecipients,
                 Is.EquivalentTo ["user1@sample.com*"; "user2@sample.com*"; "user3@sample.com"])
 
     settings.DB.ConnectionString |> should equal "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;"
@@ -176,7 +176,7 @@ TopLevelUnknown:
 
 """
     settings.Mail.Smtp.Port |> should equal 4430
-    
+
 [<Test>]
 let ``Can load empty lists``() =
     let settings = Settings()
@@ -209,9 +209,9 @@ Mail:
      mailListener.Events
      pop3Listener.Events
      smtpListener.Events
-     dbListener.Events] 
+     dbListener.Events]
     |> should equal [1; 1; 1; 0; 0]
-    
+
 [<Test>]
 let ``Does not raise duplicates of parent Changed events even though several children changed``() =
     let settings = Settings()
@@ -230,7 +230,7 @@ Mail:
     [rootListener.Events
      mailListener.Events
      pop3Listener.Events
-     smtpListener.Events] 
+     smtpListener.Events]
     |> should equal [1; 1; 1; 1]
 
 
@@ -249,7 +249,7 @@ items:
     settings.items.Count |> should equal 1
     settings.items.[0].part_no |> should equal "Test"
     settings.items.[0].descrip |> should equal "Some description"
-    settings.items.[0].quantity |> should equal 14 
+    settings.items.[0].quantity |> should equal 14
 
 [<Test>]
 let ``Can load sequence of maps (multiple items)``() =
@@ -275,7 +275,7 @@ items:
     settings.items.[0].part_no |> should equal "Test"
     settings.items.[0].descrip |> should equal "Some description"
     settings.items.[0].quantity |> should equal 14
-    
+
     settings.items.[2].part_no |> should equal "E1628"
     settings.items.[2].descrip |> should equal "High Heeled \"Ruby\" Slippers"
     settings.items.[2].quantity |> should equal 1

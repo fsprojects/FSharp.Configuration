@@ -13,7 +13,7 @@ open System.Runtime.Caching
 let readValue (filePath: FilePath, name) =
     use reader = new ResXResourceReader(filePath)
     reader.UseResXDataNodes <- true
-    let entry = 
+    let entry =
         reader
         |> Seq.cast
         |> Seq.map (fun (x: DictionaryEntry) -> x.Value :?> ResXDataNode)
@@ -21,16 +21,16 @@ let readValue (filePath: FilePath, name) =
     entry.GetValue(Unchecked.defaultof<ITypeResolutionService>)
 
 /// Converts ResX entries to provided properties
-let internal toProperties (resXFilePath:string) =       
+let internal toProperties (resXFilePath:string) =
     use reader = new ResXResourceReader(resXFilePath)
     reader.UseResXDataNodes <- true
-    [ for (entry:DictionaryEntry) in reader |> Seq.cast ->                   
+    [ for (entry:DictionaryEntry) in reader |> Seq.cast ->
         let node = entry.Value :?> ResXDataNode
         let name = node.Name
         let typ = node.GetValueTypeName(Unchecked.defaultof<ITypeResolutionService>) |> System.Type.GetType
         let comment = node.Comment
         let getter _args = <@@ readValue(resXFilePath, name) @@>
-        let resource = ProvidedProperty(name, typ, IsStatic=true, GetterCode=getter)                          
+        let resource = ProvidedProperty(name, typ, IsStatic=true, GetterCode=getter)
         if not(String.IsNullOrEmpty(comment)) then resource.AddXmlDoc(node.Comment)
         resource :> MemberInfo ]
 
@@ -46,18 +46,18 @@ let internal createResourceDataType (resXFilePath) =
 let internal createResXProvider typeName resXFilePath =
     let ty = ProvidedTypeDefinition(thisAssembly, rootNamespace, typeName, baseType=Some typeof<obj>)
     ty.AddMember (createResourceDataType resXFilePath)
-    ty  
+    ty
 
 let internal typedResources (context: Context) =
     let resXType = erasedType<obj> thisAssembly rootNamespace "ResXProvider"
     let cache = new MemoryCache("ResXProvider")
-    context.AddDisposable cache    
+    context.AddDisposable cache
 
     resXType.DefineStaticParameters(
-        parameters = [ ProvidedStaticParameter ("file", typeof<string>) ], 
+        parameters = [ ProvidedStaticParameter ("file", typeof<string>) ],
         instantiationFunction = (fun typeName parameterValues ->
             let value = lazy (
-                match parameterValues with 
+                match parameterValues with
                 | [| :? string as resourcePath|] ->
                     let filePath = findConfigFile context.ResolutionFolder resourcePath
                     if not (File.Exists filePath) then invalidArg "file" "Resouce file not found"

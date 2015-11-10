@@ -5,7 +5,7 @@
 The AppSettings type provider
 ============================
 
-This tutorial shows the use of the AppSettings type provider. 
+This tutorial shows the use of the AppSettings type provider.
 It allows to access app.config files in a strongly typed way.
 
 Using App.Settings from F# scripts

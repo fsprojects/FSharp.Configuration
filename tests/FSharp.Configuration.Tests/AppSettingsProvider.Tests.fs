@@ -7,27 +7,27 @@ open FsUnit
 
 type Settings = AppSettings<"app.config">
 
-[<Test>] 
-let ``Can return a string from the config file``() =   
-    Settings.Test2.GetType() |> should equal typeof<string>   
+[<Test>]
+let ``Can return a string from the config file``() =
+    Settings.Test2.GetType() |> should equal typeof<string>
     Settings.Test2 |> should equal "Some Test Value 5"
 
-[<Test>] 
+[<Test>]
 let ``Can return an integer from the config file``() =
     Settings.TestInt.GetType() |> should equal typeof<int>
     Settings.TestInt |> should equal 102
 
-[<Test>] 
+[<Test>]
 let ``Can return a double from the config file``() =
     Settings.TestDouble.GetType() |> should equal typeof<float>
     Settings.TestDouble |> should equal 10.01
 
-[<Test>] 
+[<Test>]
 let ``Can return a boolean from the config file``() =
     Settings.TestBool.GetType() |> should equal typeof<bool>
     Settings.TestBool |> should equal true
 
-[<Test>] 
+[<Test>]
 let ``Can return a TimeSpan from the config file``() =
     Settings.TestTimeSpan.GetType() |> should equal typeof<TimeSpan>
     Settings.TestTimeSpan |> should equal (TimeSpan.Parse "2.01:02:03.444")
@@ -42,11 +42,11 @@ let ``Can return a Uri from the config file``() =
     Settings.TestUri.GetType() |> should equal typeof<Uri>
     Settings.TestUri |> should equal (Uri "http://fsharp.org")
 
-[<Test>] 
-let ``Can return a connection string from the config file``() =   
+[<Test>]
+let ``Can return a connection string from the config file``() =
     Settings.ConnectionStrings.Test1 |> should equal "Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;"
-     
-[<Test>] 
-let ``Can read multiple connection strings from the config file``() =   
+
+[<Test>]
+let ``Can read multiple connection strings from the config file``() =
     Settings.ConnectionStrings.Test1 |> should not' (equal Settings.ConnectionStrings.Test2)
 

@@ -14,15 +14,15 @@ type FilePath = string
 type String with
     member x.TryGetChar i = if i >= x.Length then None else Some x.[i]
 
-let inline satisfies predicate (charOption:option<char>) = 
-    match charOption with 
-    | Some c when predicate c -> charOption 
+let inline satisfies predicate (charOption:option<char>) =
+    match charOption with
+    | Some c when predicate c -> charOption
     | _ -> None
 
 let dispose (x: IDisposable) = if x = null then () else x.Dispose()
 let inline debug msg = Printf.kprintf Diagnostics.Debug.WriteLine msg
 
-let (|EOF|_|) = function 
+let (|EOF|_|) = function
     | Some _ -> None
     | _ -> Some ()
 
@@ -117,13 +117,13 @@ module ValueParser =
     let (|Int|_|) = tryParseWith Int32.TryParse
     let (|Float|_|) = tryParseWith (fun x -> Double.TryParse(x, NumberStyles.Any, CultureInfo.InvariantCulture))
     let (|TimeSpan|_|) = tryParseWith (fun x -> TimeSpan.TryParse(x, CultureInfo.InvariantCulture))
-    
-    let (|DateTime|_|) =  
+
+    let (|DateTime|_|) =
         tryParseWith (fun x -> DateTime.TryParse(x, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal))
 
-    let (|Uri|_|) (text: string) = 
-        ["http"; "https"; "ftp"; "ftps"; "sftp"; "amqp"] 
-        |> List.tryPick (fun x -> 
+    let (|Uri|_|) (text: string) =
+        ["http"; "https"; "ftp"; "ftps"; "sftp"; "amqp"]
+        |> List.tryPick (fun x ->
             if text.Trim().StartsWith(x + ":", StringComparison.InvariantCultureIgnoreCase) then
                 match System.Uri.TryCreate(text, UriKind.Absolute) with
                 | true, uri -> Some uri
@@ -131,12 +131,12 @@ module ValueParser =
             else None)
 
 /// Turns a string into a nice PascalCase identifier
-let niceName (set:System.Collections.Generic.HashSet<_>) =     
+let niceName (set:System.Collections.Generic.HashSet<_>) =
     fun (s: string) ->
         if s = s.ToUpper() then s else
-        // Starting to parse a new segment 
+        // Starting to parse a new segment
         let rec restart i = seq {
-            match s.TryGetChar i with 
+            match s.TryGetChar i with
             | EOF -> ()
             | LetterDigit _ & Upper _ -> yield! upperStart i (i + 1)
             | LetterDigit _ -> yield! consume i false (i + 1)
@@ -144,28 +144,28 @@ let niceName (set:System.Collections.Generic.HashSet<_>) =
 
         // Parsed first upper case letter, continue either all lower or all upper
         and upperStart from i = seq {
-            match s.TryGetChar i with 
-            | Upper _ -> yield! consume from true (i + 1) 
-            | Lower _ -> yield! consume from false (i + 1) 
+            match s.TryGetChar i with
+            | Upper _ -> yield! consume from true (i + 1)
+            | Lower _ -> yield! consume from false (i + 1)
             | _ -> yield! restart (i + 1) }
         // Consume are letters of the same kind (either all lower or all upper)
         and consume from takeUpper i = seq {
             match s.TryGetChar i with
             | Lower _ when not takeUpper -> yield! consume from takeUpper (i + 1)
             | Upper _ when takeUpper -> yield! consume from takeUpper (i + 1)
-            | _ -> 
+            | _ ->
                 yield from, i
                 yield! restart i }
-    
+
         // Split string into segments and turn them to PascalCase
         let mutable name =
-            seq { for i1, i2 in restart 0 do 
-                    let sub = s.Substring(i1, i2 - i1) 
+            seq { for i1, i2 in restart 0 do
+                    let sub = s.Substring(i1, i2 - i1)
                     if Seq.forall Char.IsLetterOrDigit sub then
                         yield sub.[0].ToString().ToUpper() + sub.ToLower().Substring(1) }
             |> String.concat ""
 
-        while set.Contains name do 
+        while set.Contains name do
           let mutable lastLetterPos = String.length name - 1
           while Char.IsDigit name.[lastLetterPos] && lastLetterPos > 0 do
             lastLetterPos <- lastLetterPos - 1
@@ -181,12 +181,12 @@ let niceName (set:System.Collections.Generic.HashSet<_>) =
 
 
 let findConfigFile resolutionFolder configFileName =
-    if Path.IsPathRooted configFileName then 
-        configFileName 
-    else 
+    if Path.IsPathRooted configFileName then
+        configFileName
+    else
         Path.Combine(resolutionFolder, configFileName)
 
-let erasedType<'T> assemblyName rootNamespace typeName = 
+let erasedType<'T> assemblyName rootNamespace typeName =
     ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>))
 
 // Get the assembly and namespace used to house the provided types
@@ -212,45 +212,45 @@ module File =
                     use reader = new StreamReader (file)
                     match attemptsLeft, reader.ReadToEnd() with
                     | 0, x -> return x
-                    | _, "" -> 
+                    | _, "" ->
                         printfn "Attempt %d of %d: %s is empty. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
                         return! sleepAndRun attemptsLeft
-                    | _, content -> return content 
-                finally file.Dispose() 
-            | None ->  
+                    | _, content -> return content
+                finally file.Dispose()
+            | None ->
                 printfn "Attempt %d of %d: cannot read %s. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
                 return! sleepAndRun attemptsLeft }
         loop maxAttempts |> Async.RunSynchronously
 
-    type private State = 
+    type private State =
         { LastFileWriteTime: DateTime
           Updated: DateTime }
 
     let watch changesOnly filePath onChanged =
         let getLastWrite() = File.GetLastWriteTime filePath
         let state = ref { LastFileWriteTime = getLastWrite(); Updated = DateTime.Now }
-        
+
         let changed (_: FileSystemEventArgs) =
             let curr = getLastWrite()
             // log (sprintf "%A. Last = %A, Curr = %A" args.ChangeType !lastWrite curr)
             if curr <> (!state).LastFileWriteTime && DateTime.Now - (!state).Updated > TimeSpan.FromMilliseconds 500. then
-//                try 
+//                try
                     onChanged()
                     state := { LastFileWriteTime = curr; Updated = DateTime.Now }
 //                with e -> ()
                 //log "call onChanged"
-                
+
 
         let w = new FileSystemWatcher(Path.GetDirectoryName filePath, Path.GetFileName filePath)
         w.NotifyFilter <- NotifyFilters.CreationTime ||| NotifyFilters.LastWrite ||| NotifyFilters.Size
         w.Changed.Add changed
-        if not changesOnly then 
+        if not changesOnly then
             w.Deleted.Add changed
             w.Renamed.Add changed
         w.EnableRaisingEvents <- true
         w :> IDisposable
 
-    let getFullPath resolutionFolder fileName = 
+    let getFullPath resolutionFolder fileName =
         match Path.IsPathRooted fileName with
         | true -> fileName
         | _ -> Path.Combine (resolutionFolder, fileName)
@@ -271,12 +271,12 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
         disposeWatcher()
         let fileName = File.getFullPath cfg.ResolutionFolder fileName
         File.watch false fileName provider.Invalidate
-    
+
     let agent = MailboxProcessor.Start(fun inbox ->
         let rec loop (files: Map<string, IDisposable>) (disposables: IDisposable list) = async {
             let unwatch file =
                 match files |> Map.tryFind file with
-                | Some disposable -> 
+                | Some disposable ->
                     disposable.Dispose()
                     files |> Map.remove file
                 | None -> files
@@ -285,7 +285,7 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
             match msg with
             | Watch file -> return! loop (unwatch file |> Map.add file (watchForChanges file)) disposables
             | AddDisposable x -> return! loop files (x :: disposables)
-            | Cancel -> 
+            | Cancel ->
                 files |> Map.toSeq |> Seq.map snd |> Seq.iter dispose
                 disposables |> List.iter dispose
         }
@@ -294,19 +294,19 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
 
     member __.ResolutionFolder = cfg.ResolutionFolder
     member __.WatchFile (file: FilePath) = agent.Post (Watch file)
-    member __.AddDisposable x = agent.Post (AddDisposable x) 
+    member __.AddDisposable x = agent.Post (AddDisposable x)
 
     interface IDisposable with
         member __.Dispose() = agent.Post Cancel
 
 open System.Runtime.Caching
 
-type MemoryCache with 
-    member x.GetOrAdd(key, value: Lazy<_>, ?expiration) = 
+type MemoryCache with
+    member x.GetOrAdd(key, value: Lazy<_>, ?expiration) =
         let policy = CacheItemPolicy()
         policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
         match x.AddOrGetExisting(key, value, policy) with
-        | :? Lazy<ProvidedTypeDefinition> as item -> item.Value 
-        | x -> 
+        | :? Lazy<ProvidedTypeDefinition> as item -> item.Value
+        | x ->
             assert(x = null)
             value.Value

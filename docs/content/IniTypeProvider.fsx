@@ -5,7 +5,7 @@
 The Ini type provider
 =====================
 
-This tutorial shows the use of the Ini type provider. 
+This tutorial shows the use of the Ini type provider.
 
 Using Ini type provider from F# scripts
 ---------------------------------------

@@ -21,8 +21,8 @@ let getConfigValue key =
     | null -> raise <| KeyNotFoundException(message = sprintf "Cannot find name %s in <appSettings> section of config file." key)
     | settings -> settings.Value
 
-let setConfigValue (key, value) = 
-    let config = getConfig() 
+let setConfigValue (key, value) =
+    let config = getConfig()
     config.AppSettings.Settings.[key].Value <- value
     config.Save()
 
@@ -40,11 +40,11 @@ let internal typedAppSettings (context: Context) =
     let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings"
     let cache = new MemoryCache("AppSettingProvider")
     context.AddDisposable cache
-    
+
     appSettings.DefineStaticParameters(
         parameters = [ProvidedStaticParameter("configFileName", typeof<string>)],
         instantiationFunction = (fun typeName parameterValues ->
-            let value = lazy (            
+            let value = lazy (
                 let typedConnectionStrings (config: Configuration, filePath, configFileName) =
                     let typeDef = ProvidedTypeDefinition("ConnectionStrings", Some typeof<obj>, HideObjectMethods = true)
                     typeDef.AddXmlDoc (sprintf "Represents the available connection strings from %s" configFileName)
@@ -54,18 +54,18 @@ let internal typedAppSettings (context: Context) =
                         let key = connectionString.Name
                         let name = niceName names key
                         let prop =
-                            ProvidedProperty(name, 
+                            ProvidedProperty(name,
                                              typeof<string>,
                                              GetterCode = (fun _ -> <@@ getConnectionString key @@>),
                                              SetterCode = fun args -> <@@ setConnectionString(key, %%args.[0]) @@>)
-            
+
                         prop.IsStatic <- true
                         prop.AddXmlDoc (sprintf "Returns the connection string from %s with name %s" configFileName name)
                         prop.AddDefinitionLocation(1,1,filePath)
                         typeDef.AddMember prop
                     typeDef
 
-                match parameterValues with 
+                match parameterValues with
                 | [| :? string as configFileName |] ->
                     let typeDef = erasedType<obj> thisAssembly rootNamespace typeName
                     let names = HashSet()
@@ -74,7 +74,7 @@ let internal typedAppSettings (context: Context) =
                         let fileMap = ExeConfigurationFileMap(ExeConfigFilename=filePath)
                         let config = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None)
                         let appSettings = config.AppSettings.Settings
-    
+
                         for key in appSettings.AllKeys do
                             let name = niceName names key
                             let prop =
@@ -107,23 +107,23 @@ let internal typedAppSettings (context: Context) =
                                     ProvidedProperty(name, typeof<string>,
                                         GetterCode = (fun _ -> <@@ getConfigValue key @@>),
                                         SetterCode = fun args -> <@@ setConfigValue(key, %%args.[0]) @@>)
-    
+
                             prop.IsStatic <- true
                             prop.AddXmlDoc (sprintf "Returns the value from %s with key %s" configFileName key)
                             prop.AddDefinitionLocation(1, 1, filePath)
-    
+
                             typeDef.AddMember prop
-    
-                        let prop = 
+
+                        let prop =
                             ProvidedProperty(niceName names "ConfigFileName", typeof<string>, GetterCode = fun _ -> <@@ filePath @@>)
-    
+
                         prop.IsStatic <- true
                         prop.AddXmlDoc "Returns the Filename"
                         typeDef.AddMember prop
-    
+
                         let connectionStringTypeDefinition = typedConnectionStrings (config, filePath, configFileName)
                         typeDef.AddMember connectionStringTypeDefinition
-    
+
                         context.WatchFile filePath
                         typeDef
                     with _ -> typeDef

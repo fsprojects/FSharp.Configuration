@@ -1,10 +1,10 @@
 ﻿// Based on code developed for the F# 3.0 Beta release of March 2012,
 // Copyright (c) Microsoft Corporation 2005-2012.
-// This sample code is provided "as is" without warranty of any kind. 
-// We disclaim all warranties, either express or implied, including the 
-// warranties of merchantability and fitness for a particular purpose. 
+// This sample code is provided "as is" without warranty of any kind.
+// We disclaim all warranties, either express or implied, including the
+// warranties of merchantability and fitness for a particular purpose.
 
-// This file contains a set of helper types and methods for providing types in an implementation 
+// This file contains a set of helper types and methods for providing types in an implementation
 // of ITypeProvider.
 
 // This code has been modified and is appropriate for use in conjunction with the F# 3.0, F# 3.1, and F# 3.1.1 releases
@@ -24,24 +24,24 @@ type ProvidedParameter =
     member IsParamArray : bool with get,set
 
 /// Represents an erased provided constructor.
-type ProvidedConstructor =    
+type ProvidedConstructor =
     inherit System.Reflection.ConstructorInfo
 
     /// Create a new provided constructor. It is not initially associated with any specific provided type definition.
     new : parameters: ProvidedParameter list -> ProvidedConstructor
 
     /// Add a 'System.Obsolete' attribute to this provided constructor
-    member AddObsoleteAttribute : message: string * ?isError: bool -> unit    
-    
+    member AddObsoleteAttribute : message: string * ?isError: bool -> unit
+
     /// Add XML documentation information to this provided constructor
-    member AddXmlDoc          : xmlDoc: string -> unit   
-    
+    member AddXmlDoc          : xmlDoc: string -> unit
+
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
-    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Add XML documentation information to this provided constructor, where the documentation is re-computed  every time it is required.
-    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Set the quotation used to compute the implementation of invocations of this constructor.
     member InvokeCode         : (Quotations.Expr list -> Quotations.Expr) with set
 
@@ -58,28 +58,28 @@ type ProvidedConstructor =
 
     /// Add definition location information to the provided constructor.
     member AddDefinitionLocation : line:int * column:int * filePath:string -> unit
-    
+
     member IsTypeInitializer : bool with get,set
 
-type ProvidedMethod = 
+type ProvidedMethod =
     inherit System.Reflection.MethodInfo
 
     /// Create a new provided method. It is not initially associated with any specific provided type definition.
     new : methodName:string * parameters: ProvidedParameter list * returnType: Type -> ProvidedMethod
 
     /// Add XML documentation information to this provided method
-    member AddObsoleteAttribute : message: string * ?isError: bool -> unit    
+    member AddObsoleteAttribute : message: string * ?isError: bool -> unit
 
     /// Add XML documentation information to this provided constructor
-    member AddXmlDoc            : xmlDoc: string -> unit    
+    member AddXmlDoc            : xmlDoc: string -> unit
 
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
-    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
     /// The documentation is re-computed  every time it is required.
-    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit
+
     member AddMethodAttrs       : attributes:MethodAttributes -> unit
 
     /// Set the method attributes of the method. By default these are simple 'MethodAttributes.Public'
@@ -110,18 +110,18 @@ type ProvidedProperty =
     new  : propertyName: string * propertyType: Type * ?parameters:ProvidedParameter list -> ProvidedProperty
 
     /// Add a 'System.Obsolete' attribute to this provided property
-    member AddObsoleteAttribute : message: string * ?isError: bool -> unit    
+    member AddObsoleteAttribute : message: string * ?isError: bool -> unit
 
     /// Add XML documentation information to this provided constructor
-    member AddXmlDoc            : xmlDoc: string -> unit    
+    member AddXmlDoc            : xmlDoc: string -> unit
 
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
-    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
     /// The documentation is re-computed  every time it is required.
-    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Get or set a flag indicating if the property is static.
     /// FSharp.Data addition: the getter is used by Debug.fs
     member IsStatic             : bool with get,set
@@ -146,15 +146,15 @@ type ProvidedEvent =
     new  : propertyName: string * eventHandlerType: Type -> ProvidedEvent
 
     /// Add XML documentation information to this provided constructor
-    member AddXmlDoc            : xmlDoc: string -> unit    
+    member AddXmlDoc            : xmlDoc: string -> unit
 
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
-    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
     /// The documentation is re-computed  every time it is required.
-    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Get or set a flag indicating if the property is static.
     member IsStatic             : bool with set
 
@@ -175,17 +175,17 @@ type ProvidedLiteralField =
     new  : fieldName: string * fieldType: Type * literalValue: obj -> ProvidedLiteralField
 
     /// Add a 'System.Obsolete' attribute to this provided field
-    member AddObsoleteAttribute : message: string * ?isError: bool -> unit    
+    member AddObsoleteAttribute : message: string * ?isError: bool -> unit
 
     /// Add XML documentation information to this provided field
-    member AddXmlDoc            : xmlDoc: string -> unit    
+    member AddXmlDoc            : xmlDoc: string -> unit
 
     /// Add XML documentation information to this provided field, where the computation of the documentation is delayed until necessary
-    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Add XML documentation information to this provided field, where the computation of the documentation is delayed until necessary
     /// The documentation is re-computed  every time it is required.
-    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit   
+    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit
 
     /// Add definition location information to the provided field.
     member AddDefinitionLocation : line:int * column:int * filePath:string -> unit
@@ -198,17 +198,17 @@ type ProvidedField =
     new  : fieldName: string * fieldType: Type -> ProvidedField
 
     /// Add a 'System.Obsolete' attribute to this provided field
-    member AddObsoleteAttribute : message: string * ?isError: bool -> unit    
+    member AddObsoleteAttribute : message: string * ?isError: bool -> unit
 
     /// Add XML documentation information to this provided field
-    member AddXmlDoc            : xmlDoc: string -> unit    
+    member AddXmlDoc            : xmlDoc: string -> unit
 
     /// Add XML documentation information to this provided field, where the computation of the documentation is delayed until necessary
-    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Add XML documentation information to this provided field, where the computation of the documentation is delayed until necessary
     /// The documentation is re-computed  every time it is required.
-    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit   
+    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit
 
     /// Add definition location information to the provided field definition.
     member AddDefinitionLocation : line:int * column:int * filePath:string -> unit
@@ -218,12 +218,12 @@ type ProvidedField =
 /// FSharp.Data addition: SymbolKind is used by AssemblyReplacer.fs
 /// Represents the type constructor in a provided symbol type.
 [<NoComparison>]
-type SymbolKind = 
-    | SDArray 
-    | Array of int 
-    | Pointer 
-    | ByRef 
-    | Generic of System.Type 
+type SymbolKind =
+    | SDArray
+    | Array of int
+    | Pointer
+    | ByRef
+    | Generic of System.Type
     | FSharpTypeAbbreviation of (System.Reflection.Assembly * string * string[])
 
 /// FSharp.Data addition: ProvidedSymbolType is used by AssemblyReplacer.fs
@@ -251,7 +251,7 @@ type ProvidedTypeBuilder =
 /// Helps create erased provided unit-of-measure annotations.
 [<Class>]
 type ProvidedMeasureBuilder =
-    
+
     /// The ProvidedMeasureBuilder for building measures.
     static member Default : ProvidedMeasureBuilder
 
@@ -264,13 +264,13 @@ type ProvidedMeasureBuilder =
 
     /// e.g. kg / m
     member Ratio : numerator: System.Type * denominator: System.Type -> System.Type
-    
-    /// e.g. m * m 
+
+    /// e.g. m * m
     member Square : ``measure``: System.Type -> System.Type
-    
+
     /// the SI unit from the F# core library, where the string is in capitals and US spelling, e.g. Meter
     member SI : string -> System.Type
-    
+
     /// e.g. float<kg>, Vector<int, kg>
     member AnnotateType : basic: System.Type * argument: System.Type list -> System.Type
 
@@ -281,61 +281,61 @@ type ProvidedStaticParameter =
     new : parameterName: string * parameterType:Type * ?parameterDefaultValue:obj -> ProvidedStaticParameter
 
     /// Add XML documentation information to this provided constructor
-    member AddXmlDoc            : xmlDoc: string -> unit    
+    member AddXmlDoc            : xmlDoc: string -> unit
 
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
-    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit   
+    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit
 
 /// Represents a provided type definition.
 type ProvidedTypeDefinition =
     inherit System.Type
 
-    /// Create a new provided type definition in a namespace. 
+    /// Create a new provided type definition in a namespace.
     new : assembly: Assembly * namespaceName: string * className: string * baseType: Type option -> ProvidedTypeDefinition
 
     /// Create a new provided type definition, to be located as a nested type in some type definition.
     new : className : string * baseType: Type option -> ProvidedTypeDefinition
 
     /// Add the given type as an implemented interface.
-    member AddInterfaceImplementation : interfaceType: Type -> unit    
+    member AddInterfaceImplementation : interfaceType: Type -> unit
 
     /// Add the given function as a set of on-demand computed interfaces.
-    member AddInterfaceImplementationsDelayed : interfacesFunction:(unit -> Type  list)-> unit    
+    member AddInterfaceImplementationsDelayed : interfacesFunction:(unit -> Type  list)-> unit
 
     /// Specifies that the given method body implements the given method declaration.
     member DefineMethodOverride : methodInfoBody: ProvidedMethod * methodInfoDeclaration: MethodInfo -> unit
 
     /// Add a 'System.Obsolete' attribute to this provided type definition
-    member AddObsoleteAttribute : message: string * ?isError: bool -> unit    
+    member AddObsoleteAttribute : message: string * ?isError: bool -> unit
 
     /// Add XML documentation information to this provided constructor
-    member AddXmlDoc             : xmlDoc: string -> unit    
+    member AddXmlDoc             : xmlDoc: string -> unit
 
     /// Set the base type
-    member SetBaseType             : Type -> unit    
+    member SetBaseType             : Type -> unit
 
     /// Set the base type to a lazily evaluated value
-    member SetBaseTypeDelayed      : Lazy<Type option> -> unit    
+    member SetBaseTypeDelayed      : Lazy<Type option> -> unit
 
     /// Set underlying type for generated enums
     member SetEnumUnderlyingType : Type -> unit
 
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary.
     /// The documentation is only computed once.
-    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocDelayed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
     /// The documentation is re-computed  every time it is required.
-    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit   
-    
+    member AddXmlDocComputed   : xmlDocFunction: (unit -> string) -> unit
+
     /// Set the attributes on the provided type. This fully replaces the default TypeAttributes.
     member SetAttributes        : System.Reflection.TypeAttributes -> unit
-    
+
     /// Reset the enclosing type (for generated nested types)
     member ResetEnclosingType: enclosingType:System.Type -> unit
-    
+
     /// Add a method, property, nested type or other member to a ProvidedTypeDefinition
-    member AddMember         : memberInfo:MemberInfo      -> unit  
+    member AddMember         : memberInfo:MemberInfo      -> unit
     /// Add a set of members to a ProvidedTypeDefinition
     member AddMembers        : memberInfos:list<#MemberInfo> -> unit
 
@@ -343,8 +343,8 @@ type ProvidedTypeDefinition =
     member AddMemberDelayed  : memberFunction:(unit -> #MemberInfo)      -> unit
 
     /// Add a set of members to a ProvidedTypeDefinition, delaying computation of the members until required by the compilation context.
-    member AddMembersDelayed : (unit -> list<#MemberInfo>) -> unit    
-    
+    member AddMembersDelayed : (unit -> list<#MemberInfo>) -> unit
+
     /// Add the types of the generated assembly as generative types, where types in namespaces get hierarchically positioned as nested types.
     member AddAssemblyTypesAsNestedTypesDelayed : assemblyFunction:(unit -> System.Reflection.Assembly) -> unit
 
@@ -354,7 +354,7 @@ type ProvidedTypeDefinition =
     /// Add definition location information to the provided type definition.
     member AddDefinitionLocation : line:int * column:int * filePath:string -> unit
 
-    /// Suppress System.Object entries in intellisense menus in instances of this provided type 
+    /// Suppress System.Object entries in intellisense menus in instances of this provided type
     member HideObjectMethods  : bool with set
 
     /// Get or set a flag indicating if the ProvidedTypeDefinition is erased
@@ -371,7 +371,7 @@ type ProvidedTypeDefinition =
     member AddCustomAttribute : CustomAttributeData -> unit
 
     /// FSharp.Data addition: this method is used by Debug.fs and QuotationBuilder.fs
-    /// Emulate the F# type provider type erasure mechanism to get the 
+    /// Emulate the F# type provider type erasure mechanism to get the
     /// actual (erased) type. We erase ProvidedTypes to their base type
     /// and we erase array of provided type to array of base type. In the
     /// case of generics all the generic type arguments are also recursively
@@ -382,7 +382,7 @@ type ProvidedTypeDefinition =
 type ProvidedAssembly =
     new : assemblyFileName:string -> ProvidedAssembly
     /// <summary>
-    /// Emit the given provided type definitions as part of the assembly 
+    /// Emit the given provided type definitions as part of the assembly
     /// and adjust the 'Assembly' property of all provided type definitions to return that
     /// assembly.
     ///
@@ -400,14 +400,14 @@ type ProvidedAssembly =
 #endif
 
 
-/// A base type providing default implementations of type provider functionality when all provided 
+/// A base type providing default implementations of type provider functionality when all provided
 /// types are of type ProvidedTypeDefinition.
 type TypeProviderForNamespaces =
 
     /// Initializes a type provider to provide the types in the given namespace.
     new : namespaceName:string * types: ProvidedTypeDefinition list -> TypeProviderForNamespaces
 
-    /// Initializes a type provider 
+    /// Initializes a type provider
     new : unit -> TypeProviderForNamespaces
 
     /// Add a namespace of provided types.
@@ -422,7 +422,7 @@ type TypeProviderForNamespaces =
 
 #if FX_NO_LOCAL_FILESYSTEM
 #else
-    /// AssemblyResolve handler. Default implementation searches <assemblyname>.dll file in registered folders 
+    /// AssemblyResolve handler. Default implementation searches <assemblyname>.dll file in registered folders
     abstract ResolveAssembly : System.ResolveEventArgs -> Assembly
     default ResolveAssembly : System.ResolveEventArgs -> Assembly
 
