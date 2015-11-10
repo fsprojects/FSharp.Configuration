@@ -25,7 +25,7 @@ type BundleConfig() =
                         "~/Content/site.css"))
 
 /// Route for ASP.NET MVC applications
-type Route = { 
+type Route = {
     controller : string
     action : string
     id : UrlParameter }
@@ -35,7 +35,7 @@ type HttpRoute = {
     id : RouteParameter }
 
 type Global() =
-    inherit System.Web.HttpApplication() 
+    inherit System.Web.HttpApplication()
 
     static member RegisterWebApi(config: HttpConfiguration) =
         // Configure routing

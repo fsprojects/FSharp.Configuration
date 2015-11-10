@@ -5,7 +5,7 @@
 The YamlConfig type provider
 ============================
 
-This tutorial shows the use of the YamlConfig type provider. 
+This tutorial shows the use of the YamlConfig type provider.
 
 It's generated, hence the types can be used from any .NET language, not only from F# code.
 
@@ -108,7 +108,7 @@ type Config = YamlConfig<"Config.yaml">
 (**
 Compile it. Now we have assembly `Config.dll` containing generated types with the default values "baked" into them (actually the values are set in the type constructors).
 
-Let's test it in a C# project. Create a Console Application, add reference to `FSharp.Configuration.dll` and our F# `Config` project. 
+Let's test it in a C# project. Create a Console Application, add reference to `FSharp.Configuration.dll` and our F# `Config` project.
 
 First, we'll try to create an instance of our generated `Config` type and check that all the values are there:
 
@@ -149,7 +149,7 @@ let dbTimeout = config.DB.DefaultTimeout
 // [fsi:val dbTimeout : System.TimeSpan = 00:05:00]
 
 (**
-It's not very interesting so far, as the main purpose of any configuration is to be loaded from a config file at runtime. 
+It's not very interesting so far, as the main purpose of any configuration is to be loaded from a config file at runtime.
 So, add the following `RuntimeConfig.yaml` into the C# console project:
 
     [lang:yaml]
@@ -219,7 +219,7 @@ Let's show the event in action:
 // ...reference assemblies and open namespaces as before...
 let c = Config()
 let log name _ = printfn "%s changed!" name
-// add handlers for the root and all down the Mail hierarchy 
+// add handlers for the root and all down the Mail hierarchy
 c.Changed.Add (log "ROOT")
 c.Mail.Changed.Add (log "Mail")
 c.Mail.Smtp.Changed.Add (log "Mail.Smtp")
@@ -233,7 +233,7 @@ Mail:
     Port: 25
     User:       => first changed value <=
     Password:   => second changed value on the same level (in the same Map) <=
-    Ssl: true   
+    Ssl: true
   Pop3:
     Host: pop3.sample.com
     Port: 110

@@ -5,7 +5,7 @@
 The ResX type provider
 ============================
 
-This tutorial shows the use of the ResX type provider. 
+This tutorial shows the use of the ResX type provider.
 It allows typed access to .resx files.
 
 Create a resource file in Visual Studio like:
