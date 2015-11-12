@@ -122,7 +122,7 @@ module ValueParser =
         tryParseWith (fun x -> DateTime.TryParse(x, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal))
 
     let (|Uri|_|) (text: string) = 
-        ["http"; "https"; "ftp"; "ftps"; "sftp"; "amqp"; "file"] 
+        ["http"; "https"; "ftp"; "ftps"; "sftp"; "amqp"; "file"; "ssh"] 
         |> List.tryPick (fun x -> 
             if text.Trim().StartsWith(x + ":", StringComparison.InvariantCultureIgnoreCase) then
                 match System.Uri.TryCreate(text, UriKind.Absolute) with
