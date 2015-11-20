@@ -53,8 +53,7 @@ let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
 // The profile where the project is posted
 let gitOwner = "fsprojects"
 let gitHome = "https://github.com/" + gitOwner
-
-// The name of the project on GitHub
+// The name of the project on GitHub 
 let gitName = "FSharp.Configuration"
 
 // The url for the raw files hosted
