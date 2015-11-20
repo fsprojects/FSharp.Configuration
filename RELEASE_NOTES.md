@@ -1,3 +1,6 @@
+#### 0.5.5 - 20.12.2015
+* Same as 0.5.4, NuGet publishing problems
+
 #### 0.5.4 - 20.12.2015
 * Support "file" and "ssh" uri schemas
 * Use SharpYaml NuGet package
