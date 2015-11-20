@@ -35,7 +35,7 @@ module private Parser =
             | :? System.Double as d -> Float d
             | :? System.String as s ->
                 Scalar.ParseStr s
-            |t -> failwith "Unknown type %s" (string t)
+            |t -> failwithf "Unknown type %s" (string (t.GetType()))
         member x.UnderlyingType = 
             match x with
             | Int x -> x.GetType()
