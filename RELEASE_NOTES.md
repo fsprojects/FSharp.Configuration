@@ -1,3 +1,7 @@
+#### 0.5.4 - 20.12.2015
+* Support "file" and "ssh" uri schemas
+* Use SharpYaml NuGet package
+
 #### 0.5.3 - 12.06.2015
 * AppConfig type provider raises better exception if a settings or connection string is missing at runtime.
 

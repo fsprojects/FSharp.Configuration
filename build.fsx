@@ -7,7 +7,6 @@ open Fake
 open Fake.Git
 open Fake.AssemblyInfoFile
 open Fake.ReleaseNotesHelper
-open System.IO
 open System
 #if MONO
 #else
@@ -170,7 +169,7 @@ Target "NuGet" (fun _ ->
     CleanDir nugetDocsDir
     CleanDir nugetlibDir
 
-    CopyDir nugetlibDir "bin" (fun file -> file.Contains "FSharp.Core." |> not)
+    CopyDir nugetlibDir "bin" (fun file -> not <| (file.Contains "FSharp.Core." || file.Contains "SharpYaml"))
     CopyDir nugetDocsDir "./docs/output" allFiles
 
     NuGet (fun p ->
@@ -185,7 +184,7 @@ Target "NuGet" (fun _ ->
             OutputPath = nugetDir
             AccessKey = getBuildParamOrDefault "nugetkey" ""
             Publish = hasBuildParam "nugetkey"
-            Dependencies = [] })
+            Dependencies = [ "SharpYaml", GetPackageVersion "packages" "SharpYaml" ]})
         (project + ".nuspec")
 )
 
