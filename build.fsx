@@ -7,7 +7,6 @@ open Fake
 open Fake.Git
 open Fake.AssemblyInfoFile
 open Fake.ReleaseNotesHelper
-open System.IO
 open System
 #if MONO
 #else
@@ -185,7 +184,7 @@ Target "NuGet" (fun _ ->
             OutputPath = nugetDir
             AccessKey = getBuildParamOrDefault "nugetkey" ""
             Publish = hasBuildParam "nugetkey"
-            Dependencies = [("SharpYaml", "1.5.1")] })
+            Dependencies = [ "SharpYaml", GetPackageVersion "packages" "SharpYaml" ]})
         (project + ".nuspec")
 )
 
