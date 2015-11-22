@@ -1,3 +1,6 @@
+#### 0.5.7 - 22.11.2015
+* Revert dependency on SharpYaml
+
 #### 0.5.6 - 22.12.2015
 * Fixed: SharpYaml NuGet package was not listed as dependency of FSharp.Configuration one
 * infer URLs with "tcp" schema
