@@ -111,11 +111,4 @@
       <Paket>True</Paket>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="SharpYaml">
-      <HintPath>..\..\packages\SharpYaml\lib\SharpYaml.dll</HintPath>
-      <Private>True</Private>
-      <Paket>True</Paket>
-    </Reference>
-  </ItemGroup>
 </Project>
