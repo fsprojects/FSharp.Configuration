@@ -1,3 +1,7 @@
+#### 0.5.6 - 22.12.2015
+* Fixed: SharpYaml NuGet package was not listed as dependency of FSharp.Configuration one
+* infer URLs with "tcp" schema
+
 #### 0.5.5 - 20.12.2015
 * Same as 0.5.4, NuGet publishing problems
 
