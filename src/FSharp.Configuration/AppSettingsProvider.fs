@@ -11,14 +11,22 @@ open System.Globalization
 open System.Web.Hosting
 open System.Runtime.Caching
 
+let mutable private exePath = ""
+let ``Set .exe file path`` filePath = 
+    exePath <- filePath
+
 let private getConfig() =
+    let path = exePath
+    if not(String.IsNullOrEmpty path) && System.IO.File.Exists(path) then ConfigurationManager.OpenExeConfiguration path
+    else
+
     if HostingEnvironment.IsHosted then
         Web.Configuration.WebConfigurationManager.OpenWebConfiguration "~"
     else ConfigurationManager.OpenExeConfiguration ConfigurationUserLevel.None
 
 let getConfigValue key =
     match getConfig().AppSettings.Settings.[key] with
-    | null -> raise <| KeyNotFoundException(message = sprintf "Cannot find name %s in <appSettings> section of config file." key)
+    | null -> raise <| KeyNotFoundException(message = sprintf "Cannot find name %s in <appSettings> section of config file. (%s)" key (getConfig().FilePath))
     | settings -> settings.Value
 
 let setConfigValue (key, value) = 
@@ -114,6 +122,15 @@ let internal typedAppSettings (context: Context) =
     
                             typeDef.AddMember prop
     
+        
+                        let executeSelector = 
+                            ProvidedMethod(niceName names "SelectExecutableFile", [ProvidedParameter("pathOfExe",typeof<string>);],
+                                                                                   typeof<Unit>, IsStaticMethod=true,
+                                                                                   InvokeCode = (fun args -> <@@ ``Set .exe file path``(%%args.[0]) @@>))
+                        executeSelector.AddXmlDoc "Property to change the executable file that is read for configurations. This idea is that you can manage other executables also (e.g. from script)."
+                        typeDef.AddMember executeSelector
+
+
                         let prop = 
                             ProvidedProperty(niceName names "ConfigFileName", typeof<string>, GetterCode = fun _ -> <@@ filePath @@>)
     
