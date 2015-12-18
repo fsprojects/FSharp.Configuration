@@ -11,36 +11,37 @@ open System.Globalization
 open System.Web.Hosting
 open System.Runtime.Caching
 
-let mutable private exePath = ""
-let ``Set .exe file path`` filePath = 
-    exePath <- filePath
+let mutable private exePath = Map.empty
+let ``Set .exe file path``(key, filePath) = 
+    exePath <- exePath.Add(key, filePath)
 
-let private getConfig() =
+let private getConfig file =
     let path = exePath
-    if not(String.IsNullOrEmpty path) && System.IO.File.Exists(path) then ConfigurationManager.OpenExeConfiguration path
+    if path.ContainsKey(file) && System.IO.File.Exists(path.[file]) then ConfigurationManager.OpenExeConfiguration path.[file]
     else
 
     if HostingEnvironment.IsHosted then
         Web.Configuration.WebConfigurationManager.OpenWebConfiguration "~"
     else ConfigurationManager.OpenExeConfiguration ConfigurationUserLevel.None
 
-let getConfigValue key =
-    match getConfig().AppSettings.Settings.[key] with
-    | null -> raise <| KeyNotFoundException(message = sprintf "Cannot find name %s in <appSettings> section of config file. (%s)" key (getConfig().FilePath))
+let getConfigValue(file,key) =
+    let conf = getConfig file
+    match conf.AppSettings.Settings.[key] with
+    | null -> raise <| KeyNotFoundException(message = sprintf "Cannot find name %s in <appSettings> section of config file. (%s)" key (conf.FilePath))
     | settings -> settings.Value
 
-let setConfigValue (key, value) = 
-    let config = getConfig() 
+let setConfigValue(file, key, value) = 
+    let config = getConfig file
     config.AppSettings.Settings.[key].Value <- value
     config.Save()
 
-let getConnectionString (key: string) =
-    match getConfig().ConnectionStrings.ConnectionStrings.[key] with
+let getConnectionString(file, key: string) =
+    match getConfig(file).ConnectionStrings.ConnectionStrings.[key] with
     | null -> raise <| KeyNotFoundException(message = sprintf "Cannot find name %s in <connectionStrings> section of config file." key)
     | section -> section.ConnectionString
 
-let setConnectionString (key: string, value) =
-    let config = getConfig()
+let setConnectionString(file, key: string, value) =
+    let config = getConfig file
     config.ConnectionStrings.ConnectionStrings.[key].ConnectionString <- value
     config.Save()
 
@@ -64,8 +65,8 @@ let internal typedAppSettings (context: Context) =
                         let prop =
                             ProvidedProperty(name, 
                                              typeof<string>,
-                                             GetterCode = (fun _ -> <@@ getConnectionString key @@>),
-                                             SetterCode = fun args -> <@@ setConnectionString(key, %%args.[0]) @@>)
+                                             GetterCode = (fun _ -> <@@ getConnectionString(filePath, key) @@>),
+                                             SetterCode = fun args -> <@@ setConnectionString(filePath, key, %%args.[0]) @@>)
             
                         prop.IsStatic <- true
                         prop.AddXmlDoc (sprintf "Returns the connection string from %s with name %s" configFileName name)
@@ -89,32 +90,32 @@ let internal typedAppSettings (context: Context) =
                                 match (appSettings.Item key).Value with
                                 | ValueParser.Uri _ ->
                                     ProvidedProperty(name, typeof<Uri>,
-                                        GetterCode = (fun _ -> <@@ Uri (getConfigValue key) @@>),
-                                        SetterCode = fun args -> <@@ setConfigValue(key, string (%%args.[0]: Uri)) @@>)
+                                        GetterCode = (fun _ -> <@@ Uri (getConfigValue(filePath, key)) @@>),
+                                        SetterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: Uri)) @@>)
                                 | ValueParser.Int _ ->
                                     ProvidedProperty(name, typeof<int>,
-                                        GetterCode = (fun _ -> <@@ Int32.Parse (getConfigValue key) @@>),
-                                        SetterCode = fun args -> <@@ setConfigValue(key, string (%%args.[0]: Int32)) @@>)
+                                        GetterCode = (fun _ -> <@@ Int32.Parse (getConfigValue(filePath, key)) @@>),
+                                        SetterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: Int32)) @@>)
                                 | ValueParser.Bool _ ->
                                     ProvidedProperty(name, typeof<bool>,
-                                        GetterCode = (fun _ -> <@@ Boolean.Parse (getConfigValue key) @@>),
-                                        SetterCode = fun args -> <@@ setConfigValue(key, string (%%args.[0]: Boolean)) @@>)
+                                        GetterCode = (fun _ -> <@@ Boolean.Parse (getConfigValue(filePath, key)) @@>),
+                                        SetterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: Boolean)) @@>)
                                 | ValueParser.Float _ ->
                                     ProvidedProperty(name, typeof<float>,
-                                        GetterCode = (fun _ -> <@@ Double.Parse (getConfigValue key, NumberStyles.Any, CultureInfo.InvariantCulture) @@>),
-                                        SetterCode = fun args -> <@@ setConfigValue(key, string (%%args.[0]: float)) @@>)
+                                        GetterCode = (fun _ -> <@@ Double.Parse (getConfigValue(filePath, key), NumberStyles.Any, CultureInfo.InvariantCulture) @@>),
+                                        SetterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: float)) @@>)
                                 | ValueParser.TimeSpan _ ->
                                     ProvidedProperty(name, typeof<TimeSpan>,
-                                        GetterCode = (fun _ -> <@@ TimeSpan.Parse(getConfigValue key, CultureInfo.InvariantCulture) @@>),
-                                        SetterCode = fun args -> <@@ setConfigValue(key, string (%%args.[0]: TimeSpan)) @@>)
+                                        GetterCode = (fun _ -> <@@ TimeSpan.Parse(getConfigValue(filePath, key), CultureInfo.InvariantCulture) @@>),
+                                        SetterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: TimeSpan)) @@>)
                                 | ValueParser.DateTime _ ->
                                     ProvidedProperty(name, typeof<DateTime>,
-                                        GetterCode = (fun _ -> <@@ DateTime.Parse(getConfigValue key, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal) @@>),
-                                        SetterCode = fun args -> <@@ setConfigValue(key, (%%args.[0]: DateTime).ToString("o")) @@>)
+                                        GetterCode = (fun _ -> <@@ DateTime.Parse(getConfigValue(filePath, key), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal) @@>),
+                                        SetterCode = fun args -> <@@ setConfigValue(filePath, key, (%%args.[0]: DateTime).ToString("o")) @@>)
                                 | _ ->
                                     ProvidedProperty(name, typeof<string>,
-                                        GetterCode = (fun _ -> <@@ getConfigValue key @@>),
-                                        SetterCode = fun args -> <@@ setConfigValue(key, %%args.[0]) @@>)
+                                        GetterCode = (fun _ -> <@@ getConfigValue(filePath, key) @@>),
+                                        SetterCode = fun args -> <@@ setConfigValue(filePath, key, %%args.[0]) @@>)
     
                             prop.IsStatic <- true
                             prop.AddXmlDoc (sprintf "Returns the value from %s with key %s" configFileName key)
@@ -126,7 +127,7 @@ let internal typedAppSettings (context: Context) =
                         let executeSelector = 
                             ProvidedMethod(niceName names "SelectExecutableFile", [ProvidedParameter("pathOfExe",typeof<string>);],
                                                                                    typeof<Unit>, IsStaticMethod=true,
-                                                                                   InvokeCode = (fun args -> <@@ ``Set .exe file path``(%%args.[0]) @@>))
+                                                                                   InvokeCode = (fun args -> <@@ ``Set .exe file path``(filePath, %%args.[0]) @@>))
                         executeSelector.AddXmlDoc "Property to change the executable file that is read for configurations. This idea is that you can manage other executables also (e.g. from script)."
                         typeDef.AddMember executeSelector
 
