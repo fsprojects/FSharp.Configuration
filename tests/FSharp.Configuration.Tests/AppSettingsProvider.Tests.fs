@@ -50,3 +50,14 @@ let ``Can return a connection string from the config file``() =
 let ``Can read multiple connection strings from the config file``() =   
     Settings.ConnectionStrings.Test1 |> should not' (equal Settings.ConnectionStrings.Test2)
 
+
+[<Literal>] 
+let fakeConfig = __SOURCE_DIRECTORY__ + @"/../../packages/FAKE/tools/FAKE.Deploy.exe.config"
+type FakeSettings = AppSettings<fakeConfig>
+
+[<Test>] 
+let ``Can read different configuration file``() =
+    let exePath = [| __SOURCE_DIRECTORY__; ".."; ".."; "packages"; "FAKE"; "tools"; "FAKE.Deploy.exe" |]
+                  |> System.IO.Path.Combine |> System.IO.Path.GetFullPath
+    FakeSettings.SelectExecutableFile exePath
+    FakeSettings.ServerName |> should equal "localhost"
