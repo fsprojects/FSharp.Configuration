@@ -50,19 +50,16 @@ let ``Can return a connection string from the config file``() =
 let ``Can read multiple connection strings from the config file``() =   
     Settings.ConnectionStrings.Test1 |> should not' (equal Settings.ConnectionStrings.Test2)
 
-open System.IO
-type Settings2 = AppSettings<"app.config">
+[<Literal>] 
+let fakeConfig = __SOURCE_DIRECTORY__ + @"/../../packages/FAKE/tools/FAKE.Deploy.exe.config"
+type FakeSettings = AppSettings<fakeConfig>
 
 [<Test>] 
 let ``Can read different configuration file``() =
-    let exePath = 
-#if INTERACTIVE
-        let basePath = Path.Combine [| __SOURCE_DIRECTORY__ ; "bin"; "Debug" |]
-#else
-        let basePath = 
-            System.Reflection.Assembly.GetExecutingAssembly().Location
-            |> Path.GetDirectoryName
+    let exePath = [| __SOURCE_DIRECTORY__; ".."; ".."; "packages"; "FAKE"; "tools"; "FAKE.Deploy.exe" |]
+                  |> System.IO.Path.Combine |> System.IO.Path.GetFullPath
+    FakeSettings.SelectExecutableFile exePath
+
+#if INTERACTIVE //Travis can't handle fakeConfig-directory
+    FakeSettings.ServerName |> should equal "localhost"
 #endif
-        Path.Combine(basePath, "FSharp.Configuration.Tests.dll") |> System.IO.Path.GetFullPath    
-    Settings2.SelectExecutableFile exePath
-    Settings2.TestBool |> should equal true
