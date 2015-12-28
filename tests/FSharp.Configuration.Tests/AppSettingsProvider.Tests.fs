@@ -51,6 +51,7 @@ let ``Can read multiple connection strings from the config file``() =
     Settings.ConnectionStrings.Test1 |> should not' (equal Settings.ConnectionStrings.Test2)
 
 
+// Can we assert something from a third party component?
 [<Literal>] 
 let fakeConfig = __SOURCE_DIRECTORY__ + @"/../../packages/FAKE/tools/FAKE.Deploy.exe.config"
 type FakeSettings = AppSettings<fakeConfig>
