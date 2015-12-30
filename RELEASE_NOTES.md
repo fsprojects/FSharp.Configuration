@@ -1,3 +1,10 @@
+#### 0.5.8 - 30.12.2015
+* Get SharpYaml from NuGet but pack dll inside of FSharp.Configuration NuGet package
+* Fix Travis build
+* For Mono compatibility: TypeConstructor path should be able to be separated by both "/" and "\"
+* AppSettingsProvider: Added possibility to change the application that is being configured.
+* Fixed AppSettingsProvider to work in parallel with multiple configs.
+
 #### 0.5.7 - 22.11.2015
 * Revert dependency on SharpYaml
 
