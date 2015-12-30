@@ -51,14 +51,14 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '1', 1)" onmouseover="showTip(event, '1', 1)">
-            getConfigValue key
+            ( Set .exe file path ) (key, filePath)
           </code>
           <div class="tip" id="1">
-            <strong>Signature:</strong> key:string -&gt; string<br />
+            <strong>Signature:</strong> (key:string * filePath:string) -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/AppSettingsProvider.fs#L19-19" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/AppSettingsProvider.fs#L15-15" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -69,14 +69,14 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
-            getConnectionString key
+            getConfigValue (file, key)
           </code>
           <div class="tip" id="2">
-            <strong>Signature:</strong> key:string -&gt; string<br />
+            <strong>Signature:</strong> (file:string * key:string) -&gt; string<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/AppSettingsProvider.fs#L29-29" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/AppSettingsProvider.fs#L27-27" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -87,14 +87,14 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
-            setConfigValue (key, value)
+            getConnectionString (file, key)
           </code>
           <div class="tip" id="3">
-            <strong>Signature:</strong> (key:string * value:string) -&gt; unit<br />
+            <strong>Signature:</strong> (file:string * key:string) -&gt; string<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/AppSettingsProvider.fs#L24-24" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/AppSettingsProvider.fs#L38-38" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -105,14 +105,32 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
-            setConnectionString (key, value)
+            setConfigValue (file, key, value)
           </code>
           <div class="tip" id="4">
-            <strong>Signature:</strong> (key:string * value:string) -&gt; unit<br />
+            <strong>Signature:</strong> (file:string * key:string * value:string) -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/AppSettingsProvider.fs#L34-34" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/AppSettingsProvider.fs#L33-33" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '5', 5)" onmouseover="showTip(event, '5', 5)">
+            setConnectionString (file, key, value)
+          </code>
+          <div class="tip" id="5">
+            <strong>Signature:</strong> (file:string * key:string * value:string) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/AppSettingsProvider.fs#L43-43" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

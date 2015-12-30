@@ -117,6 +117,26 @@ It allows to access app.config files in a strongly typed way.</p>
 </tr>
 </table>
 
+<h2><a name="Using-AppSettingsProvider-in-fsx-script" class="anchor" href="#Using-AppSettingsProvider-in-fsx-script">Using AppSettingsProvider in *.fsx-script</a></h2>
+
+<p>The default executable is the current project .config. (Which is Fsi.exe.config in F# interactive.)
+How ever, if you want to modify the configuration of some other application, you can do with SelectExecutableFile-method:</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">path</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">IO</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="t">Path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="f">Combine</span> [|<span class="k">__SOURCE_DIRECTORY__</span> ; <span class="s">&quot;bin&quot;</span>; <span class="s">&quot;myProject.exe&quot;</span> |]
+<span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="f">SelectExecutableFile</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">path</span>
+<span onmouseout="hideTip(event, 'fs3', 20)" onmouseover="showTip(event, 'fs3', 20)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="i">Test2</span>
+</pre>
+</td>
+</tr>
+</table>
+
 <div class="tip" id="fs1">namespace FSharp</div>
 <div class="tip" id="fs2">namespace FSharp.Configuration</div>
 <div class="tip" id="fs3">type Settings = AppSettings&lt;...&gt;<br /><br />Full name: AppSettingsProvider.Settings</div>
@@ -125,6 +145,12 @@ It allows to access app.config files in a strongly typed way.</p>
 <div class="tip" id="fs6">property AppSettings&lt;...&gt;.ConfigFileName: string<br /><em><br /><br />Returns the Filename</em></div>
 <div class="tip" id="fs7">type ConnectionStrings =<br />&#160;&#160;static member LocalSqlServer : string with get, set<br />&#160;&#160;static member Test : string with get, set<br /><br />Full name: FSharp.Configuration.AppSettings,configFileName=&quot;app.config&quot;.ConnectionStrings<br /><em><br /><br />Represents the available connection strings from app.config</em></div>
 <div class="tip" id="fs8">property AppSettings&lt;...&gt;.ConnectionStrings.Test: string<br /><em><br /><br />Returns the connection string from app.config with name Test</em></div>
+<div class="tip" id="fs9">val path : string<br /><br />Full name: AppSettingsProvider.path</div>
+<div class="tip" id="fs10">namespace System</div>
+<div class="tip" id="fs11">namespace System.IO</div>
+<div class="tip" id="fs12">type Path =<br />&#160;&#160;static val DirectorySeparatorChar : char<br />&#160;&#160;static val AltDirectorySeparatorChar : char<br />&#160;&#160;static val VolumeSeparatorChar : char<br />&#160;&#160;static val InvalidPathChars : char[]<br />&#160;&#160;static val PathSeparator : char<br />&#160;&#160;static member ChangeExtension : path:string * extension:string -&gt; string<br />&#160;&#160;static member Combine : params paths:string[] -&gt; string + 3 overloads<br />&#160;&#160;static member GetDirectoryName : path:string -&gt; string<br />&#160;&#160;static member GetExtension : path:string -&gt; string<br />&#160;&#160;static member GetFileName : path:string -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Path</div>
+<div class="tip" id="fs13">System.IO.Path.Combine(params paths: string []) : string<br />System.IO.Path.Combine(path1: string, path2: string) : string<br />System.IO.Path.Combine(path1: string, path2: string, path3: string) : string<br />System.IO.Path.Combine(path1: string, path2: string, path3: string, path4: string) : string</div>
+<div class="tip" id="fs14">AppSettings&lt;...&gt;.SelectExecutableFile(pathOfExe: string) : Unit<br /><em><br /><br />Property to change the executable file that is read for configurations. This idea is that you can manage other executables also (e.g. from script).</em></div>
 
         </div>
         <div class="span3">
