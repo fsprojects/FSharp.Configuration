@@ -62,3 +62,16 @@ Settings.ConfigFileName
 // read a connection string from the config
 Settings.ConnectionStrings.Test
 // [fsi:val it : string = "Server=.;Database=SomeDatabase;Integrated Security=true"]
+
+(**
+
+Using AppSettingsProvider in *.fsx-script
+-----------------------------------------
+
+The default executable is the current project .config. (Which is Fsi.exe.config in F# interactive.)
+How ever, if you want to modify the configuration of some other application, you can do with SelectExecutableFile-method:
+*)
+
+let path = System.IO.Path.Combine [|__SOURCE_DIRECTORY__ ; "bin"; "myProject.exe" |]
+Settings.SelectExecutableFile path
+Settings.Test2

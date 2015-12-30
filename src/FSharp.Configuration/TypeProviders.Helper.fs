@@ -184,7 +184,8 @@ let findConfigFile resolutionFolder configFileName =
     if Path.IsPathRooted configFileName then 
         configFileName 
     else 
-        Path.Combine(resolutionFolder, configFileName)
+        let path = configFileName.Split([|@"\"; "/"|], StringSplitOptions.None)
+        [| [|resolutionFolder|]; path|] |> Array.concat |> Path.Combine
 
 let erasedType<'T> assemblyName rootNamespace typeName = 
     ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>))
