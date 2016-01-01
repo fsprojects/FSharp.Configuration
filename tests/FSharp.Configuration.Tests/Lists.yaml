@@ -40,3 +40,13 @@ Archive:
   - Type: mssql
     Writeonly: false
     ConnectionString: Data Source=server1;Initial Catalog=message_archive;Integrated Security=SSPI;
+
+Fix82:
+  id: "myApp"
+  constraints:
+    -
+      - "attribute"
+      - "OPERATOR"
+      - "value"
+  labels:
+    environment: "staging"

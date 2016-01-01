@@ -280,6 +280,32 @@ items:
     settings.items.[2].descrip |> should equal "High Heeled \"Ruby\" Slippers"
     settings.items.[2].quantity |> should equal 1
 
+[<Test>]
+let ``Can load nested lists``() =
+    let settings = Lists()
+    settings.LoadText """
+Fix82:
+  id: "myApp"
+  constraints:
+    -
+      - "attribute"
+      - "OPERATOR"
+      - "value"
+    -
+      - "field"
+      - "OP"
+  labels:
+    environment: "staging"
+"""
+    settings.Fix82.constraints.Count |> should equal 2
+    settings.Fix82.constraints.[0].Count |> should equal 3
+    settings.Fix82.constraints.[0].[0] |> should equal "attribute"
+    settings.Fix82.constraints.[0].[1] |> should equal "OPERATOR"
+    settings.Fix82.constraints.[0].[2] |> should equal "value"
+    settings.Fix82.constraints.[1].Count |> should equal 2
+    settings.Fix82.constraints.[1].[0] |> should equal "field"
+    settings.Fix82.constraints.[1].[1] |> should equal "OP"
+
 [<Ignore>]
 [<Test>]
 let ``Check that list defaults are OK``() =
