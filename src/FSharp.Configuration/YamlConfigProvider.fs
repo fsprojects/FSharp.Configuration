@@ -52,8 +52,7 @@ module private Parser =
             | Bool x -> box x
             | Uri x -> box x
             | Float x -> box x
-        
-        
+
     type Node =
         | Scalar of Scalar
         | List of Node list
@@ -63,11 +62,14 @@ module private Parser =
         let rec loop (n: obj) =
             match n with
             | :? List<obj> as l -> Node.List (l |> Seq.map loop |> Seq.toList)
-            | :? Dictionary<obj,obj> as m -> 
-                Map (m |> Seq.choose (fun p -> 
+            | :? Dictionary<obj,obj> as map -> 
+                map 
+                |> Seq.choose (fun p -> 
                     match p.Key with
                     | :? string as key -> Some (key, loop p.Value)
-                    | _ -> None) |> Seq.toList)
+                    | _ -> None)
+                |> Seq.toList
+                |> Map
             | scalar ->
                 Scalar (Scalar.FromObj scalar)
 
@@ -80,21 +82,28 @@ module private Parser =
               raise e.InnerException // inner exceptions are much more informative
             | _ -> reraise()
 
+    let private inferListType (targetType: Type) (nodes: Node list) =
+        let types =
+            nodes 
+            |> List.choose (function Scalar x -> Some x | _ -> None)
+            |> Seq.groupBy (fun n -> n.UnderlyingType) 
+            |> Seq.map fst 
+            |> Seq.toList
+            
+        match types with
+        | [] -> targetType
+        | [ty] -> typedefof<ResizeArray<_>>.MakeGenericType ty
+        | types -> failwithf "List cannot contain elements of heterohenius types (attempt to mix types: %A)." types
+
     let update (target: 'a) (updater: Node) =
-        let tryGetField o name =
-            let ty = o.GetType()
-            let field = ty.GetField(name, BindingFlags.Instance ||| BindingFlags.NonPublic)
-            if field = null then 
-                debug "Field %s was not found in %s." name ty.Name
-                None
-            else Some field
+        let tryGetField x name = x.GetType().GetField(name, BindingFlags.Instance ||| BindingFlags.NonPublic) |> Option.ofNull
 
         let getChangedDelegate x = 
             x.GetType().GetField("_changed", BindingFlags.Instance ||| BindingFlags.NonPublic).GetValue x :?> MulticastDelegate 
 
         let rec update (target: obj) name (updater: Node) =
             match name, updater with
-            | _, Scalar (_ as x) -> updateScalar target name x 
+            | _, Scalar x -> updateScalar target name x 
             | _, Map m -> updateMap target name m
             | Some name, List l -> updateList target name l
             | None, _ -> failwithf "Only Maps are allowed at the root level."
@@ -111,66 +120,54 @@ module private Parser =
                 let newValue = node.BoxedValue
         
                 return! 
-                    if oldValue <> newValue then 
+                    if oldValue <> newValue then
                         field.SetValue(target, newValue)
                         Some (getChangedDelegate target)
                     else None
-            } |> function Some dlg -> [dlg] | None -> []
+            } |> Option.toList
 
-        and fillList (targetType: Type) (updaters: Node list) =
-
-            let fieldType =
-                match updaters |> List.choose (function Scalar x -> Some x | _ -> None)
-                                |> Seq.groupBy (fun n -> n.UnderlyingType) |> Seq.map fst |> Seq.toList with
-                | [] -> targetType
-                | [ty] -> typedefof<ResizeArray<_>>.MakeGenericType ty
-                | types -> failwithf "List cannot contain elements of heterohenius types (attempt to mix types: %A)." types
-
-            let updaters = updaters |> List.choose (function
-                | Scalar x -> Some x.BoxedValue
-                | Map m ->
-                    let mapItem = Activator.CreateInstance (fieldType.GetGenericArguments().[0])
+        and makeListItemUpdaters (itemType: Type) (itemNodes: Node list) =
+            itemNodes 
+            |> List.choose (function 
+                | Scalar x -> Some x.BoxedValue 
+                | Map m -> 
+                    let mapItem = Activator.CreateInstance itemType
                     updateMap mapItem None m |> ignore
                     Some mapItem
-                | List l ->
-                    let listItem = fillList (fieldType.GetGenericArguments().[0]) l
-                    Some listItem)
+                | List l -> Some (fillList itemType l))
 
-            if targetType.IsAssignableFrom(fieldType) |> not then failwithf "Cannot assign %O to %O." fieldType.Name targetType.Name
-
-            let list = Activator.CreateInstance fieldType
-            let addMethod = fieldType.GetMethod("Add", [|fieldType.GetGenericArguments().[0]|])
-            updaters |> List.iter (fun x -> addMethod.Invoke(list, [| x |]) |> ignore)
+        and makeListInstance (listType: Type) (itemType: Type) (updaters: obj list) = 
+            let list = Activator.CreateInstance listType
+            let addMethod = listType.GetMethod("Add", [|itemType|])
+            for updater in updaters do
+                addMethod.Invoke(list, [|updater|]) |> ignore
             list
+
+        and fillList (targetType: Type) (updaters: Node list) =
+            let fieldType = inferListType targetType updaters
+            let itemType = fieldType.GetGenericArguments().[0]
+            let updaters = makeListItemUpdaters itemType updaters
+            
+            if not (targetType.IsAssignableFrom fieldType) then 
+                failwithf "Cannot assign %O to %O." fieldType.Name targetType.Name
+            
+            makeListInstance fieldType itemType updaters
 
         and updateList (target: obj) name (updaters: Node list) =
             maybe {
                 let! field = tryGetField target ("_" + name)
-        
-                let fieldType = 
-                    match updaters |> List.choose (function Scalar x -> Some x | _ -> None) 
-                                   |> Seq.groupBy (fun n -> n.UnderlyingType) |> Seq.map fst |> Seq.toList with
-                    | [] -> field.FieldType
-                    | [ty] -> typedefof<ResizeArray<_>>.MakeGenericType ty
-                    | types -> failwithf "List cannot contain elements of heterohenius types (attempt to mix types: %A)." types
-
-                let updaters = updaters |> List.choose (function 
-                    | Scalar x -> Some x.BoxedValue 
-                    | Map m -> 
-                        let mapItem = Activator.CreateInstance (fieldType.GetGenericArguments().[0])
-                        updateMap mapItem None m |> ignore
-                        Some mapItem
-                    | List l ->
-                        let listItem = fillList (fieldType.GetGenericArguments().[0]) l
-                        Some listItem)
-
-                if field.FieldType <> fieldType then failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
+                let fieldType = inferListType field.FieldType updaters
+                
+                if field.FieldType <> fieldType then 
+                    failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
+                
                 let isComparable (x: obj) = x :? Uri || x :? IComparable
-                let values = field.GetValue(target) :?> Collections.IEnumerable |> Seq.cast<obj>
+                let values = field.GetValue target :?> Collections.IEnumerable |> Seq.cast<obj>
                 // NOTE: another solution would be to make our provided type implement IComparable
                 // On the other side I'm not completely sure why we sort at all.
                 // What if the ordering of the item matters for the user?
                 let isSortable = values |> Seq.forall isComparable
+                
                 let sort (xs: obj seq) = 
                     xs 
                     |> Seq.sortBy (function
@@ -178,16 +175,17 @@ module private Parser =
                        | :? IComparable as x -> x
                        | x -> failwithf "%A is not comparable, so it cannot be included into a list."  x)
                     |> Seq.toList
+
+                let itemType = fieldType.GetGenericArguments().[0]
+                let updaters = makeListItemUpdaters itemType updaters
+
                 let oldValues, newValues =
-                    if isSortable then
-                        sort values, sort updaters
-                    else values |> Seq.toList, updaters
+                    if isSortable then sort values, sort updaters
+                    else Seq.toList values, updaters
 
                 return!
                     if not isSortable || oldValues <> newValues then
-                        let list = Activator.CreateInstance fieldType
-                        let addMethod = fieldType.GetMethod("Add", [|fieldType.GetGenericArguments().[0]|])
-                        updaters |> List.iter (fun x -> addMethod.Invoke(list, [| x |]) |> ignore)
+                        let list = makeListInstance fieldType itemType updaters
                         field.SetValue(target, list)
                         Some (getChangedDelegate target)
                     else None
@@ -264,7 +262,7 @@ module private TypesFactory =
 
     let rec transform readOnly name (node: Node) =
         match name, node with
-        | Some name, Scalar (_ as x) -> transformScalar readOnly name x
+        | Some name, Scalar x -> transformScalar readOnly name x
         | _, Map m -> transformMap readOnly name m
         | Some name, List l -> transformList readOnly name l
         | None, _ -> failwithf "Only Maps are allowed at the root level."
@@ -272,7 +270,7 @@ module private TypesFactory =
     and transformScalar readOnly name (node: Scalar) =
         let rawType = node.UnderlyingType
         let field = ProvidedField("_" +  name, rawType)
-        let prop = ProvidedProperty (name, rawType, IsStatic=false, GetterCode = (fun [me] -> Expr.FieldGet(me, field)))
+        let prop = ProvidedProperty (name, rawType, IsStatic = false, GetterCode = (fun [me] -> Expr.FieldGet(me, field)))
         if not readOnly then prop.SetterCode <- (fun [me;v] -> Expr.FieldSet(me, field, v))
         let initValue = node.ToExpr()
 
@@ -284,7 +282,10 @@ module private TypesFactory =
         let elements =
             children
             |> List.map (function
-               | Scalar x -> { MainType = Some x.UnderlyingType; Types = []; Init = fun _ -> x.ToExpr() }
+               | Scalar x -> 
+                   { MainType = Some x.UnderlyingType
+                     Types = []
+                     Init = fun _ -> x.ToExpr() }
                | Map m -> transformMap readOnly None m
                | List l -> transformListRaw readOnly (name + "_Items") l)
 
@@ -299,19 +300,17 @@ module private TypesFactory =
                 let childTypes, childInits = foldChildren readOnly headChildren
                 let eventField, event = generateChangedEvent()
 
-                let mapTy = ProvidedTypeDefinition(name + "_Item_Type", Some typeof<obj>, HideObjectMethods=true,
-                                                   IsErased=false, SuppressRelocation=false)
+                let mapTy = ProvidedTypeDefinition(name + "_Item_Type", Some typeof<obj>, HideObjectMethods = true,
+                                                   IsErased = false, SuppressRelocation = false)
 
                 let ctr = ProvidedConstructor([], InvokeCode = (fun [me] -> childInits me))
                 mapTy.AddMembers (ctr :> MemberInfo :: childTypes)
                 mapTy.AddMember eventField
                 mapTy.AddMember event
-                let t =
-                    { MainType = Some (mapTy :> _)
-                      Types = [mapTy :> MemberInfo]
-                      Init = fun _ -> Expr.NewObject(ctr, []) }
-
-                [ t ], mapTy :> _
+                [{ MainType = Some (mapTy :> _)
+                   Types = [mapTy :> MemberInfo]
+                   Init = fun _ -> Expr.NewObject(ctr, []) }],
+                mapTy :> _
             | types -> failwithf "List cannot contain elements of heterogeneous types (attempt to mix types: %A)."
                                  (types |> List.map (Option.map (fun x -> x.Name)))
 
@@ -321,12 +320,13 @@ module private TypesFactory =
         let listCtr =
             let meth = typeof<Helper>.GetMethod("CreateResizeArray")
             ProvidedTypeBuilder.MakeGenericMethod(meth, [elementType])
+
         let childTypes = elements |> List.collect (fun x -> x.Types)
+
         let initValue me =
             Expr.Coerce(
                 Expr.Call(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)),ctrType)]),
                 propType)
-
 
         { MainType = Some propType
           Types = childTypes
@@ -347,23 +347,20 @@ module private TypesFactory =
                 // Sequence of maps: https://github.com/fsprojects/FSharp.Configuration/issues/51
                 // TODOL Construct the type from all the elements (instead of only the first entry)
                 let headChildren = match children |> Seq.head with Map m -> m | _ -> failwith "expected a sequence of maps."
-                
                 let childTypes, childInits = foldChildren readOnly headChildren
                 let eventField, event = generateChangedEvent()
                 
-                let mapTy = ProvidedTypeDefinition(name + "_Item_Type", Some typeof<obj>, HideObjectMethods=true, 
-                                                   IsErased=false, SuppressRelocation=false)
+                let mapTy = ProvidedTypeDefinition(name + "_Item_Type", Some typeof<obj>, HideObjectMethods = true, 
+                                                   IsErased = false, SuppressRelocation = false)
                 
                 let ctr = ProvidedConstructor([], InvokeCode = (fun [me] -> childInits me))
                 mapTy.AddMembers (ctr :> MemberInfo :: childTypes)
                 mapTy.AddMember eventField
                 mapTy.AddMember event
-                let t =
-                    { MainType = Some (mapTy :> _)
-                      Types = [mapTy :> MemberInfo]
-                      Init = fun _ -> Expr.NewObject(ctr, []) }
-
-                [ t ], mapTy :> _ 
+                [{ MainType = Some (mapTy :> _)
+                   Types = [mapTy :> MemberInfo]
+                   Init = fun _ -> Expr.NewObject(ctr, []) }],
+                mapTy :> _ 
             | types -> failwithf "List cannot contain elements of heterogeneous types (attempt to mix types: %A)." 
                                  (types |> List.map (Option.map (fun x -> x.Name)))
 
@@ -376,13 +373,14 @@ module private TypesFactory =
         let listCtr =
             let meth = typeof<Helper>.GetMethod("CreateResizeArray")
             ProvidedTypeBuilder.MakeGenericMethod(meth, [elementType])
-        if not readOnly then prop.SetterCode <- fun [me;v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.Call(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))
+        if not readOnly then 
+            prop.SetterCode <- fun [me;v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.Call(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))
         let childTypes = elements |> List.collect (fun x -> x.Types)
+        
         let initValue me = 
             Expr.Coerce(
                 Expr.Call(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)),ctrType)]),
                 fieldType)
-
 
         { MainType = Some fieldType
           Types = childTypes @ [field :> MemberInfo; prop :> MemberInfo]
@@ -410,36 +408,34 @@ module private TypesFactory =
             let ctr = ProvidedConstructor([], InvokeCode = (fun [me] -> childInits me))
             mapTy.AddMembers (ctr :> MemberInfo :: childTypes)
             let field = ProvidedField("_" + name, mapTy)
-            let prop = ProvidedProperty (name, mapTy, IsStatic=false, GetterCode = (fun [me] -> Expr.FieldGet(me, field)))
+            let prop = ProvidedProperty (name, mapTy, IsStatic = false, GetterCode = (fun [me] -> Expr.FieldGet(me, field)))
             mapTy.AddMember eventField
             mapTy.AddMember event
 
             { MainType = Some (mapTy :> _)
               Types = [mapTy :> MemberInfo; field :> MemberInfo; prop :> MemberInfo]
               Init = fun me -> Expr.FieldSet(me, field, Expr.NewObject(ctr, [])) }
-        | None -> { MainType = None; Types = [eventField :> MemberInfo; event :> MemberInfo] @ childTypes; Init = childInits }
+        | None -> 
+            { MainType = None
+              Types = [eventField :> MemberInfo; event :> MemberInfo] @ childTypes
+              Init = childInits }
 
 type Root () = 
     let serializer = 
-        let settings = 
-            SerializerSettings(EmitDefaultValues=true,
-                               EmitTags=false,
-                               SortKeyForMapping=false,
-                               EmitAlias=false,
-                               ComparerForKeySorting=null)
-
-        settings.RegisterSerializer(
+        let settings = SerializerSettings(EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false, 
+                                          EmitAlias = false, ComparerForKeySorting = null)
+        settings.RegisterSerializer (
             typeof<System.Uri>, 
             { new ScalarSerializerBase() with
                 member __.ConvertFrom (_, scalar) = 
-                        match System.Uri.TryCreate(scalar.Value, UriKind.Absolute) with
-                        | true, uri -> box uri
-                        | _ -> null
+                    match System.Uri.TryCreate (scalar.Value, UriKind.Absolute) with
+                    | true, uri -> box uri
+                    | _ -> null
                 member __.ConvertTo ctx = 
-                        match ctx.Instance with
-                        | :? Uri as uri -> uri.OriginalString
-                        | _ -> "" })
-        Serializer(settings)
+                    match ctx.Instance with
+                    | :? Uri as uri -> uri.OriginalString
+                    | _ -> "" })
+        Serializer settings
 
     let mutable lastLoadedFrom = None
     
@@ -527,8 +523,9 @@ let internal typedYamlConfig (context: Context) =
                      | "", yamlText -> createTy yamlText readOnly
                      | filePath, _ -> 
                           let filePath =
-                              if Path.IsPathRooted filePath then filePath 
-                              else Path.Combine(context.ResolutionFolder, filePath)
+                              if Path.IsPathRooted filePath 
+                              then filePath 
+                              else context.ResolutionFolder </> filePath
                           context.WatchFile filePath
                           createTy (File.ReadAllText filePath) readOnly
                 | _ -> failwith "Wrong parameters")

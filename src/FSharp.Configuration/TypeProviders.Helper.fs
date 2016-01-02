@@ -29,6 +29,8 @@ let (|EOF|_|) = function
 let (|LetterDigit|_|) = satisfies Char.IsLetterOrDigit
 let (|Upper|_|) = satisfies Char.IsUpper
 let (|Lower|_|) = satisfies Char.IsLower
+/// Path.Combine
+let (</>) x y = Path.Combine(x, y)
 
 [<RequireQualifiedAccess>]
 module Option =
