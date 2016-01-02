@@ -1,3 +1,6 @@
+#### 0.5.9 - 02.01.2016
+* Yaml provider handle nested lists
+
 #### 0.5.8 - 30.12.2015
 * Get SharpYaml from NuGet but pack dll inside of FSharp.Configuration NuGet package
 * Fix Travis build
