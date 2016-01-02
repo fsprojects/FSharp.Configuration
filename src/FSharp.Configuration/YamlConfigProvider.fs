@@ -117,6 +117,32 @@ module private Parser =
                     else None
             } |> function Some dlg -> [dlg] | None -> []
 
+        and fillList (targetType: Type) (updaters: Node list) =
+
+            let fieldType =
+                match updaters |> List.choose (function Scalar x -> Some x | _ -> None)
+                                |> Seq.groupBy (fun n -> n.UnderlyingType) |> Seq.map fst |> Seq.toList with
+                | [] -> targetType
+                | [ty] -> typedefof<ResizeArray<_>>.MakeGenericType ty
+                | types -> failwithf "List cannot contain elements of heterohenius types (attempt to mix types: %A)." types
+
+            let updaters = updaters |> List.choose (function
+                | Scalar x -> Some x.BoxedValue
+                | Map m ->
+                    let mapItem = Activator.CreateInstance (fieldType.GetGenericArguments().[0])
+                    updateMap mapItem None m |> ignore
+                    Some mapItem
+                | List l ->
+                    let listItem = fillList (fieldType.GetGenericArguments().[0]) l
+                    Some listItem)
+
+            if targetType.IsAssignableFrom(fieldType) |> not then failwithf "Cannot assign %O to %O." fieldType.Name targetType.Name
+
+            let list = Activator.CreateInstance fieldType
+            let addMethod = fieldType.GetMethod("Add", [|fieldType.GetGenericArguments().[0]|])
+            updaters |> List.iter (fun x -> addMethod.Invoke(list, [| x |]) |> ignore)
+            list
+
         and updateList (target: obj) name (updaters: Node list) =
             maybe {
                 let! field = tryGetField target ("_" + name)
@@ -134,7 +160,9 @@ module private Parser =
                         let mapItem = Activator.CreateInstance (fieldType.GetGenericArguments().[0])
                         updateMap mapItem None m |> ignore
                         Some mapItem
-                    | _ -> None)
+                    | List l ->
+                        let listItem = fillList (fieldType.GetGenericArguments().[0]) l
+                        Some listItem)
 
                 if field.FieldType <> fieldType then failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
                 let isComparable (x: obj) = x :? Uri || x :? IComparable
@@ -252,13 +280,65 @@ module private TypesFactory =
           Types = [field :> MemberInfo; prop :> MemberInfo]
           Init = fun me -> Expr.FieldSet(me, field, initValue) }
 
+    and transformListRaw readOnly name (children: Node list) =
+        let elements =
+            children
+            |> List.map (function
+               | Scalar x -> { MainType = Some x.UnderlyingType; Types = []; Init = fun _ -> x.ToExpr() }
+               | Map m -> transformMap readOnly None m
+               | List l -> transformListRaw readOnly (name + "_Items") l)
+
+        let elements, elementType =
+            match elements |> Seq.groupBy (fun n -> n.MainType) |> Seq.map fst |> Seq.toList with
+            | [Some ty] -> elements, ty
+            | [None] ->
+                // Sequence of maps: https://github.com/fsprojects/FSharp.Configuration/issues/51
+                // TODOL Construct the type from all the elements (instead of only the first entry)
+                let headChildren = match children |> Seq.head with Map m -> m | _ -> failwith "expected a sequence of maps."
+
+                let childTypes, childInits = foldChildren readOnly headChildren
+                let eventField, event = generateChangedEvent()
+
+                let mapTy = ProvidedTypeDefinition(name + "_Item_Type", Some typeof<obj>, HideObjectMethods=true,
+                                                   IsErased=false, SuppressRelocation=false)
+
+                let ctr = ProvidedConstructor([], InvokeCode = (fun [me] -> childInits me))
+                mapTy.AddMembers (ctr :> MemberInfo :: childTypes)
+                mapTy.AddMember eventField
+                mapTy.AddMember event
+                let t =
+                    { MainType = Some (mapTy :> _)
+                      Types = [mapTy :> MemberInfo]
+                      Init = fun _ -> Expr.NewObject(ctr, []) }
+
+                [ t ], mapTy :> _
+            | types -> failwithf "List cannot contain elements of heterogeneous types (attempt to mix types: %A)."
+                                 (types |> List.map (Option.map (fun x -> x.Name)))
+
+        let propType = ProvidedTypeBuilder.MakeGenericType(typedefof<IList<_>>, [elementType])
+        let ctrType = ProvidedTypeBuilder.MakeGenericType(typedefof<seq<_>>, [elementType])
+
+        let listCtr =
+            let meth = typeof<Helper>.GetMethod("CreateResizeArray")
+            ProvidedTypeBuilder.MakeGenericMethod(meth, [elementType])
+        let childTypes = elements |> List.collect (fun x -> x.Types)
+        let initValue me =
+            Expr.Coerce(
+                Expr.Call(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)),ctrType)]),
+                propType)
+
+
+        { MainType = Some propType
+          Types = childTypes
+          Init = initValue }
+
     and transformList readOnly name (children: Node list) =
         let elements = 
             children 
             |> List.map (function
                | Scalar x -> { MainType = Some x.UnderlyingType; Types = []; Init = fun _ -> x.ToExpr() }
                | Map m -> transformMap readOnly None m
-               | List _ -> failwith "Nested lists are not supported.")
+               | List l -> transformListRaw readOnly (name + "_Items") l)
 
         let elements, elementType = 
             match elements |> Seq.groupBy (fun n -> n.MainType) |> Seq.map fst |> Seq.toList with
