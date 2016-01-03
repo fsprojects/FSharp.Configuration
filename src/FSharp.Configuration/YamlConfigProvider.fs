@@ -264,7 +264,7 @@ module private TypesFactory =
         match name, node with
         | Some name, Scalar x -> transformScalar readOnly name x
         | _, Map m -> transformMap readOnly name m
-        | Some name, List l -> transformList readOnly name l
+        | Some name, List l -> transformList readOnly name true l
         | None, _ -> failwithf "Only Maps are allowed at the root level."
     
     and transformScalar readOnly name (node: Scalar) =
@@ -278,7 +278,7 @@ module private TypesFactory =
           Types = [field :> MemberInfo; prop :> MemberInfo]
           Init = fun me -> Expr.FieldSet(me, field, initValue) }
 
-    and transformListRaw readOnly name (children: Node list) =
+    and transformList readOnly name generateField (children: Node list) =
         let elements =
             children
             |> List.map (function
@@ -287,7 +287,7 @@ module private TypesFactory =
                      Types = []
                      Init = fun _ -> x.ToExpr() }
                | Map m -> transformMap readOnly None m
-               | List l -> transformListRaw readOnly (name + "_Items") l)
+               | List l -> transformList readOnly (name + "_Items") false l)
 
         let elements, elementType =
             match elements |> Seq.groupBy (fun n -> n.MainType) |> Seq.map fst |> Seq.toList with
@@ -316,75 +316,36 @@ module private TypesFactory =
 
         let propType = ProvidedTypeBuilder.MakeGenericType(typedefof<IList<_>>, [elementType])
         let ctrType = ProvidedTypeBuilder.MakeGenericType(typedefof<seq<_>>, [elementType])
-
-        let listCtr =
-            let meth = typeof<Helper>.GetMethod("CreateResizeArray")
-            ProvidedTypeBuilder.MakeGenericMethod(meth, [elementType])
-
-        let childTypes = elements |> List.collect (fun x -> x.Types)
-
-        let initValue me =
-            Expr.Coerce(
-                Expr.Call(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)),ctrType)]),
-                propType)
-
-        { MainType = Some propType
-          Types = childTypes
-          Init = initValue }
-
-    and transformList readOnly name (children: Node list) =
-        let elements = 
-            children 
-            |> List.map (function
-               | Scalar x -> { MainType = Some x.UnderlyingType; Types = []; Init = fun _ -> x.ToExpr() }
-               | Map m -> transformMap readOnly None m
-               | List l -> transformListRaw readOnly (name + "_Items") l)
-
-        let elements, elementType = 
-            match elements |> Seq.groupBy (fun n -> n.MainType) |> Seq.map fst |> Seq.toList with
-            | [Some ty] -> elements, ty
-            | [None] ->
-                // Sequence of maps: https://github.com/fsprojects/FSharp.Configuration/issues/51
-                // TODOL Construct the type from all the elements (instead of only the first entry)
-                let headChildren = match children |> Seq.head with Map m -> m | _ -> failwith "expected a sequence of maps."
-                let childTypes, childInits = foldChildren readOnly headChildren
-                let eventField, event = generateChangedEvent()
-                
-                let mapTy = ProvidedTypeDefinition(name + "_Item_Type", Some typeof<obj>, HideObjectMethods = true, 
-                                                   IsErased = false, SuppressRelocation = false)
-                
-                let ctr = ProvidedConstructor([], InvokeCode = (fun [me] -> childInits me))
-                mapTy.AddMembers (ctr :> MemberInfo :: childTypes)
-                mapTy.AddMember eventField
-                mapTy.AddMember event
-                [{ MainType = Some (mapTy :> _)
-                   Types = [mapTy :> MemberInfo]
-                   Init = fun _ -> Expr.NewObject(ctr, []) }],
-                mapTy :> _ 
-            | types -> failwithf "List cannot contain elements of heterogeneous types (attempt to mix types: %A)." 
-                                 (types |> List.map (Option.map (fun x -> x.Name)))
-
-        let fieldType = ProvidedTypeBuilder.MakeGenericType(typedefof<ResizeArray<_>>, [elementType])
-        let propType = ProvidedTypeBuilder.MakeGenericType(typedefof<IList<_>>, [elementType])
-        let ctrType = ProvidedTypeBuilder.MakeGenericType(typedefof<seq<_>>, [elementType])
-
-        let field = ProvidedField("_" + name, fieldType)
-        let prop = ProvidedProperty (name, propType, IsStatic=false, GetterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)))
-        let listCtr =
-            let meth = typeof<Helper>.GetMethod("CreateResizeArray")
-            ProvidedTypeBuilder.MakeGenericMethod(meth, [elementType])
-        if not readOnly then 
-            prop.SetterCode <- fun [me;v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.Call(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))
-        let childTypes = elements |> List.collect (fun x -> x.Types)
         
-        let initValue me = 
-            Expr.Coerce(
-                Expr.Call(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)),ctrType)]),
-                fieldType)
+        let listCtr =
+            let meth = typeof<Helper>.GetMethod("CreateResizeArray")
+            ProvidedTypeBuilder.MakeGenericMethod(meth, [elementType])
+        
+        let childTypes = elements |> List.collect (fun x -> x.Types)
 
-        { MainType = Some fieldType
-          Types = childTypes @ [field :> MemberInfo; prop :> MemberInfo]
-          Init = fun me -> Expr.FieldSet(me, field, initValue me) }
+        let initValue ty me =
+            Expr.Coerce(
+                Expr.Call(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)), ctrType)]),
+                ty)
+
+        if generateField then
+            let fieldType = ProvidedTypeBuilder.MakeGenericType(typedefof<ResizeArray<_>>, [elementType])
+            let field = ProvidedField("_" + name, fieldType)
+            
+            let prop = 
+                ProvidedProperty (name, propType, IsStatic=false, GetterCode = 
+                    fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType))
+
+            if not readOnly then 
+                prop.SetterCode <- fun [me; v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.Call(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))
+
+            { MainType = Some fieldType
+              Types = childTypes @ [field :> MemberInfo; prop :> MemberInfo]
+              Init = fun me -> Expr.FieldSet(me, field, initValue fieldType me) }
+        else
+            { MainType = Some propType
+              Types = childTypes
+              Init = initValue propType }
 
     and foldChildren readOnly (children: (string * Node) list) =
         let childTypes, childInits =
