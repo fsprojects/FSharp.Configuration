@@ -399,11 +399,23 @@ type Root () =
         Serializer settings
 
     let mutable lastLoadedFrom = None
-    
+
+    let errorEvent = new Event<Exception>()
+
     /// Load Yaml config as text and update itself with it.
-    member x.LoadText (yamlText: string) = Parser.parse yamlText |> Parser.update x
+    member x.LoadText (yamlText: string) =
+      try
+        Parser.parse yamlText |> Parser.update x
+      with e ->
+        async { errorEvent.Trigger e } |> Async.Start
+        reraise()
     /// Load Yaml config from a TextReader and update itself with it.
-    member x.Load (reader: TextReader) = reader.ReadToEnd() |> Parser.parse |> Parser.update x
+    member x.Load (reader: TextReader) = 
+      try
+        reader.ReadToEnd() |> Parser.parse |> Parser.update x
+      with e ->
+        async { errorEvent.Trigger e } |> Async.Start
+        reraise()
     /// Load Yaml config from a file and update itself with it.
     member x.Load (filePath: string) = 
         filePath |> Helper.File.tryReadNonEmptyTextFile |> x.LoadText
@@ -418,7 +430,6 @@ type Root () =
                 x.Load filePath
             with e -> 
                 Diagnostics.Debug.WriteLine (sprintf "Cannot load file %s: %O" filePath e.Message)
-                reraise()
     /// Saves configuration as Yaml text into a stream.
     member x.Save (stream: Stream) =
         use writer = new StreamWriter(stream)
@@ -442,6 +453,9 @@ type Root () =
         use writer = new StringWriter()
         x.Save writer
         writer.ToString()
+    // Error channel to announce parse errors on
+    [<CLIEvent>]
+    member x.Error = errorEvent.Publish
 
 let internal typedYamlConfig (context: Context) =
     let baseTy = typeof<Root>

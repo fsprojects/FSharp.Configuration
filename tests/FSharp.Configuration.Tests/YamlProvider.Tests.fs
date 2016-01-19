@@ -176,7 +176,38 @@ TopLevelUnknown:
 
 """
     settings.Mail.Smtp.Port |> should equal 4430
-    
+
+
+[<Test>]
+let ``Can load file and watch``() =
+    let settings = Settings()
+    let tempFile = Path.GetTempFileName()
+    try
+      File.Copy ("Settings.yaml", tempFile, overwrite=true)
+      settings.LoadAndWatch tempFile |> ignore
+    finally
+      File.Delete tempFile
+
+[<Test>]
+let ``Can load file and watch and detect errors``() =
+    let settings = Settings()
+    let tempFile = Path.GetTempFileName()
+    let mutable err = false
+    settings.Error.Add(fun _ -> err <- true) 
+    try
+      File.Copy ("Settings.yaml", tempFile, overwrite=true)
+      use x = settings.LoadAndWatch tempFile
+      System.Threading.Thread.Sleep(800)
+      let f = new FileStream(tempFile, FileMode.Append)
+      let data = "<junk:>:asd:DF" |> System.Text.Encoding.ASCII.GetBytes
+      f.Write(data, 0, data.Length)
+      f.Flush()
+      f.Dispose()
+      System.Threading.Thread.Sleep(800)
+      err |> should equal true
+    finally
+      File.Delete tempFile
+
 [<Test>]
 let ``Can load empty lists``() =
     let settings = Settings()
