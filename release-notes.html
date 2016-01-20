@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>release-notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Type providers for the configuration of .NET projects.">
+    <meta name="author" content="FSProjects team">
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="./content/style.css" />
+    <script type="text/javascript" src="./content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="http://github.com/fsprojects/FSharp.Configuration">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="./index.html">FSharp.Configuration</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+<h4><a name="0-5-10-20-01-2016" class="anchor" href="#0-5-10-20-01-2016">0.5.10 - 20.01.2016</a></h4>
+
+<ul>
+<li>Yaml provider: added event to monitor errors in parsing from LoadAndWatch</li>
+</ul>
+
+<h4><a name="0-5-9-02-01-2016" class="anchor" href="#0-5-9-02-01-2016">0.5.9 - 02.01.2016</a></h4>
+
+<ul>
+<li>Yaml provider handle nested lists</li>
+</ul>
+
+<h4><a name="0-5-8-30-12-2015" class="anchor" href="#0-5-8-30-12-2015">0.5.8 - 30.12.2015</a></h4>
+
+<ul>
+<li>Get SharpYaml from NuGet but pack dll inside of FSharp.Configuration NuGet package</li>
+<li>Fix Travis build</li>
+<li>For Mono compatibility: TypeConstructor path should be able to be separated by both "/" and "\"</li>
+<li>AppSettingsProvider: Added possibility to change the application that is being configured.</li>
+<li>Fixed AppSettingsProvider to work in parallel with multiple configs.</li>
+</ul>
+
+<h4><a name="0-5-7-22-11-2015" class="anchor" href="#0-5-7-22-11-2015">0.5.7 - 22.11.2015</a></h4>
+
+<ul>
+<li>Revert dependency on SharpYaml</li>
+</ul>
+
+<h4><a name="0-5-6-22-12-2015" class="anchor" href="#0-5-6-22-12-2015">0.5.6 - 22.12.2015</a></h4>
+
+<ul>
+<li>Fixed: SharpYaml NuGet package was not listed as dependency of FSharp.Configuration one</li>
+<li>infer URLs with "tcp" schema</li>
+</ul>
+
+<h4><a name="0-5-5-20-12-2015" class="anchor" href="#0-5-5-20-12-2015">0.5.5 - 20.12.2015</a></h4>
+
+<ul>
+<li>Same as 0.5.4, NuGet publishing problems</li>
+</ul>
+
+<h4><a name="0-5-4-20-12-2015" class="anchor" href="#0-5-4-20-12-2015">0.5.4 - 20.12.2015</a></h4>
+
+<ul>
+<li>Support "file" and "ssh" uri schemas</li>
+<li>Use SharpYaml NuGet package</li>
+</ul>
+
+<h4><a name="0-5-3-12-06-2015" class="anchor" href="#0-5-3-12-06-2015">0.5.3 - 12.06.2015</a></h4>
+
+<ul>
+<li>AppConfig type provider raises better exception if a settings or connection string is missing at runtime.</li>
+</ul>
+
+<h4><a name="0-5-2-12-06-2015" class="anchor" href="#0-5-2-12-06-2015">0.5.2 - 12.06.2015</a></h4>
+
+<ul>
+<li>Add caching into all type providers</li>
+</ul>
+
+<h4><a name="0-5-1-18-03-2015" class="anchor" href="#0-5-1-18-03-2015">0.5.1 - 18.03.2015</a></h4>
+
+<ul>
+<li>fixed: YamlConfigProvider does not always parse floating point scalars</li>
+</ul>
+
+<h4><a name="0-5-0-09-03-2015" class="anchor" href="#0-5-0-09-03-2015">0.5.0 - 09.03.2015</a></h4>
+
+<ul>
+<li>YamlConfigProvider supports sequence of maps</li>
+</ul>
+
+<h4><a name="0-4-10-06-02-2015" class="anchor" href="#0-4-10-06-02-2015">0.4.10 - 06.02.2015</a></h4>
+
+<ul>
+<li>Better YamlConfigProvider error reporting in case of duplicated keys</li>
+</ul>
+
+<h4><a name="0-4-9-06-01-2015" class="anchor" href="#0-4-9-06-01-2015">0.4.9 - 06.01.2015</a></h4>
+
+<ul>
+<li>Fixed: AppSettings type provider does not read connection strings at runtime</li>
+</ul>
+
+<h4><a name="0-4-8-19-12-2014" class="anchor" href="#0-4-8-19-12-2014">0.4.8 - 19.12.2014</a></h4>
+
+<ul>
+<li>Use HostingEnvironment.IsHosted to determine that AppSettings type provider is used in a Web application</li>
+</ul>
+
+<h4><a name="0-4-7-12-12-2014" class="anchor" href="#0-4-7-12-12-2014">0.4.7 - 12.12.2014</a></h4>
+
+<ul>
+<li>Fixed design time memory leaks in all providers <a href="https://github.com/fsprojects/FSharp.Configuration/pull/48">https://github.com/fsprojects/FSharp.Configuration/pull/48</a></li>
+</ul>
+
+<h4><a name="0-4-6-06-12-2014" class="anchor" href="#0-4-6-06-12-2014">0.4.6 - 06.12.2014</a></h4>
+
+<ul>
+<li>Fixed: AppSettingsProvider does not find web.config at runtime</li>
+</ul>
+
+<h4><a name="0-4-5-06-12-2014" class="anchor" href="#0-4-5-06-12-2014">0.4.5 - 06.12.2014</a></h4>
+
+<ul>
+<li>Fixed: AppSettingsProvider infers URLs as ints</li>
+</ul>
+
+<h4><a name="0-4-4-22-10-2014" class="anchor" href="#0-4-4-22-10-2014">0.4.4 - 22.10.2014</a></h4>
+
+<ul>
+<li>Add support for connection strings to AppSettings TP</li>
+</ul>
+
+<h4><a name="0-4-3-20-09-2014" class="anchor" href="#0-4-3-20-09-2014">0.4.3 - 20.09.2014</a></h4>
+
+<ul>
+<li>IniFile provider - <a href="https://github.com/fsprojects/FSharp.Configuration/pull/34">https://github.com/fsprojects/FSharp.Configuration/pull/34</a></li>
+</ul>
+
+<h4><a name="0-3-0-19-09-2014" class="anchor" href="#0-3-0-19-09-2014">0.3.0 - 19.09.2014</a></h4>
+
+<ul>
+<li>Making config settings writable -<a href="https://github.com/fsprojects/FSharp.Configuration/pull/29">https://github.com/fsprojects/FSharp.Configuration/pull/29</a></li>
+<li>Relax yaml tp loading rules - <a href="https://github.com/fsprojects/FSharp.Configuration/pull/32">https://github.com/fsprojects/FSharp.Configuration/pull/32</a></li>
+</ul>
+
+<h4><a name="0-2-2-17-01-2013" class="anchor" href="#0-2-2-17-01-2013">0.2.2 - 17.01.2013</a></h4>
+
+<ul>
+<li>Allows to read bitmaps from resources</li>
+</ul>
+
+<h4><a name="0-2-1-17-01-2013" class="anchor" href="#0-2-1-17-01-2013">0.2.1 - 17.01.2013</a></h4>
+
+<ul>
+<li>Fixed bug with the AppSettings type provider and .fsx files</li>
+</ul>
+
+<h4><a name="0-2-0-15-01-2013" class="anchor" href="#0-2-0-15-01-2013">0.2.0 - 15.01.2013</a></h4>
+
+<ul>
+<li>Yaml type provider renamed to Yaml Config type provider</li>
+</ul>
+
+<h4><a name="0-1-0-15-01-2013" class="anchor" href="#0-1-0-15-01-2013">0.1.0 - 15.01.2013</a></h4>
+
+<ul>
+<li>First official release of ResX, Yaml and AppSettings type provider</li>
+</ul>
+
+<h4><a name="0-1-0-alpha5-15-01-2013" class="anchor" href="#0-1-0-alpha5-15-01-2013">0.1.0-alpha5 - 15.01.2013</a></h4>
+
+<ul>
+<li>Make it compatible with .NET 4.0</li>
+</ul>
+
+<h4><a name="0-1-0-alpha4-15-01-2013" class="anchor" href="#0-1-0-alpha4-15-01-2013">0.1.0-alpha4 - 15.01.2013</a></h4>
+
+<ul>
+<li>Using latest version of SharpYaml</li>
+</ul>
+
+<h4><a name="0-1-0-alpha3-15-01-2013" class="anchor" href="#0-1-0-alpha3-15-01-2013">0.1.0-alpha3 - 15.01.2013</a></h4>
+
+<ul>
+<li>Initial release of the Yaml type provider</li>
+</ul>
+
+<h4><a name="0-1-0-alpha2-14-01-2013" class="anchor" href="#0-1-0-alpha2-14-01-2013">0.1.0-alpha2 - 14.01.2013</a></h4>
+
+<ul>
+<li>Initial release of the ResX type provider</li>
+</ul>
+
+<h4><a name="0-1-0-alpha-14-01-2013" class="anchor" href="#0-1-0-alpha-14-01-2013">0.1.0-alpha - 14.01.2013</a></h4>
+
+<ul>
+<li>Initial release</li>
+</ul>
+
+
+        </div>
+        <div class="span3">
+          <img src="./img/logo.png" alt="FSharp.Configuration" style="width:150px;margin:10px" />
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">FSharp.Configuration</li>
+            <li><a href="./index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="./AppSettingsProvider.html">AppSettingsProvider</a></li>
+            <li><a href="./ResXProvider.html">ResXProvider</a></li>
+            <li><a href="./YamlConfigProvider.html">YamlConfigProvider</a></li>
+            <li><a href="./IniTypeProvider.html">IniTypeProvider</a></li>
+        </div>
+      </div>
+    </div>
+    <a href="http://github.com/fsprojects/FSharp.Configuration"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+  </body>
+  </html>
