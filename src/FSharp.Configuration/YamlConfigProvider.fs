@@ -501,6 +501,7 @@ let internal typedYamlConfig (context: Context) =
                               if Path.IsPathRooted filePath 
                               then filePath 
                               else context.ResolutionFolder </> filePath
+                              |> Path.GetFullPath
                           context.WatchFile filePath
                           createTy (File.ReadAllText filePath) readOnly
                 | _ -> failwith "Wrong parameters")
