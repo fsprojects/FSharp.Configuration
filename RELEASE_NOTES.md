@@ -1,3 +1,6 @@
+#### 0.5.11 - 24.01.2016
+* Add Path.GetFullPath to the filePath calculation in YamlConfigProvider
+
 #### 0.5.10 - 20.01.2016
 * Yaml provider: added event to monitor errors in parsing from LoadAndWatch
 
