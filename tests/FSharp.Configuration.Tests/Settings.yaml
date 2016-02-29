@@ -16,6 +16,7 @@
 DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
+  Id: 21474836470
   DefaultTimeout: 00:05:00.0000000
 JustStuff:
   SomeDoubleValue: 0.5

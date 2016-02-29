@@ -21,6 +21,12 @@ let ``Can return an int from the settings file``() =
     settings.DB.NumberOfDeadlockRepeats |> should equal 5
 
 [<Test>] 
+let ``Can return an int64 from the settings file``() =   
+    let settings = Settings()
+    settings.DB.Id.GetType() |> should equal typeof<int64>   
+    settings.DB.Id |> should equal 21474836470L
+
+[<Test>] 
 let ``Can return an double from the settings file``() =   
     let settings = Settings()
     settings.JustStuff.SomeDoubleValue.GetType() |> should equal typeof<double>   
