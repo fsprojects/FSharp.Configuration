@@ -19,6 +19,7 @@ type Helper () =
 module private Parser =
     type Scalar =
         | Int of int
+        | Int64 of int64
         | String of string
         | TimeSpan of TimeSpan
         | Bool of bool
@@ -32,6 +33,7 @@ module private Parser =
             | null -> String ""
             | :? System.Boolean as b -> Bool b
             | :? System.Int32 as i -> Int i
+            | :? System.Int64 as i -> Int64 i
             | :? System.Double as d -> Float d
             | :? System.String as s ->
                 Scalar.ParseStr s
@@ -39,6 +41,7 @@ module private Parser =
         member x.UnderlyingType = 
             match x with
             | Int x -> x.GetType()
+            | Int64 x -> x.GetType()
             | String x -> x.GetType()
             | Bool x -> x.GetType()
             | TimeSpan x -> x.GetType()
@@ -47,6 +50,7 @@ module private Parser =
         member x.BoxedValue =
             match x with
             | Int x -> box x
+            | Int64 x -> box x
             | String x -> box x
             | TimeSpan x -> box x
             | Bool x -> box x
@@ -223,6 +227,7 @@ module private TypesFactory =
         member x.ToExpr() = 
             match x with
             | Int x -> Expr.Value x
+            | Int64 x -> Expr.Value x
             | String x -> Expr.Value x
             | Bool x -> Expr.Value x
             | Float x -> Expr.Value x

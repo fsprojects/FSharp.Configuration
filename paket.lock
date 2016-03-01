@@ -19,7 +19,7 @@ NUGET
     NUnit.Runners (2.6.4)
     Octokit (0.7.2)
       Microsoft.Net.Http
-    SharpYaml (1.5.2)
+    SharpYaml (1.5.3)
     SourceLink.Fake (0.4.2)
 GITHUB
   remote: fsharp/FAKE
