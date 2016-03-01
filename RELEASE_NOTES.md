@@ -1,3 +1,6 @@
+#### 0.5.12 - 01.03.2016
+* Added support for data in int64 to YamlConfigProvider
+
 #### 0.5.11 - 24.01.2016
 * Add Path.GetFullPath to the filePath calculation in YamlConfigProvider
 
