@@ -10,42 +10,44 @@ open System.ComponentModel.Design
 open System.Collections
 open System.Runtime.Caching
 
+let readFile (filePath: FilePath) : ResXDataNode list =
+    use reader = new ResXResourceReader(filePath, UseResXDataNodes = true)
+    reader
+    |> Seq.cast
+    |> Seq.map (fun (x: DictionaryEntry) -> x.Value :?> ResXDataNode)
+    |> Seq.toList
+
 let readValue (filePath: FilePath, name) =
-    use reader = new ResXResourceReader(filePath)
-    reader.UseResXDataNodes <- true
-    let entry = 
-        reader
-        |> Seq.cast
-        |> Seq.map (fun (x: DictionaryEntry) -> x.Value :?> ResXDataNode)
-        |> Seq.find (fun e -> name = e.Name)
-    entry.GetValue(Unchecked.defaultof<ITypeResolutionService>)
+    let entry = readFile filePath |> Seq.find (fun e -> name = e.Name)
+    entry.GetValue Unchecked.defaultof<ITypeResolutionService>
 
 /// Converts ResX entries to provided properties
-let internal toProperties (resXFilePath:string) =       
-    use reader = new ResXResourceReader(resXFilePath)
-    reader.UseResXDataNodes <- true
-    [ for (entry:DictionaryEntry) in reader |> Seq.cast ->                   
-        let node = entry.Value :?> ResXDataNode
+let private toProperties (filePath: FilePath) : MemberInfo list =       
+    readFile filePath
+    |> List.map (fun node ->
         let name = node.Name
-        let typ = node.GetValueTypeName(Unchecked.defaultof<ITypeResolutionService>) |> System.Type.GetType
-        let comment = node.Comment
-        let getter _args = <@@ readValue(resXFilePath, name) @@>
-        let resource = ProvidedProperty(name, typ, IsStatic=true, GetterCode=getter)                          
-        if not(String.IsNullOrEmpty(comment)) then resource.AddXmlDoc(node.Comment)
-        resource :> MemberInfo ]
+        let ty = node.GetValueTypeName Unchecked.defaultof<ITypeResolutionService> |> Type.GetType
+        let resource = 
+          ProvidedProperty(
+            name, 
+            ty, 
+            IsStatic = true, 
+            GetterCode = fun _ -> <@@ readValue(filePath, name) @@>)                          
+        if not (String.IsNullOrEmpty node.Comment) then 
+          resource.AddXmlDoc node.Comment
+        resource :> MemberInfo)
 
 /// Creates resource data type from specified ResX file
-let internal createResourceDataType (resXFilePath) =
-    let resourceName = Path.GetFileNameWithoutExtension(resXFilePath)
-    let data = ProvidedTypeDefinition(resourceName, baseType=Some typeof<obj>, HideObjectMethods=true)
-    let properties = toProperties resXFilePath
-    properties |> Seq.iter data.AddMember
+let private createResourceDataType filePath =
+    let resourceName = Path.GetFileNameWithoutExtension filePath
+    let data = ProvidedTypeDefinition (resourceName, baseType = Some typeof<obj>, HideObjectMethods = true)
+    toProperties filePath |> Seq.iter data.AddMember
     data
 
 /// Creates provided type from static resource file parameter
-let internal createResXProvider typeName resXFilePath =
-    let ty = ProvidedTypeDefinition(thisAssembly, rootNamespace, typeName, baseType=Some typeof<obj>)
-    ty.AddMember (createResourceDataType resXFilePath)
+let private createResXProvider typeName filePath =
+    let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, baseType = Some typeof<obj>)
+    ty.AddMember (createResourceDataType filePath)
     ty  
 
 let internal typedResources (context: Context) =

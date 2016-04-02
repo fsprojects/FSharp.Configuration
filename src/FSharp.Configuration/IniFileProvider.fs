@@ -32,7 +32,8 @@ module Parser =
         | _ -> None
 
     let (|Setting|_|) = function
-        | Regex @"\s*(\S+)\s*=\s*([^;]*)" ([_; key; value], s) -> Some ({ Key = key; Value = value }, s)
+        | Regex @"\s*(\S+)\s*=\s*([^;]*)" ([_; key; value], s) -> 
+            Some ({ Key = key; Value = value }, s)
         | _ -> None
 
     let (|Settings|_|) s =
@@ -64,27 +65,6 @@ module Parser =
         | Sections (sections, _) -> Choice1Of2 sections
         | e -> Choice2Of2 e
 
-//    let input = """
-//[Section1]
-//k1=v1
-//; comment
-//[Section2]
-//k2 = v2
-//k3 = v3 ; comment 2
-//k4 =
-//"""
-//    match streamOfLines (input.Split([| '\r'; '\n' |], StringSplitOptions.RemoveEmptyEntries)) with
-//    | Sections (sections, _) -> printfn "Success %A" sections
-//    | x -> printfn "Failed: %A" x
-//    
-//    match Stream (0, ["[Section1]"]) with
-//    | Header (name, s) -> printfn "Success %s, %A" name s
-//    | x -> printfn "Error: %A" x
-//    
-//    match Stream (0, ["k=v"]) with
-//    | Setting (setting, s) -> printfn "Success %A, %A" setting s
-//    | x -> printfn "Error: %A" x
-
 open ProviderImplementation.ProvidedTypes
 open System.Collections.Generic
 open System
@@ -114,7 +94,7 @@ let internal typedIniFile (context: Context) =
                 | [| :? string as iniFileName |] ->
                     let typeDef = erasedType<obj> thisAssembly rootNamespace typeName
                     typeDef.HideObjectMethods <- true
-                    let names = HashSet()
+                    let niceName = createNiceNameProvider()
                     try
                         let filePath = findConfigFile context.ResolutionFolder iniFileName
                         match Parser.parse filePath with
@@ -159,9 +139,9 @@ let internal typedIniFile (context: Context) =
                                 typeDef.AddMember sectionTy
                         | Choice2Of2 e -> failwithf "%A" e
                 
-                        let name = niceName names "ConfigFileName"
+                        let name = niceName "ConfigFileName"
                         let getValue = <@@ filePath @@>
-                        let prop = ProvidedProperty(name, typeof<string>, GetterCode = (fun _ -> getValue))
+                        let prop = ProvidedProperty(name, typeof<string>, GetterCode = fun _ -> getValue)
                 
                         prop.IsStatic <- true
                         prop.AddXmlDoc "Returns the Filename"
