@@ -36,8 +36,12 @@
 
 
 <h1>ProvidedConstructor</h1>
+<p>
+  <span>Namespace: ProviderImplementation.ProvidedTypes</span><br />
+</p>
 <div class="xmldoc">
 <p>Represents an erased provided constructor.</p>
+
 </div>
   <h3>Constructors</h3>
   <table class="table table-bordered member-list">
@@ -48,10 +52,10 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '54', 54)" onmouseover="showTip(event, '54', 54)">
+          <code onmouseout="hideTip(event, '57', 57)" onmouseover="showTip(event, '57', 57)">
             new(parameters)
           </code>
-          <div class="tip" id="54">
+          <div class="tip" id="57">
             <strong>Signature:</strong> (parameters:ProvidedParameter list) -&gt; ProvidedConstructor<br />
                       </div>
         </td>
@@ -62,6 +66,8 @@
             </a>
           <p>Create a new provided constructor. It is not initially associated with any specific provided type definition.</p>
 
+
+              <p>CompiledName: <code>.ctor</code></p>
         </td>
       </tr>
     </tbody>
@@ -75,10 +81,10 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '55', 55)" onmouseover="showTip(event, '55', 55)">
+          <code onmouseout="hideTip(event, '58', 58)" onmouseover="showTip(event, '58', 58)">
             AddDefinitionLocation(...)
           </code>
-          <div class="tip" id="55">
+          <div class="tip" id="58">
             <strong>Signature:</strong> (line:int * column:int * filePath:string) -&gt; unit<br />
                       </div>
         </td>
@@ -89,15 +95,16 @@
             </a>
           <p>Add definition location information to the provided constructor.</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '56', 56)" onmouseover="showTip(event, '56', 56)">
+          <code onmouseout="hideTip(event, '59', 59)" onmouseover="showTip(event, '59', 59)">
             AddObsoleteAttribute(message, isError)
           </code>
-          <div class="tip" id="56">
+          <div class="tip" id="59">
             <strong>Signature:</strong> (message:string * isError:bool option) -&gt; unit<br />
                       </div>
         </td>
@@ -108,15 +115,16 @@
             </a>
           <p>Add a 'System.Obsolete' attribute to this provided constructor</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '57', 57)" onmouseover="showTip(event, '57', 57)">
+          <code onmouseout="hideTip(event, '60', 60)" onmouseover="showTip(event, '60', 60)">
             AddXmlDoc(xmlDoc)
           </code>
-          <div class="tip" id="57">
+          <div class="tip" id="60">
             <strong>Signature:</strong> xmlDoc:string -&gt; unit<br />
                       </div>
         </td>
@@ -127,15 +135,16 @@
             </a>
           <p>Add XML documentation information to this provided constructor</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '58', 58)" onmouseover="showTip(event, '58', 58)">
+          <code onmouseout="hideTip(event, '61', 61)" onmouseover="showTip(event, '61', 61)">
             AddXmlDocComputed(xmlDocFunction)
           </code>
-          <div class="tip" id="58">
+          <div class="tip" id="61">
             <strong>Signature:</strong> (xmlDocFunction:(unit -&gt; string)) -&gt; unit<br />
                       </div>
         </td>
@@ -146,15 +155,16 @@
             </a>
           <p>Add XML documentation information to this provided constructor, where the documentation is re-computed  every time it is required.</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '59', 59)" onmouseover="showTip(event, '59', 59)">
+          <code onmouseout="hideTip(event, '62', 62)" onmouseover="showTip(event, '62', 62)">
             AddXmlDocDelayed(xmlDocFunction)
           </code>
-          <div class="tip" id="59">
+          <div class="tip" id="62">
             <strong>Signature:</strong> (xmlDocFunction:(unit -&gt; string)) -&gt; unit<br />
                       </div>
         </td>
@@ -165,15 +175,16 @@
             </a>
           <p>Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '60', 60)" onmouseover="showTip(event, '60', 60)">
+          <code onmouseout="hideTip(event, '63', 63)" onmouseover="showTip(event, '63', 63)">
             BaseConstructorCall()
           </code>
-          <div class="tip" id="60">
+          <div class="tip" id="63">
             <strong>Signature:</strong> unit -&gt; Expr list -&gt; ConstructorInfo * Expr list<br />
                       </div>
         </td>
@@ -184,15 +195,17 @@
             </a>
           <p>Set the target and arguments of the base constructor call. Only used for generated types.</p>
 
+
+              <p>CompiledName: <code>set_BaseConstructorCall</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '61', 61)" onmouseover="showTip(event, '61', 61)">
+          <code onmouseout="hideTip(event, '64', 64)" onmouseover="showTip(event, '64', 64)">
             BaseConstructorCall()
           </code>
-          <div class="tip" id="61">
+          <div class="tip" id="64">
             <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
@@ -203,15 +216,17 @@
             </a>
           <p>Set the target and arguments of the base constructor call. Only used for generated types.</p>
 
+
+              <p>CompiledName: <code>set_BaseConstructorCall</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '62', 62)" onmouseover="showTip(event, '62', 62)">
+          <code onmouseout="hideTip(event, '65', 65)" onmouseover="showTip(event, '65', 65)">
             InvokeCode()
           </code>
-          <div class="tip" id="62">
+          <div class="tip" id="65">
             <strong>Signature:</strong> unit -&gt; Expr list -&gt; Expr<br />
                       </div>
         </td>
@@ -222,15 +237,17 @@
             </a>
           <p>Set the quotation used to compute the implementation of invocations of this constructor.</p>
 
+
+              <p>CompiledName: <code>set_InvokeCode</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '63', 63)" onmouseover="showTip(event, '63', 63)">
+          <code onmouseout="hideTip(event, '66', 66)" onmouseover="showTip(event, '66', 66)">
             InvokeCode()
           </code>
-          <div class="tip" id="63">
+          <div class="tip" id="66">
             <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
@@ -241,15 +258,17 @@
             </a>
           <p>Set the quotation used to compute the implementation of invocations of this constructor.</p>
 
+
+              <p>CompiledName: <code>set_InvokeCode</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '64', 64)" onmouseover="showTip(event, '64', 64)">
+          <code onmouseout="hideTip(event, '67', 67)" onmouseover="showTip(event, '67', 67)">
             IsImplicitCtor()
           </code>
-          <div class="tip" id="64">
+          <div class="tip" id="67">
             <strong>Signature:</strong> unit -&gt; bool<br />
                       </div>
         </td>
@@ -262,15 +281,17 @@
 parameters of the constructor become fields and can be accessed using Expr.GlobalVar with the
 same name.</p>
 
+
+              <p>CompiledName: <code>set_IsImplicitCtor</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '65', 65)" onmouseover="showTip(event, '65', 65)">
+          <code onmouseout="hideTip(event, '68', 68)" onmouseover="showTip(event, '68', 68)">
             IsImplicitCtor()
           </code>
-          <div class="tip" id="65">
+          <div class="tip" id="68">
             <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
@@ -283,15 +304,17 @@ same name.</p>
 parameters of the constructor become fields and can be accessed using Expr.GlobalVar with the
 same name.</p>
 
+
+              <p>CompiledName: <code>get_IsImplicitCtor</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '66', 66)" onmouseover="showTip(event, '66', 66)">
+          <code onmouseout="hideTip(event, '69', 69)" onmouseover="showTip(event, '69', 69)">
             IsTypeInitializer()
           </code>
-          <div class="tip" id="66">
+          <div class="tip" id="69">
             <strong>Signature:</strong> unit -&gt; bool<br />
                       </div>
         </td>
@@ -301,15 +324,16 @@ same name.</p>
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           
+              <p>CompiledName: <code>set_IsTypeInitializer</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '67', 67)" onmouseover="showTip(event, '67', 67)">
+          <code onmouseout="hideTip(event, '70', 70)" onmouseover="showTip(event, '70', 70)">
             IsTypeInitializer()
           </code>
-          <div class="tip" id="67">
+          <div class="tip" id="70">
             <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
@@ -319,6 +343,7 @@ same name.</p>
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           
+              <p>CompiledName: <code>get_IsTypeInitializer</code></p>
         </td>
       </tr>
     </tbody>

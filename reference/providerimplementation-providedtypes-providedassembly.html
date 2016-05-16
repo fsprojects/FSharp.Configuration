@@ -36,8 +36,12 @@
 
 
 <h1>ProvidedAssembly</h1>
+<p>
+  <span>Namespace: ProviderImplementation.ProvidedTypes</span><br />
+</p>
 <div class="xmldoc">
 <p>A provided generated assembly</p>
+
 </div>
   <h3>Constructors</h3>
   <table class="table table-bordered member-list">
@@ -48,10 +52,10 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '50', 50)" onmouseover="showTip(event, '50', 50)">
+          <code onmouseout="hideTip(event, '53', 53)" onmouseover="showTip(event, '53', 53)">
             new(assemblyFileName)
           </code>
-          <div class="tip" id="50">
+          <div class="tip" id="53">
             <strong>Signature:</strong> assemblyFileName:string -&gt; ProvidedAssembly<br />
                       </div>
         </td>
@@ -61,6 +65,7 @@
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           
+              <p>CompiledName: <code>.ctor</code></p>
         </td>
       </tr>
     </tbody>
@@ -74,10 +79,10 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '51', 51)" onmouseover="showTip(event, '51', 51)">
+          <code onmouseout="hideTip(event, '54', 54)" onmouseover="showTip(event, '54', 54)">
             AddNestedTypes(...)
           </code>
-          <div class="tip" id="51">
+          <div class="tip" id="54">
             <strong>Signature:</strong> (types:ProvidedTypeDefinition list * enclosingGeneratedTypeNames:string list) -&gt; unit<br />
                       </div>
         </td>
@@ -92,10 +97,10 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '52', 52)" onmouseover="showTip(event, '52', 52)">
+          <code onmouseout="hideTip(event, '55', 55)" onmouseover="showTip(event, '55', 55)">
             AddTypes(types)
           </code>
-          <div class="tip" id="52">
+          <div class="tip" id="55">
             <strong>Signature:</strong> (types:ProvidedTypeDefinition list) -&gt; unit<br />
                       </div>
         </td>
@@ -104,12 +109,12 @@
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Emit the given provided type definitions as part of the assembly 
+          <p>Emit the given provided type definitions as part of the assembly
 and adjust the 'Assembly' property of all provided type definitions to return that
 assembly.</p>
-
 <p>The assembly is only emitted when the Assembly property on the root type is accessed for the first time.
 The host F# compiler does this when processing a generative type declaration for the type.</p>
+
 
         </td>
       </tr>
@@ -124,10 +129,10 @@ The host F# compiler does this when processing a generative type declaration for
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '53', 53)" onmouseover="showTip(event, '53', 53)">
+          <code onmouseout="hideTip(event, '56', 56)" onmouseover="showTip(event, '56', 56)">
             RegisterGenerated(fileName)
           </code>
-          <div class="tip" id="53">
+          <div class="tip" id="56">
             <strong>Signature:</strong> fileName:string -&gt; Assembly<br />
                       </div>
         </td>
@@ -137,6 +142,7 @@ The host F# compiler does this when processing a generative type declaration for
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           <p>Register that a given file is a provided generated assembly</p>
+
 
         </td>
       </tr>

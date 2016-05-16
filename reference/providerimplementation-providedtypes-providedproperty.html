@@ -36,8 +36,12 @@
 
 
 <h1>ProvidedProperty</h1>
+<p>
+  <span>Namespace: ProviderImplementation.ProvidedTypes</span><br />
+</p>
 <div class="xmldoc">
 <p>Represents an erased provided property.</p>
+
 </div>
   <h3>Constructors</h3>
   <table class="table table-bordered member-list">
@@ -48,10 +52,10 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '116', 116)" onmouseover="showTip(event, '116', 116)">
+          <code onmouseout="hideTip(event, '119', 119)" onmouseover="showTip(event, '119', 119)">
             new(...)
           </code>
-          <div class="tip" id="116">
+          <div class="tip" id="119">
             <strong>Signature:</strong> (propertyName:string * propertyType:Type * parameters:ProvidedParameter list option) -&gt; ProvidedProperty<br />
                       </div>
         </td>
@@ -62,6 +66,8 @@
             </a>
           <p>Create a new provided type. It is not initially associated with any specific provided type definition.</p>
 
+
+              <p>CompiledName: <code>.ctor</code></p>
         </td>
       </tr>
     </tbody>
@@ -75,10 +81,10 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '117', 117)" onmouseover="showTip(event, '117', 117)">
+          <code onmouseout="hideTip(event, '120', 120)" onmouseover="showTip(event, '120', 120)">
             AddCustomAttribute(arg1)
           </code>
-          <div class="tip" id="117">
+          <div class="tip" id="120">
             <strong>Signature:</strong> CustomAttributeData -&gt; unit<br />
                       </div>
         </td>
@@ -89,15 +95,16 @@
             </a>
           <p>Add a custom attribute to the provided property definition.</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '118', 118)" onmouseover="showTip(event, '118', 118)">
+          <code onmouseout="hideTip(event, '121', 121)" onmouseover="showTip(event, '121', 121)">
             AddDefinitionLocation(...)
           </code>
-          <div class="tip" id="118">
+          <div class="tip" id="121">
             <strong>Signature:</strong> (line:int * column:int * filePath:string) -&gt; unit<br />
                       </div>
         </td>
@@ -108,15 +115,16 @@
             </a>
           <p>Add definition location information to the provided type definition.</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '119', 119)" onmouseover="showTip(event, '119', 119)">
+          <code onmouseout="hideTip(event, '122', 122)" onmouseover="showTip(event, '122', 122)">
             AddObsoleteAttribute(message, isError)
           </code>
-          <div class="tip" id="119">
+          <div class="tip" id="122">
             <strong>Signature:</strong> (message:string * isError:bool option) -&gt; unit<br />
                       </div>
         </td>
@@ -127,15 +135,16 @@
             </a>
           <p>Add a 'System.Obsolete' attribute to this provided property</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '120', 120)" onmouseover="showTip(event, '120', 120)">
+          <code onmouseout="hideTip(event, '123', 123)" onmouseover="showTip(event, '123', 123)">
             AddXmlDoc(xmlDoc)
           </code>
-          <div class="tip" id="120">
+          <div class="tip" id="123">
             <strong>Signature:</strong> xmlDoc:string -&gt; unit<br />
                       </div>
         </td>
@@ -146,15 +155,16 @@
             </a>
           <p>Add XML documentation information to this provided constructor</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '121', 121)" onmouseover="showTip(event, '121', 121)">
+          <code onmouseout="hideTip(event, '124', 124)" onmouseover="showTip(event, '124', 124)">
             AddXmlDocComputed(xmlDocFunction)
           </code>
-          <div class="tip" id="121">
+          <div class="tip" id="124">
             <strong>Signature:</strong> (xmlDocFunction:(unit -&gt; string)) -&gt; unit<br />
                       </div>
         </td>
@@ -166,15 +176,16 @@
           <p>Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
 The documentation is re-computed  every time it is required.</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '122', 122)" onmouseover="showTip(event, '122', 122)">
+          <code onmouseout="hideTip(event, '125', 125)" onmouseover="showTip(event, '125', 125)">
             AddXmlDocDelayed(xmlDocFunction)
           </code>
-          <div class="tip" id="122">
+          <div class="tip" id="125">
             <strong>Signature:</strong> (xmlDocFunction:(unit -&gt; string)) -&gt; unit<br />
                       </div>
         </td>
@@ -185,15 +196,16 @@ The documentation is re-computed  every time it is required.</p>
             </a>
           <p>Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary</p>
 
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '123', 123)" onmouseover="showTip(event, '123', 123)">
+          <code onmouseout="hideTip(event, '126', 126)" onmouseover="showTip(event, '126', 126)">
             GetterCode()
           </code>
-          <div class="tip" id="123">
+          <div class="tip" id="126">
             <strong>Signature:</strong> unit -&gt; Expr list -&gt; Expr<br />
                       </div>
         </td>
@@ -204,15 +216,17 @@ The documentation is re-computed  every time it is required.</p>
             </a>
           <p>Set the quotation used to compute the implementation of gets of this property.</p>
 
+
+              <p>CompiledName: <code>set_GetterCode</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '124', 124)" onmouseover="showTip(event, '124', 124)">
+          <code onmouseout="hideTip(event, '127', 127)" onmouseover="showTip(event, '127', 127)">
             GetterCode()
           </code>
-          <div class="tip" id="124">
+          <div class="tip" id="127">
             <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
@@ -223,15 +237,17 @@ The documentation is re-computed  every time it is required.</p>
             </a>
           <p>Set the quotation used to compute the implementation of gets of this property.</p>
 
+
+              <p>CompiledName: <code>set_GetterCode</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '125', 125)" onmouseover="showTip(event, '125', 125)">
+          <code onmouseout="hideTip(event, '128', 128)" onmouseover="showTip(event, '128', 128)">
             IsStatic()
           </code>
-          <div class="tip" id="125">
+          <div class="tip" id="128">
             <strong>Signature:</strong> unit -&gt; bool<br />
                       </div>
         </td>
@@ -243,15 +259,17 @@ The documentation is re-computed  every time it is required.</p>
           <p>Get or set a flag indicating if the property is static.
 FSharp.Data addition: the getter is used by Debug.fs</p>
 
+
+              <p>CompiledName: <code>set_IsStatic</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '126', 126)" onmouseover="showTip(event, '126', 126)">
+          <code onmouseout="hideTip(event, '129', 129)" onmouseover="showTip(event, '129', 129)">
             IsStatic()
           </code>
-          <div class="tip" id="126">
+          <div class="tip" id="129">
             <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
@@ -263,15 +281,17 @@ FSharp.Data addition: the getter is used by Debug.fs</p>
           <p>Get or set a flag indicating if the property is static.
 FSharp.Data addition: the getter is used by Debug.fs</p>
 
+
+              <p>CompiledName: <code>get_IsStatic</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '127', 127)" onmouseover="showTip(event, '127', 127)">
+          <code onmouseout="hideTip(event, '130', 130)" onmouseover="showTip(event, '130', 130)">
             SetterCode()
           </code>
-          <div class="tip" id="127">
+          <div class="tip" id="130">
             <strong>Signature:</strong> unit -&gt; Expr list -&gt; Expr<br />
                       </div>
         </td>
@@ -282,15 +302,17 @@ FSharp.Data addition: the getter is used by Debug.fs</p>
             </a>
           <p>Set the function used to compute the implementation of sets of this property.</p>
 
+
+              <p>CompiledName: <code>set_SetterCode</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '128', 128)" onmouseover="showTip(event, '128', 128)">
+          <code onmouseout="hideTip(event, '131', 131)" onmouseover="showTip(event, '131', 131)">
             SetterCode()
           </code>
-          <div class="tip" id="128">
+          <div class="tip" id="131">
             <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
@@ -301,6 +323,8 @@ FSharp.Data addition: the getter is used by Debug.fs</p>
             </a>
           <p>Set the function used to compute the implementation of sets of this property.</p>
 
+
+              <p>CompiledName: <code>set_SetterCode</code></p>
         </td>
       </tr>
     </tbody>
