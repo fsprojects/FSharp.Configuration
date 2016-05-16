@@ -309,11 +309,16 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
 open System.Runtime.Caching
 
 type MemoryCache with 
-    member x.GetOrAdd(key, value: Lazy<_>, ?expiration) = 
+    member x.GetOrAdd(key: string, value: Lazy<ProvidedTypeDefinition>, ?expiration: TimeSpan) = 
         let policy = CacheItemPolicy()
         policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
+        
         match x.AddOrGetExisting(key, value, policy) with
-        | :? Lazy<ProvidedTypeDefinition> as item -> item.Value 
+        | :? Lazy<ProvidedTypeDefinition> as item -> 
+            try item.Value
+            with _ -> 
+                x.Remove key |> ignore
+                value.Value
         | x -> 
             assert(x = null)
             value.Value

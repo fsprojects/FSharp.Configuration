@@ -178,3 +178,5 @@ nuget/*.nupkg
 .paket/paket.exe
 paket-files
 build_PRIVATE.cmd
+.fake/build.fsx_*
+docs/tools/.fake/generate.fsx_*

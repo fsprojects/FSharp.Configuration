@@ -3,18 +3,19 @@
 // --------------------------------------------------------------------------------------
 
 #r @"packages/FAKE/tools/FakeLib.dll"
+#load "paket-files/fsharp/FAKE/modules/Octokit/Octokit.fsx"
+ 
 open Fake
 open Fake.Git
 open Fake.AssemblyInfoFile
 open Fake.ReleaseNotesHelper
-open System.IO
 open System
+open Octokit
 #if MONO
 #else
 #load "packages/SourceLink.Fake/tools/Fake.fsx"
 open SourceLink
 #endif
-
 
 // --------------------------------------------------------------------------------------
 // START TODO: Provide project-specific details below
@@ -128,13 +129,15 @@ Target "Build" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Run the unit tests using test runner
 
+open Fake.Testing
+
 Target "RunTests" (fun _ ->
     !! testAssemblies
-    |> NUnit (fun p ->
+    |> xUnit (fun p ->
         { p with
-            DisableShadowCopy = true
+            ShadowCopy = true
             TimeOut = TimeSpan.FromMinutes 20.
-            OutputFile = "TestResults.xml" })
+            XmlOutputPath = Some "TestResults.xml" })
 )
 
 #if MONO
@@ -234,7 +237,7 @@ let generateHelp' fail debug =
         buildDocumentationTarget args "Default"
         traceImportant "Help generated"
     with
-    | e when not fail ->
+    | _ when not fail ->
         traceImportant "generating help documentation failed"
 
 let generateHelp fail =
@@ -268,9 +271,6 @@ Target "ReleaseDocs" (fun _ ->
     Git.Commit.Commit tempDocsDir (sprintf "Update generated documentation for version %s" release.NugetVersion)
     Branches.push tempDocsDir
 )
-
-#load "paket-files/fsharp/FAKE/modules/Octokit/Octokit.fsx"
-open Octokit
 
 Target "Release" (fun _ ->
     StageAll ""

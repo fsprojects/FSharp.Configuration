@@ -1,82 +1,76 @@
 module FSharp.Configuration.Tests.YamlTests
 
 open FSharp.Configuration
-open NUnit.Framework
-open FsUnit
 open System
 open System.IO
+open Xunit
 
 type Settings = YamlConfig<"Settings.yaml">
 
-[<Test>] 
+[<Fact>] 
 let ``Can return a string from the settings file``() = 
     let settings = Settings()  
-    settings.DB.ConnectionString.GetType() |> should equal typeof<string>   
-    settings.DB.ConnectionString |> should equal "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;"
+    Assert.Equal<string>(settings.DB.ConnectionString, "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;")
 
-[<Test>] 
+[<Fact>] 
 let ``Can return an int from the settings file``() =   
     let settings = Settings()
-    settings.DB.NumberOfDeadlockRepeats.GetType() |> should equal typeof<int>   
-    settings.DB.NumberOfDeadlockRepeats |> should equal 5
+    Assert.Equal(settings.DB.NumberOfDeadlockRepeats, 5)
 
-[<Test>] 
+[<Fact>] 
 let ``Can return an int64 from the settings file``() =   
     let settings = Settings()
-    settings.DB.Id.GetType() |> should equal typeof<int64>   
-    settings.DB.Id |> should equal 21474836470L
+    Assert.Equal(settings.DB.Id, 21474836470L)
 
-[<Test>] 
+[<Fact>] 
 let ``Can return an double from the settings file``() =   
     let settings = Settings()
-    settings.JustStuff.SomeDoubleValue.GetType() |> should equal typeof<double>   
-    settings.JustStuff.SomeDoubleValue |> should equal 0.5
+    Assert.Equal(settings.JustStuff.SomeDoubleValue, 0.5)
 
-[<Test>] 
+[<Fact>] 
 let ``Can return a TimeSpan from the settings file``() =   
     let settings = Settings()
-    settings.DB.DefaultTimeout.GetType() |> should equal typeof<System.TimeSpan>   
-    settings.DB.DefaultTimeout |> should equal (System.TimeSpan.FromMinutes 5.)
+    Assert.Equal(settings.DB.DefaultTimeout, System.TimeSpan.FromMinutes 5.)
 
-[<Test>] 
+[<Fact>] 
 let ``Can return a list from the settings file``() = 
     let settings = Settings()
-    settings.Mail.ErrorNotificationRecipients.Count |> should equal 2
-    settings.Mail.ErrorNotificationRecipients.[0] |> should equal "user1@sample.com"
-    settings.Mail.ErrorNotificationRecipients.[1] |> should equal "user2@sample.com"
+    Assert.Equal(settings.Mail.ErrorNotificationRecipients.Count, 2)
+    Assert.Equal<string>(settings.Mail.ErrorNotificationRecipients.[0], "user1@sample.com")
+    Assert.Equal<string>(settings.Mail.ErrorNotificationRecipients.[1], "user2@sample.com")
 
-[<Test>] 
+[<Fact>] 
 let ``Can write to a string in the settings file``() =
     let settings = Settings()
     settings.DB.ConnectionString <- "Data Source=server2"
-    settings.DB.ConnectionString |> should equal "Data Source=server2"
+    Assert.Equal<string>(settings.DB.ConnectionString, "Data Source=server2")
 
-[<Test>] 
+[<Fact>] 
 let ``Can write to an int in the settings file``() =
     let settings = Settings()
     settings.DB.NumberOfDeadlockRepeats <- 6
-    settings.DB.NumberOfDeadlockRepeats |> should equal 6
+    Assert.Equal(settings.DB.NumberOfDeadlockRepeats, 6)
 
-[<Test>] 
+[<Fact>] 
 let ``Can write to an double in the settings file``() =
     let settings = Settings()
     settings.JustStuff.SomeDoubleValue <- 0.5
-    settings.JustStuff.SomeDoubleValue |> should equal 0.5
+    Assert.Equal(settings.JustStuff.SomeDoubleValue, 0.5)
 
 let private assertFilesAreEqual expected actual =
     let read file = (File.ReadAllText file).Replace("\r\n", "\n")
-    read expected |> should equal (read actual)
+    Assert.Equal<string>(read expected, read actual)
 
-[<Test>] 
+[<Fact>] 
 let ``Can save a settings file to a specified location``() =
     let settings = Settings()
     settings.DB.NumberOfDeadlockRepeats <- 11
     settings.DB.DefaultTimeout <- System.TimeSpan.FromMinutes 6.
     settings.JustStuff.SomeDoubleValue <- 0.5
-    settings.Save("SettingsModifed.yaml")
+    settings.Save "SettingsModifed.yaml"
     assertFilesAreEqual "SettingsModifed.yaml" "Settings2.yaml"
 
-[<Test>] 
+[<Fact>] 
 let ``Can save settings to the file it was loaded from last time``() =
     let settings = Settings()
     let tempFile = Path.GetTempFileName()
@@ -89,12 +83,12 @@ let ``Can save settings to the file it was loaded from last time``() =
         assertFilesAreEqual tempFile "Settings2.yaml"
     finally File.Delete tempFile
 
-[<Test>] 
+[<Fact>] 
 let ``Throws exception during saving if it was not loaded from a file and location is not specified``() =
     let settings = Settings()
-    (fun() -> settings.Save()) |> should throw typeof<InvalidOperationException>
+    Assert.Throws<InvalidOperationException> (fun() -> settings.Save())
     
-[<Test>] 
+[<Fact>] 
 let ``Can loads full settings``() =
     let settings = Settings()
     settings.LoadText """
@@ -119,25 +113,24 @@ DB:
   NumberOfDeadlockRepeats: 50
   DefaultTimeout: 00:06:00
 """
-    settings.Mail.Smtp.Host |> should equal "smtp.sample.com*"
-    settings.Mail.Smtp.Port |> should equal 4430
-    settings.Mail.Smtp.User |> should equal "user1*"
-    settings.Mail.Smtp.Password |> should equal "pass1*"
+    Assert.Equal<string>(settings.Mail.Smtp.Host, "smtp.sample.com*")
+    Assert.Equal(settings.Mail.Smtp.Port, 4430)
+    Assert.Equal<string>(settings.Mail.Smtp.User, "user1*")
+    Assert.Equal<string>(settings.Mail.Smtp.Password, "pass1*")
 
-    settings.Mail.Pop3.Host |> should equal "pop3.sample.com*"
-    settings.Mail.Pop3.Port |> should equal 3310
-    settings.Mail.Pop3.User |> should equal "user2*"
-    settings.Mail.Pop3.Password |> should equal "pass2*"
-    settings.Mail.Pop3.CheckPeriod |> should equal (TimeSpan.FromMinutes 2.)
+    Assert.Equal<string>(settings.Mail.Pop3.Host, "pop3.sample.com*")
+    Assert.Equal(settings.Mail.Pop3.Port, 3310)
+    Assert.Equal<string>(settings.Mail.Pop3.User, "user2*")
+    Assert.Equal<string>(settings.Mail.Pop3.Password, "pass2*")
+    Assert.Equal(settings.Mail.Pop3.CheckPeriod, TimeSpan.FromMinutes 2.)
 
-    Assert.That(settings.Mail.ErrorNotificationRecipients, 
-                Is.EquivalentTo ["user1@sample.com*"; "user2@sample.com*"; "user3@sample.com"])
+    Assert.Equal<_ list>(List.ofSeq settings.Mail.ErrorNotificationRecipients, ["user1@sample.com*"; "user2@sample.com*"; "user3@sample.com"])
+    
+    Assert.Equal<string>(settings.DB.ConnectionString, "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;*")
+    Assert.Equal(settings.DB.NumberOfDeadlockRepeats, 50)
+    Assert.Equal(settings.DB.DefaultTimeout, TimeSpan.FromMinutes 6.)
 
-    settings.DB.ConnectionString |> should equal "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;*"
-    settings.DB.NumberOfDeadlockRepeats |> should equal 50
-    settings.DB.DefaultTimeout |> should equal (TimeSpan.FromMinutes 6.)
-
-[<Test>]
+[<Fact>]
 let ``Can load partial settings``() =
     let settings = Settings()
     settings.LoadText """
@@ -151,25 +144,24 @@ Mail:
     - user2@sample.com*
     - user3@sample.com
 """
-    settings.Mail.Smtp.Host |> should equal "smtp.sample.com"
-    settings.Mail.Smtp.Port |> should equal 4430
-    settings.Mail.Smtp.User |> should equal "user1"
-    settings.Mail.Smtp.Password |> should equal "pass1"
+    Assert.Equal<string>(settings.Mail.Smtp.Host, "smtp.sample.com")
+    Assert.Equal(settings.Mail.Smtp.Port, 4430)
+    Assert.Equal<string>(settings.Mail.Smtp.User, "user1")
+    Assert.Equal<string>(settings.Mail.Smtp.Password, "pass1")
+   
+    Assert.Equal<string>(settings.Mail.Pop3.Host, "pop3.sample.com")
+    Assert.Equal(settings.Mail.Pop3.Port, 331)
+    Assert.Equal<string>(settings.Mail.Pop3.User, "user2")
+    Assert.Equal<string>(settings.Mail.Pop3.Password, "pass2")
+    Assert.Equal(settings.Mail.Pop3.CheckPeriod, TimeSpan.FromMinutes 2.)
 
-    settings.Mail.Pop3.Host |> should equal "pop3.sample.com"
-    settings.Mail.Pop3.Port |> should equal 331
-    settings.Mail.Pop3.User |> should equal "user2"
-    settings.Mail.Pop3.Password |> should equal "pass2"
-    settings.Mail.Pop3.CheckPeriod |> should equal (TimeSpan.FromMinutes 2.)
+    Assert.Equal<_ list>(List.ofSeq settings.Mail.ErrorNotificationRecipients, ["user1@sample.com*"; "user2@sample.com*"; "user3@sample.com"])
 
-    Assert.That(settings.Mail.ErrorNotificationRecipients, 
-                Is.EquivalentTo ["user1@sample.com*"; "user2@sample.com*"; "user3@sample.com"])
+    Assert.Equal<string>(settings.DB.ConnectionString, "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;")
+    Assert.Equal(settings.DB.NumberOfDeadlockRepeats, 5)
+    Assert.Equal(settings.DB.DefaultTimeout, TimeSpan.FromMinutes 5.)
 
-    settings.DB.ConnectionString |> should equal "Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;"
-    settings.DB.NumberOfDeadlockRepeats |> should equal 5
-    settings.DB.DefaultTimeout |> should equal (TimeSpan.FromMinutes 5.)
-
-[<Test>]
+[<Fact>]
 let ``Can load settings containing unknown nodes``() =
     let settings = Settings()
     settings.LoadText """
@@ -181,54 +173,53 @@ TopLevelUnknown:
   Value: 1
 
 """
-    settings.Mail.Smtp.Port |> should equal 4430
+    Assert.Equal(settings.Mail.Smtp.Port, 4430)
 
-
-[<Test>]
+[<Fact>]
 let ``Can load file and watch``() =
     let settings = Settings()
     let tempFile = Path.GetTempFileName()
     try
-      File.Copy ("Settings.yaml", tempFile, overwrite=true)
-      settings.LoadAndWatch tempFile |> ignore
+        File.Copy ("Settings.yaml", tempFile, overwrite = true)
+        settings.LoadAndWatch tempFile |> ignore
     finally
-      File.Delete tempFile
+        File.Delete tempFile
 
-[<Test>]
+[<Fact>]
 let ``Can load file and watch and detect errors``() =
     let settings = Settings()
     let tempFile = Path.GetTempFileName()
     let mutable err = false
     settings.Error.Add(fun _ -> err <- true) 
     try
-      File.Copy ("Settings.yaml", tempFile, overwrite=true)
-      use x = settings.LoadAndWatch tempFile
-      System.Threading.Thread.Sleep(800)
-      let f = new FileStream(tempFile, FileMode.Append)
-      let data = "<junk:>:asd:DF" |> System.Text.Encoding.ASCII.GetBytes
-      f.Write(data, 0, data.Length)
-      f.Flush()
-      f.Dispose()
-      System.Threading.Thread.Sleep(800)
-      err |> should equal true
+        File.Copy ("Settings.yaml", tempFile, overwrite=true)
+        use __ = settings.LoadAndWatch tempFile
+        System.Threading.Thread.Sleep(800)
+        let f = new FileStream(tempFile, FileMode.Append)
+        let data = "<junk:>:asd:DF" |> System.Text.Encoding.ASCII.GetBytes
+        f.Write(data, 0, data.Length)
+        f.Flush()
+        f.Dispose()
+        System.Threading.Thread.Sleep(800)
+        err,  true
     finally
-      File.Delete tempFile
+        File.Delete tempFile
 
-[<Test>]
+[<Fact>]
 let ``Can load empty lists``() =
     let settings = Settings()
     settings.LoadText """
 Mail:
   ErrorNotificationRecipients: []
 """
-    settings.Mail.ErrorNotificationRecipients |> should be Empty
+    settings.Mail.ErrorNotificationRecipients.Count,  0
 
-type private Listener(event: IEvent<EventHandler,_>) =
+type private Listener(event: IEvent<EventHandler, _>) =
     let events = ref 0
     do event.Add (fun _ -> incr events)
-    member x.Events = !events
+    member __.Events = !events
 
-[<Test>]
+[<Fact>]
 let ``Raises Changed events``() =
     let settings = Settings()
     let rootListener = Listener(settings.Changed)
@@ -242,20 +233,21 @@ Mail:
   Pop3:
     CheckPeriod: 00:02:00
 """
-    [rootListener.Events
-     mailListener.Events
-     pop3Listener.Events
-     smtpListener.Events
-     dbListener.Events] 
-    |> should equal [1; 1; 1; 0; 0]
+    Assert.Equal<seq<_>>(
+        [rootListener.Events
+         mailListener.Events
+         pop3Listener.Events
+         smtpListener.Events
+         dbListener.Events],  
+        [1; 1; 1; 0; 0])
     
-[<Test>]
+[<Fact>]
 let ``Does not raise duplicates of parent Changed events even though several children changed``() =
     let settings = Settings()
-    let rootListener = Listener(settings.Changed)
-    let mailListener = Listener(settings.Mail.Changed)
-    let pop3Listener = Listener(settings.Mail.Pop3.Changed)
-    let smtpListener = Listener(settings.Mail.Smtp.Changed)
+    let rootListener = Listener settings.Changed
+    let mailListener = Listener settings.Mail.Changed
+    let pop3Listener = Listener settings.Mail.Pop3.Changed
+    let smtpListener = Listener settings.Mail.Smtp.Changed
 
     settings.LoadText """
 Mail:
@@ -264,16 +256,16 @@ Mail:
   Pop3:
     CheckPeriod: 00:02:00
 """
-    [rootListener.Events
-     mailListener.Events
-     pop3Listener.Events
-     smtpListener.Events] 
-    |> should equal [1; 1; 1; 1]
-
+    Assert.Equal<seq<_>>(
+        [rootListener.Events
+         mailListener.Events
+         pop3Listener.Events
+         smtpListener.Events],
+        [1; 1; 1; 1])
 
 type Lists = YamlConfig<"Lists.yaml">
 
-[<Test>]
+[<Fact>]
 let ``Can load sequence of maps (single item)``() =
     let settings = Lists()
     settings.LoadText """
@@ -283,12 +275,12 @@ items:
       price:     347
       quantity:  14
 """
-    settings.items.Count |> should equal 1
-    settings.items.[0].part_no |> should equal "Test"
-    settings.items.[0].descrip |> should equal "Some description"
-    settings.items.[0].quantity |> should equal 14 
+    Assert.Equal(settings.items.Count, 1)
+    Assert.Equal<string>(settings.items.[0].part_no, "Test")
+    Assert.Equal<string>(settings.items.[0].descrip, "Some description")
+    Assert.Equal(settings.items.[0].quantity, 14)
 
-[<Test>]
+[<Fact>]
 let ``Can load sequence of maps (multiple items)``() =
     let settings = Lists()
     settings.LoadText """
@@ -308,16 +300,16 @@ items:
       price:     10027
       quantity:  1
 """
-    settings.items.Count |> should equal 3
-    settings.items.[0].part_no |> should equal "Test"
-    settings.items.[0].descrip |> should equal "Some description"
-    settings.items.[0].quantity |> should equal 14
+    Assert.Equal(settings.items.Count, 3)
+    Assert.Equal<string>(settings.items.[0].part_no, "Test")
+    Assert.Equal<string>(settings.items.[0].descrip, "Some description")
+    Assert.Equal(settings.items.[0].quantity, 14)
     
-    settings.items.[2].part_no |> should equal "E1628"
-    settings.items.[2].descrip |> should equal "High Heeled \"Ruby\" Slippers"
-    settings.items.[2].quantity |> should equal 1
+    Assert.Equal<string>(settings.items.[2].part_no, "E1628")
+    Assert.Equal<string>(settings.items.[2].descrip, "High Heeled \"Ruby\" Slippers")
+    Assert.Equal(settings.items.[2].quantity, 1)
 
-[<Test>]
+[<Fact>]
 let ``Can load nested lists``() =
     let settings = Lists()
     settings.LoadText """
@@ -334,18 +326,31 @@ Fix82:
   labels:
     environment: "staging"
 """
-    settings.Fix82.constraints.Count |> should equal 2
-    settings.Fix82.constraints.[0].Count |> should equal 3
-    settings.Fix82.constraints.[0].[0] |> should equal "attribute"
-    settings.Fix82.constraints.[0].[1] |> should equal "OPERATOR"
-    settings.Fix82.constraints.[0].[2] |> should equal "value"
-    settings.Fix82.constraints.[1].Count |> should equal 2
-    settings.Fix82.constraints.[1].[0] |> should equal "field"
-    settings.Fix82.constraints.[1].[1] |> should equal "OP"
+    Assert.Equal(settings.Fix82.constraints.Count, 2)
+    Assert.Equal(settings.Fix82.constraints.[0].Count, 3)
+    Assert.Equal<string>(settings.Fix82.constraints.[0].[0], "attribute")
+    Assert.Equal<string>(settings.Fix82.constraints.[0].[1], "OPERATOR")
+    Assert.Equal<string>(settings.Fix82.constraints.[0].[2], "value")
+    Assert.Equal(settings.Fix82.constraints.[1].Count, 2)
+    Assert.Equal<string>(settings.Fix82.constraints.[1].[0], "field")
+    Assert.Equal<string>(settings.Fix82.constraints.[1].[1], "OP")
 
-[<Ignore>]
-[<Test>]
+//[<Fact>]
 let ``Check that list defaults are OK``() =
     let settings = Lists()
-    settings.items.Count |> should equal 2
-    settings.Archive.Count |> should equal 3
+    Assert.Equal(settings.items.Count, 2)
+    Assert.Equal(settings.Archive.Count, 3)
+
+type NumericKeys = YamlConfig<YamlText = 
+"""
+1: 10
+2: 20
+3a: foo
+""">
+
+[<Fact>]
+let ``Numeric map keys are OK``() =
+    let sut = NumericKeys()
+    Assert.Equal(sut.``1``, 10)
+    Assert.Equal(sut.``2``, 20)
+    Assert.Equal<string>(sut.``3a``, "foo")
