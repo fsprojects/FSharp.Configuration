@@ -423,8 +423,12 @@ type Root () =
         reraise()
     /// Load Yaml config from a file and update itself with it.
     member x.Load (filePath: string) = 
+      try
         filePath |> Helper.File.tryReadNonEmptyTextFile |> x.LoadText
         lastLoadedFrom <- Some filePath
+      with e ->
+        async { errorEvent.Trigger e } |> Async.Start
+        reraise()
     /// Load Yaml config from a file, update itself with it, then start watching it for changes.
     /// If it detects any change, it reloads the file.
     member x.LoadAndWatch (filePath: string) = 

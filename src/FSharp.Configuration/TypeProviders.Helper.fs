@@ -229,6 +229,9 @@ module File =
                     | _, content -> return content 
                 finally file.Dispose() 
             | None ->  
+                if attemptsLeft = 0 
+                    then return raise (FileNotFoundException(sprintf "File, %s could not be opened after %d attempts." filePath maxAttempts))
+                
                 printfn "Attempt %d of %d: cannot read %s. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
                 return! sleepAndRun attemptsLeft }
         loop maxAttempts |> Async.RunSynchronously
