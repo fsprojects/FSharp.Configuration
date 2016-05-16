@@ -68,14 +68,10 @@ module private Parser =
             | :? List<obj> as l -> Node.List (l |> Seq.map loop |> Seq.toList)
             | :? Dictionary<obj,obj> as map -> 
                 map 
-                |> Seq.choose (fun p -> 
-                    match p.Key with
-                    | :? string as key -> Some (key, loop p.Value)
-                    | _ -> None)
+                |> Seq.map (fun p -> string p.Key, loop p.Value)
                 |> Seq.toList
                 |> Map
-            | scalar ->
-                Scalar (Scalar.FromObj scalar)
+            | scalar -> Scalar (Scalar.FromObj scalar)
 
         let settings = SerializerSettings(EmitDefaultValues=true, EmitTags=false, SortKeyForMapping=false)
         let serializer = Serializer(settings)
@@ -357,11 +353,12 @@ module private TypesFactory =
             children
             |> List.map (fun (name, node) -> transform readOnly (Some name) node)
             |> List.fold (fun (types, inits) t -> types @ t.Types, inits @ [t.Init]) ([], [])
-
+        
         let affinedChildInits me =
             childInits 
             |> List.fold (fun acc expr -> expr me :: acc) []
             |> List.reduce (fun res expr -> Expr.Sequential(res, expr))
+        
         childTypes, affinedChildInits
 
     and transformMap readOnly name (children: (string * Node) list) =

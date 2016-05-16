@@ -1,9 +1,9 @@
 source http://nuget.org/api/v2
 
 nuget FAKE
-nuget NUnit.Runners ~> 2
 nuget FSharp.Formatting
-nuget NUnit ~> 2
+nuget xUnit ~> 1
+nuget xUnit.runners ~> 1
 nuget Octokit
 nuget SourceLink.Fake
 nuget NuGet.CommandLine
