@@ -1,3 +1,7 @@
+#### 0.6.0 - 16.05.2016
+* YamlConfigProvider throws if file is not found or fails to load
+* YamlConfigProvider allows keys of any type
+
 #### 0.5.12 - 01.03.2016
 * Added support for data in int64 to YamlConfigProvider
 

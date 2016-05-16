@@ -14,9 +14,9 @@ NUGET
     Microsoft.Net.Http (2.2.29) - framework: net10, net11, net20, net30, net35, net40, net40-full
       Microsoft.Bcl (>= 1.1.10)
       Microsoft.Bcl.Build (>= 1.0.14)
-    NuGet.CommandLine (3.4.3)
+    NuGet.CommandLine (2.8.6)
     Octokit (0.19)
-      Microsoft.Net.Http
+      Microsoft.Net.Http  - framework: net10, net11, net20, net30, net35, net40, net40-full
     SharpYaml (1.5.3)
     SourceLink.Fake (1.1)
     xunit (1.9.2)

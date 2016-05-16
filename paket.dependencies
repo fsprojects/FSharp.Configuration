@@ -6,7 +6,7 @@ nuget xUnit ~> 1
 nuget xUnit.runners ~> 1
 nuget Octokit
 nuget SourceLink.Fake
-nuget NuGet.CommandLine
+nuget NuGet.CommandLine ~> 2
 nuget SharpYaml
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx
