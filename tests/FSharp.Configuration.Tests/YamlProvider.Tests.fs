@@ -354,3 +354,25 @@ let ``Numeric map keys are OK``() =
     Assert.Equal(sut.``1``, 10)
     Assert.Equal(sut.``2``, 20)
     Assert.Equal<string>(sut.``3a``, "foo")
+
+
+type MixedTypes = YamlConfig<YamlText = 
+"""
+Items:
+    - Item: asdf
+    - Item: http://fsharp.org
+    - Item: 14 
+""">
+
+[<Fact>]
+let ``Mixed types are read as strings``() =
+    let mt = MixedTypes()
+    mt.LoadText("""
+Items:
+    - Item: asdf
+    - Item: http://fsharp.org
+    - Item: 14 
+    """)
+    Assert.Equal<string>(mt.Items.[0].Item, "asdf")
+    Assert.Equal<string>(mt.Items.[1].Item, "http://fsharp.org/")
+    Assert.Equal<string>(mt.Items.[2].Item, "14")
