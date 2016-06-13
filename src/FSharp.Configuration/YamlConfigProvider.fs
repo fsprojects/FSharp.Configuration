@@ -113,11 +113,16 @@ module private Parser =
                 let! name = name
                 let! field = tryGetField target ("_" + name)
 
-                if field.FieldType <> node.UnderlyingType then 
-                    failwithf "Cannot assign value of type %s to field of %s: %s." node.UnderlyingType.Name name field.FieldType.Name
+                let newValue = 
+                    if field.FieldType <> node.UnderlyingType then 
+                        if node.UnderlyingType <> typeof<string> && field.FieldType = typeof<string> then
+                            node.BoxedValue |> string |> box
+                        else
+                            failwithf "Cannot assign value of type %s to field of %s: %s." node.UnderlyingType.Name name field.FieldType.Name
+                    else
+                        node.BoxedValue
 
                 let oldValue = field.GetValue(target)
-                let newValue = node.BoxedValue
         
                 return! 
                     if oldValue <> newValue then
