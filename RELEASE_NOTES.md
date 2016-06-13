@@ -1,3 +1,6 @@
+#### 0.6.1 - 13.06.2016
+* YamlConfigProvider: added support for having mixed type content fall back to strings
+
 #### 0.6.0 - 16.05.2016
 * YamlConfigProvider throws if file is not found or fails to load
 * YamlConfigProvider allows keys of any type
