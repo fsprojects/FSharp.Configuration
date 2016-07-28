@@ -20,3 +20,4 @@ DB:
   DefaultTimeout: 00:05:00.0000000
 JustStuff:
   SomeDoubleValue: 0.5
+  SomeTimeStamp: 2001-01-01 12:34:56 +00:00
