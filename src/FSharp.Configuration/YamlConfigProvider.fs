@@ -118,7 +118,7 @@ module private Parser =
                         if node.UnderlyingType <> typeof<string> && field.FieldType = typeof<string> then
                             node.BoxedValue |> string |> box
                         elif node.UnderlyingType = typeof<int32> && field.FieldType = typeof<int64> then
-                            node.BoxedValue |> int64 |> box
+                            node.BoxedValue :?> int32 |> int64 |> box
                         else
                             failwithf "Cannot assign value of type %s to field of %s: %s." node.UnderlyingType.Name name field.FieldType.Name
                     else
