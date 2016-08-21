@@ -1,3 +1,6 @@
+#### 0.6.2 - 21.08.2016
+* Handle int32 values loading from YAML files into int64 fields
+
 #### 0.6.1 - 13.06.2016
 * YamlConfigProvider: added support for having mixed type content fall back to strings
 
