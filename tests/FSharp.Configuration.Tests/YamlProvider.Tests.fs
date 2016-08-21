@@ -32,6 +32,11 @@ let ``Can return a TimeSpan from the settings file``() =
     let settings = Settings()
     Assert.Equal(settings.DB.DefaultTimeout, System.TimeSpan.FromMinutes 5.)
 
+[<Fact>]
+let ``Can return a TimeStamp from the settings file``() =
+    let settings = Settings()
+    Assert.Equal(settings.JustStuff.SomeTimeStamp, System.DateTimeOffset(2001, 01, 01, 12, 34, 56, System.TimeSpan.Zero))
+
 [<Fact>] 
 let ``Can return a list from the settings file``() = 
     let settings = Settings()

@@ -22,11 +22,13 @@ module private Parser =
         | Int64 of int64
         | String of string
         | TimeSpan of TimeSpan
+        | TimeStamp of DateTimeOffset
         | Bool of bool
         | Uri of Uri
         | Float of double
         static member ParseStr = function
             | ValueParser.TimeSpan x -> TimeSpan x
+            | ValueParser.DateTimeOffset x -> TimeStamp x
             | ValueParser.Uri x -> Uri x
             | x -> String x
         static member FromObj : obj -> Scalar = function
@@ -45,6 +47,7 @@ module private Parser =
             | String x -> x.GetType()
             | Bool x -> x.GetType()
             | TimeSpan x -> x.GetType()
+            | TimeStamp x -> x.GetType()
             | Uri x -> x.GetType()
             | Float x -> x.GetType()
         member x.BoxedValue =
@@ -53,6 +56,7 @@ module private Parser =
             | Int64 x -> box x
             | String x -> box x
             | TimeSpan x -> box x
+            | TimeStamp x -> box x
             | Bool x -> box x
             | Uri x -> box x
             | Float x -> box x
@@ -237,6 +241,9 @@ module private TypesFactory =
             | TimeSpan x -> 
                 let parse = typeof<TimeSpan>.GetMethod("Parse", [|typeof<string>|])
                 Expr.Call(parse, [Expr.Value (x.ToString())])
+            | TimeStamp x ->
+                let parse = typeof<DateTimeOffset>.GetMethod("Parse", [|typeof<string>|])
+                Expr.Call(parse, [Expr.Value (x.ToString())])
             | Uri x ->
                 let ctr = typeof<Uri>.GetConstructor [|typeof<string>|]
                 Expr.NewObject(ctr, [Expr.Value x.OriginalString])
@@ -394,6 +401,18 @@ type Root () =
     let serializer = 
         let settings = SerializerSettings(EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false, 
                                           EmitAlias = false, ComparerForKeySorting = null)
+        settings.RegisterSerializer (
+            typeof<DateTimeOffset>,
+            { new ScalarSerializerBase() with
+                member __.ConvertFrom (_, scalar) =
+                    match DateTimeOffset.TryParse (scalar.Value) with
+                    | true, dto -> box dto
+                    | _ -> null
+                member __.ConvertTo ctx =
+                    match ctx.Instance with
+                    | :? DateTimeOffset as dto -> dto.ToString("O")
+                    | _ -> "" })
+
         settings.RegisterSerializer (
             typeof<System.Uri>, 
             { new ScalarSerializerBase() with

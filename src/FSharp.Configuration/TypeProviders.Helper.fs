@@ -124,6 +124,9 @@ module ValueParser =
     let (|DateTime|_|) =  
         tryParseWith (fun x -> DateTime.TryParse(x, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal))
 
+    let (|DateTimeOffset|_|) =
+        tryParseWith (fun x -> DateTimeOffset.TryParse(x, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal))
+
     let (|Uri|_|) (text: string) = 
         ["http"; "https"; "ftp"; "ftps"; "sftp"; "amqp"; "file"; "ssh"; "tcp"] 
         |> List.tryPick (fun x -> 
