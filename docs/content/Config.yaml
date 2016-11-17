@@ -13,6 +13,7 @@ Mail:
   ErrorNotificationRecipients:
     - user1@sample.com
     - user2@sample.com
+  ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
 DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
