@@ -76,7 +76,6 @@ let ``Can write to a guid in the settings file``() =
     let settings = Settings()
     let guid = Guid.NewGuid()
     settings.JustStuff.SomeGuid <- guid
-    settings.Save ("C:\\Users\\nphx\\Desktop\\test.txt")
     Assert.Equal<Guid>(settings.JustStuff.SomeGuid, guid)
 
 [<Fact>] 
