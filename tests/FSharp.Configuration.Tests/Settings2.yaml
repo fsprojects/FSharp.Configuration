@@ -20,3 +20,5 @@ DB:
   DefaultTimeout: 0:00:06:00.0000000
 JustStuff:
   SomeDoubleValue: 0.5
+  SomeGuid: 7b7eb384-feba-4409-b560-66ff63f1e8d0
+  DifferentGuid: 9d165087-9b74-4313-ab90-89be897d3d93

@@ -32,6 +32,16 @@ let ``Can return a TimeSpan from the settings file``() =
     let settings = Settings()
     Assert.Equal(settings.DB.DefaultTimeout, System.TimeSpan.FromMinutes 5.)
 
+[<Fact>]
+let ``Can return a guid from the settings file``() =
+    let settings = Settings()
+    Assert.Equal(settings.JustStuff.SomeGuid, Guid.Parse "{7B7EB384-FEBA-4409-B560-66FF63F1E8D0}")
+
+[<Fact>]
+let ``Can return a different guid from the settings file``() =
+    let settings = Settings()
+    Assert.Equal(settings.JustStuff.DifferentGuid, Guid.Parse "9d165087-9b74-4313-ab90-89be897d3d93")
+
 [<Fact>] 
 let ``Can return a list from the settings file``() = 
     let settings = Settings()
@@ -60,6 +70,14 @@ let ``Can write to an double in the settings file``() =
 let private assertFilesAreEqual expected actual =
     let read file = (File.ReadAllText file).Replace("\r\n", "\n")
     Assert.Equal<string>(read expected, read actual)
+
+[<Fact>]
+let ``Can write to a guid in the settings file``() =
+    let settings = Settings()
+    let guid = Guid.NewGuid()
+    settings.JustStuff.SomeGuid <- guid
+    settings.Save ("C:\\Users\\nphx\\Desktop\\test.txt")
+    Assert.Equal<Guid>(settings.JustStuff.SomeGuid, guid)
 
 [<Fact>] 
 let ``Can save a settings file to a specified location``() =
