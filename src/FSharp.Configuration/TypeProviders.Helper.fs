@@ -120,6 +120,7 @@ module ValueParser =
     let (|Int|_|) = tryParseWith Int32.TryParse
     let (|Float|_|) = tryParseWith (fun x -> Double.TryParse(x, NumberStyles.Any, CultureInfo.InvariantCulture))
     let (|TimeSpan|_|) = tryParseWith (fun x -> TimeSpan.TryParse(x, CultureInfo.InvariantCulture))
+    let (|Guid|_|) = tryParseWith Guid.TryParse
     
     let (|DateTime|_|) =  
         tryParseWith (fun x -> DateTime.TryParse(x, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal))
