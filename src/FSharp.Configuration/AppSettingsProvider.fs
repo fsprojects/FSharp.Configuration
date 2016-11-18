@@ -112,6 +112,10 @@ let internal typedAppSettings (context: Context) =
                                     ProvidedProperty(name, typeof<DateTime>,
                                         GetterCode = (fun _ -> <@@ DateTime.Parse(getConfigValue(filePath, key), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal) @@>),
                                         SetterCode = fun args -> <@@ setConfigValue(filePath, key, (%%args.[0]: DateTime).ToString("o")) @@>)
+                                | ValueParser.Guid _ ->
+                                    ProvidedProperty(name, typeof<Guid>,
+                                        GetterCode = (fun _ -> <@@ Guid.Parse(getConfigValue(filePath, key)) @@>),
+                                        SetterCode = fun args -> <@@ setConfigValue(filePath, key, (%%args.[0]: Guid).ToString("B")) @@>)
                                 | _ ->
                                     ProvidedProperty(name, typeof<string>,
                                         GetterCode = (fun _ -> <@@ getConfigValue(filePath, key) @@>),

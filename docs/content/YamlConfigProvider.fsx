@@ -36,6 +36,7 @@ Create a `Config.yaml` file like this:
         ErrorNotificationRecipients:
             - user1@sample.com
             - user2@sample.com
+        ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
     DB:
         ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
         NumberOfDeadlockRepeats: 5
@@ -95,6 +96,7 @@ Let's create a F# project named `Config`, add reference to `FSharp.Configuration
       ErrorNotificationRecipients:
         - user1@sample.com
         - user2@sample.com
+      ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
     DB:
       ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
       NumberOfDeadlockRepeats: 5
@@ -135,6 +137,7 @@ It should outputs this:
       ErrorNotificationRecipients:
       - user1@sample.com
       - user2@sample.com
+      ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
     DB:
       ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
       NumberOfDeadlockRepeats: 5
@@ -169,6 +172,7 @@ So, add the following `RuntimeConfig.yaml` into the C# console project:
         - user11@sample.com
         - user22@sample.com
         - new_user@sample.com
+      ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
     DB:
       ConnectionString: Data Source=server2;Initial Catalog=Database1;Integrated Security=SSPI;
       NumberOfDeadlockRepeats: 5
@@ -202,6 +206,7 @@ The output should be:
       - user11@sample.com
       - user22@sample.com
       - new_user@sample.com
+      ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
     DB:
       ConnectionString: Data Source=server2;Initial Catalog=Database1;Integrated Security=SSPI;
       NumberOfDeadlockRepeats: 5
@@ -243,6 +248,7 @@ Mail:
   ErrorNotificationRecipients:
     - user1@sample.com
     - user2@sample.com
+  ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
 DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5

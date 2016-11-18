@@ -37,6 +37,10 @@ let ``Can return a Uri from the config file``() =
 [<Fact>] 
 let ``Can return a connection string from the config file``() =   
     Assert.Equal<string>(Settings.ConnectionStrings.Test1, "Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;")
+
+[<Fact>]
+let ``Can return a guid from the config file``() =
+    Assert.Equal(Settings.TestGuid, Guid.Parse "{7B7EB384-FEBA-4409-B560-66FF63F1E8D0}")
      
 [<Fact>] 
 let ``Can read multiple connection strings from the config file``() =   

@@ -25,9 +25,11 @@ module private Parser =
         | Bool of bool
         | Uri of Uri
         | Float of double
+        | Guid of Guid
         static member ParseStr = function
             | ValueParser.TimeSpan x -> TimeSpan x
             | ValueParser.Uri x -> Uri x
+            | ValueParser.Guid x -> Guid x
             | x -> String x
         static member FromObj : obj -> Scalar = function
             | null -> String ""
@@ -47,6 +49,7 @@ module private Parser =
             | TimeSpan x -> x.GetType()
             | Uri x -> x.GetType()
             | Float x -> x.GetType()
+            | Guid x -> x.GetType()
         member x.BoxedValue =
             match x with
             | Int x -> box x
@@ -56,6 +59,7 @@ module private Parser =
             | Bool x -> box x
             | Uri x -> box x
             | Float x -> box x
+            | Guid x -> box x
 
     type Node =
         | Scalar of Scalar
@@ -240,6 +244,9 @@ module private TypesFactory =
             | Uri x ->
                 let ctr = typeof<Uri>.GetConstructor [|typeof<string>|]
                 Expr.NewObject(ctr, [Expr.Value x.OriginalString])
+            | Guid x ->
+                let parse = typeof<Guid>.GetMethod("Parse", [|typeof<string>|])
+                Expr.Call(parse, [Expr.Value (x.ToString())])
 
     type T =
         { MainType: Type option
@@ -404,6 +411,18 @@ type Root () =
                 member __.ConvertTo ctx = 
                     match ctx.Instance with
                     | :? Uri as uri -> uri.OriginalString
+                    | _ -> "" })
+
+        settings.RegisterSerializer (
+            typeof<Guid>,
+            { new ScalarSerializerBase() with
+                member __.ConvertFrom (_, scalar) =
+                    match Guid.TryParse (scalar.Value) with
+                    | true, guid -> box guid
+                    | _ -> null
+                member __.ConvertTo ctx =
+                    match ctx.Instance with
+                    | :? Guid as guid -> guid.ToString("D")
                     | _ -> "" })
         Serializer settings
 
