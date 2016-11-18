@@ -1,4 +1,4 @@
-#### 0.6.3 - 18.11.2016
+#### 0.6.4 - 18.11.2016
 * Add support for Guids in Yaml and AppSettings
 
 #### 0.6.2 - 21.08.2016
