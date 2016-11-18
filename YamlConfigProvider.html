@@ -60,6 +60,7 @@
 <span class="l">17: </span>
 <span class="l">18: </span>
 <span class="l">19: </span>
+<span class="l">20: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip"><code lang="yaml">Mail:
     Smtp:
@@ -76,6 +77,7 @@
     ErrorNotificationRecipients:
         - user1@sample.com
         - user2@sample.com
+    ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
 DB:
     ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
     NumberOfDeadlockRepeats: 5
@@ -151,6 +153,7 @@ DB:
 <span class="l">17: </span>
 <span class="l">18: </span>
 <span class="l">19: </span>
+<span class="l">20: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip"><code lang="yaml">Mail:
   Smtp:
@@ -167,6 +170,7 @@ DB:
   ErrorNotificationRecipients:
     - user1@sample.com
     - user2@sample.com
+  ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
 DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
@@ -213,6 +217,7 @@ Console.WriteLine(<span class="k">string</span>.Format(<span class="s">"Default 
 <span class="l">18: </span>
 <span class="l">19: </span>
 <span class="l">20: </span>
+<span class="l">21: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip"><code lang="yaml">Default settings:
 Mail:
@@ -230,6 +235,7 @@ Mail:
   ErrorNotificationRecipients:
   - user1@sample.com
   - user2@sample.com
+  ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
 DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
@@ -272,6 +278,7 @@ So, add the following <code>RuntimeConfig.yaml</code> into the C# console projec
 <span class="l">18: </span>
 <span class="l">19: </span>
 <span class="l">20: </span>
+<span class="l">21: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip"><code lang="yaml">Mail:
   Smtp:
@@ -289,6 +296,7 @@ So, add the following <code>RuntimeConfig.yaml</code> into the C# console projec
     - user11@sample.com
     - user22@sample.com
     - new_user@sample.com
+  ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
 DB:
   ConnectionString: Data Source=server2;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
@@ -327,6 +335,7 @@ Console.ReadLine();
 <span class="l">19: </span>
 <span class="l">20: </span>
 <span class="l">21: </span>
+<span class="l">22: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip"><code lang="yaml">Loaded settings:
 Mail:
@@ -345,6 +354,7 @@ Mail:
   - user11@sample.com
   - user22@sample.com
   - new_user@sample.com
+  ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93
 DB:
   ConnectionString: Data Source=server2;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
@@ -386,6 +396,7 @@ DB:
 <span class="l">30: </span>
 <span class="l">31: </span>
 <span class="l">32: </span>
+<span class="l">33: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// ...reference assemblies and open namespaces as before...</span>
 <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 31)" onmouseover="showTip(event, 'fs16', 31)" class="i">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 32)" onmouseover="showTip(event, 'fs9', 32)" class="t">Config</span>()
@@ -414,6 +425,7 @@ DB:
 <span class="s">  ErrorNotificationRecipients:</span>
 <span class="s">    - user1@sample.com</span>
 <span class="s">    - user2@sample.com</span>
+<span class="s">  ErrorMessageId: 9d165087-9b74-4313-ab90-89be897d3d93</span>
 <span class="s">DB:</span>
 <span class="s">  ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;</span>
 <span class="s">  NumberOfDeadlockRepeats: 5</span>
