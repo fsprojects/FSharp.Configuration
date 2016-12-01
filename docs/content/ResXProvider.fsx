@@ -21,7 +21,7 @@ Reference the type provider assembly and configure it to use your Resource1.resx
 open FSharp.Configuration
 
 // Let the type provider do it's work
-type ResX = ResXProvider<file="Resource1.resx">
+type Resource1 = ResXProvider<file="Resource1.resx">
 
 (**
 Now you have typed access to .resx files:
@@ -33,5 +33,5 @@ Reading from the resx file
 
 *)
 
-ResX.Resource1.Greetings
+Resource1.Greetings
 // [fsi:val it : string = "Hello World!"]

@@ -3,12 +3,13 @@
 open System
 open System.IO
 open System.Reflection
-open ProviderImplementation.ProvidedTypes
-open FSharp.Configuration.Helper
 open System.Resources
 open System.ComponentModel.Design
 open System.Collections
+open System.Collections.Concurrent
 open System.Runtime.Caching
+open ProviderImplementation.ProvidedTypes
+open FSharp.Configuration.Helper
 
 let readFile (filePath: FilePath) : ResXDataNode list =
     use reader = new ResXResourceReader(filePath, UseResXDataNodes = true)
@@ -17,38 +18,38 @@ let readFile (filePath: FilePath) : ResXDataNode list =
     |> Seq.map (fun (x: DictionaryEntry) -> x.Value :?> ResXDataNode)
     |> Seq.toList
 
-let readValue (filePath: FilePath, name) =
-    let entry = readFile filePath |> Seq.find (fun e -> name = e.Name)
-    entry.GetValue Unchecked.defaultof<ITypeResolutionService>
+let resourceManCache = ConcurrentDictionary<string * Assembly, ResourceManager> ()
+
+let readValue resourceName assembly key =
+    let resourceMan = resourceManCache.GetOrAdd ((resourceName, assembly), 
+                        fun _ -> ResourceManager (resourceName, assembly))
+    downcast (resourceMan.GetObject key)
 
 /// Converts ResX entries to provided properties
-let private toProperties (filePath: FilePath) : MemberInfo list =       
+let private toProperties (filePath: FilePath) resourceName : MemberInfo list =
     readFile filePath
     |> List.map (fun node ->
-        let name = node.Name
+        let key = node.Name
         let ty = node.GetValueTypeName Unchecked.defaultof<ITypeResolutionService> |> Type.GetType
         let resource = 
           ProvidedProperty(
-            name, 
+            key, 
             ty, 
             IsStatic = true, 
-            GetterCode = fun _ -> <@@ readValue(filePath, name) @@>)                          
+            GetterCode = fun _ -> <@@ readValue resourceName (Assembly.GetExecutingAssembly ()) key @@>)                          
         if not (String.IsNullOrEmpty node.Comment) then 
           resource.AddXmlDoc node.Comment
         resource :> MemberInfo)
 
-/// Creates resource data type from specified ResX file
-let private createResourceDataType filePath =
-    let resourceName = Path.GetFileNameWithoutExtension filePath
-    let data = ProvidedTypeDefinition (resourceName, baseType = Some typeof<obj>, HideObjectMethods = true)
-    toProperties filePath |> Seq.iter data.AddMember
-    data
-
 /// Creates provided type from static resource file parameter
-let private createResXProvider typeName filePath =
+let private createResXProvider typeName resourceName filePath =
     let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, baseType = Some typeof<obj>)
-    ty.AddMember (createResourceDataType filePath)
-    ty  
+    ty.SetAttributes (ty.Attributes ||| TypeAttributes.Abstract ||| TypeAttributes.Sealed)
+    toProperties filePath resourceName 
+    |> Seq.iter ty.AddMember
+    ty
+
+let inline private replace (oldChar:char) (newChar:char) (s:string) = s.Replace(oldChar, newChar)
 
 let internal typedResources (context: Context) =
     let resXType = erasedType<obj> thisAssembly rootNamespace "ResXProvider"
@@ -63,7 +64,11 @@ let internal typedResources (context: Context) =
                 | [| :? string as resourcePath|] ->
                     let filePath = findConfigFile context.ResolutionFolder resourcePath
                     if not (File.Exists filePath) then invalidArg "file" "Resouce file not found"
-                    let providedType = createResXProvider typeName filePath
+                    let resourceName =  
+                        Path.ChangeExtension (resourcePath, null)
+                        |> replace '\\' '.'
+                        |> replace '/' '.'
+                    let providedType = createResXProvider typeName resourceName filePath
                     context.WatchFile filePath
                     providedType
                 | _ -> failwith "unexpected parameter values")
