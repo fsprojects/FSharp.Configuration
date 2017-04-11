@@ -26,20 +26,24 @@ module private Parser =
         | Uri of Uri
         | Float of double
         | Guid of Guid
+        
         static member ParseStr = function
             | ValueParser.TimeSpan x -> TimeSpan x
             | ValueParser.Uri x -> Uri x
             | ValueParser.Guid x -> Guid x
             | x -> String x
-        static member FromObj : obj -> Scalar = function
+        
+        static member FromObj (inferTypesFromStrings: bool) : obj -> Scalar = function
             | null -> String ""
             | :? System.Boolean as b -> Bool b
             | :? System.Int32 as i -> Int i
             | :? System.Int64 as i -> Int64 i
             | :? System.Double as d -> Float d
             | :? System.String as s ->
-                Scalar.ParseStr s
-            |t -> failwithf "Unknown type %s" (string (t.GetType()))
+                if inferTypesFromStrings then Scalar.ParseStr s
+                else Scalar.String s
+            | t -> failwithf "Unknown type %s" (string (t.GetType()))
+        
         member x.UnderlyingType = 
             match x with
             | Int x -> x.GetType()
@@ -50,6 +54,7 @@ module private Parser =
             | Uri x -> x.GetType()
             | Float x -> x.GetType()
             | Guid x -> x.GetType()
+        
         member x.BoxedValue =
             match x with
             | Int x -> box x
@@ -66,7 +71,7 @@ module private Parser =
         | List of Node list
         | Map of (string * Node) list
 
-    let parse : (string -> Node) =
+    let parse (inferTypesFromStrings: bool) : (string -> Node) =
         let rec loop (n: obj) =
             match n with
             | :? List<obj> as l -> Node.List (l |> Seq.map loop |> Seq.toList)
@@ -75,16 +80,16 @@ module private Parser =
                 |> Seq.map (fun p -> string p.Key, loop p.Value)
                 |> Seq.toList
                 |> Map
-            | scalar -> Scalar (Scalar.FromObj scalar)
+            | scalar -> Scalar (Scalar.FromObj inferTypesFromStrings scalar)
 
-        let settings = SerializerSettings(EmitDefaultValues=true, EmitTags=false, SortKeyForMapping=false)
+        let settings = SerializerSettings (EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false)
         let serializer = Serializer(settings)
         fun text -> 
-          try serializer.Deserialize(fromText=text) |> loop
-          with
-            | :? SharpYaml.YamlException as e when e.InnerException <> null ->
-              raise e.InnerException // inner exceptions are much more informative
-            | _ -> reraise()
+            try serializer.Deserialize(fromText=text) |> loop
+            with
+              | :? SharpYaml.YamlException as e when e.InnerException <> null ->
+                  raise e.InnerException // inner exceptions are much more informative
+              | _ -> reraise()
 
     let private inferListType (targetType: Type) (nodes: Node list) =
         let types =
@@ -397,7 +402,7 @@ module private TypesFactory =
               Types = [eventField :> MemberInfo; event :> MemberInfo] @ childTypes
               Init = childInits }
 
-type Root () = 
+type Root (inferTypesFromStrings: bool) = 
     let serializer = 
         let settings = SerializerSettings(EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false, 
                                           EmitAlias = false, ComparerForKeySorting = null)
@@ -433,17 +438,19 @@ type Root () =
     /// Load Yaml config as text and update itself with it.
     member x.LoadText (yamlText: string) =
       try
-        Parser.parse yamlText |> Parser.update x
+        Parser.parse inferTypesFromStrings yamlText |> Parser.update x
       with e ->
         async { errorEvent.Trigger e } |> Async.Start
         reraise()
+
     /// Load Yaml config from a TextReader and update itself with it.
     member x.Load (reader: TextReader) = 
       try
-        reader.ReadToEnd() |> Parser.parse |> Parser.update x
+        reader.ReadToEnd() |> Parser.parse inferTypesFromStrings |> Parser.update x
       with e ->
         async { errorEvent.Trigger e } |> Async.Start
         reraise()
+
     /// Load Yaml config from a file and update itself with it.
     member x.Load (filePath: string) = 
       try
@@ -452,6 +459,7 @@ type Root () =
       with e ->
         async { errorEvent.Trigger e } |> Async.Start
         reraise()
+
     /// Load Yaml config from a file, update itself with it, then start watching it for changes.
     /// If it detects any change, it reloads the file.
     member x.LoadAndWatch (filePath: string) = 
@@ -462,17 +470,21 @@ type Root () =
                 x.Load filePath
             with e -> 
                 Diagnostics.Debug.WriteLine (sprintf "Cannot load file %s: %O" filePath e.Message)
+
     /// Saves configuration as Yaml text into a stream.
     member x.Save (stream: Stream) =
         use writer = new StreamWriter(stream)
         x.Save writer
+
     /// Saves configuration as Yaml text into a TextWriter.
     member x.Save (writer: TextWriter) = serializer.Serialize(writer, x)
+
     /// Saves configuration as Yaml text into a file.
     member x.Save (filePath: string) =
         // forbid any access to the file for atomicity
         use file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None) 
         x.Save file
+
     /// Saves configuration as Yaml text into the last file it was loaded (if any).
     /// Throws InvalidOperationException if configuration has not been loaded at all or if it has loaded from 
     /// a different kind of source (string or TextReader).
@@ -480,11 +492,13 @@ type Root () =
         match lastLoadedFrom with
         | Some filePath -> x.Save filePath
         | None -> invalidOp "Cannot save configuration because it was not loaded from a file."
+
     /// Returns content as Yaml text.
     override x.ToString() = 
         use writer = new StringWriter()
         x.Save writer
         writer.ToString()
+
     // Error channel to announce parse errors on
     [<CLIEvent>]
     member x.Error = errorEvent.Publish
@@ -497,7 +511,8 @@ let internal typedYamlConfig (context: Context) =
     let staticParams = 
         [ ProvidedStaticParameter ("FilePath", typeof<string>, "") 
           ProvidedStaticParameter ("ReadOnly", typeof<bool>, false)
-          ProvidedStaticParameter ("YamlText", typeof<string>, "") ]
+          ProvidedStaticParameter ("YamlText", typeof<string>, "")
+          ProvidedStaticParameter ("InferTypesFromStrings", typeof<bool>, true) ]
 
     yamlConfig.AddXmlDoc 
         """<summary>Statically typed YAML config.</summary>
@@ -512,22 +527,24 @@ let internal typedYamlConfig (context: Context) =
         parameters = staticParams,
         instantiationFunction = fun typeName paramValues ->
             let value = lazy (
-                let createTy yaml readOnly =
+                let createTy yaml readOnly inferTypesFromStrings =
                     let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, Some baseTy, IsErased=false, 
                                                      SuppressRelocation=false, HideObjectMethods=true)
                     let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
                     let assembly = ProvidedAssembly assemblyPath
-                    let types = TypesFactory.transform readOnly None (Parser.parse yaml)
-                    let ctr = ProvidedConstructor ([], InvokeCode = fun [me] -> types.Init me)
+                    let types = TypesFactory.transform readOnly None (Parser.parse inferTypesFromStrings yaml)
+                    let ctr = ProvidedConstructor([], InvokeCode = fun (me :: _) -> types.Init me)
+                    let baseCtor = baseTy.GetConstructor(BindingFlags.Public ||| BindingFlags.Instance, null, [|typeof<bool>|], null)
+                    ctr.BaseConstructorCall <- fun [me] -> baseCtor, [me; Expr.Value inferTypesFromStrings]
                     ty.AddMembers (ctr :> MemberInfo :: types.Types) 
                     assembly.AddTypes [ty]
                     ty
                 
                 match paramValues with
-                | [| :? string as filePath; :? bool as readOnly; :? string as yamlText |] -> 
+                | [| :? string as filePath; :? bool as readOnly; :? string as yamlText; :? bool as inferTypesFromStrings |] -> 
                      match filePath, yamlText with
                      | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
-                     | "", yamlText -> createTy yamlText readOnly
+                     | "", yamlText -> createTy yamlText readOnly inferTypesFromStrings
                      | filePath, _ -> 
                           let filePath =
                               if Path.IsPathRooted filePath 
@@ -535,7 +552,7 @@ let internal typedYamlConfig (context: Context) =
                               else context.ResolutionFolder </> filePath
                               |> Path.GetFullPath
                           context.WatchFile filePath
-                          createTy (File.ReadAllText filePath) readOnly
+                          createTy (File.ReadAllText filePath) readOnly inferTypesFromStrings
                 | _ -> failwith "Wrong parameters")
             cache.GetOrAdd (typeName, value))
     yamlConfig
