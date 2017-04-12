@@ -304,8 +304,7 @@ let [<Tests>] listTests =
                 Expect.equal settings.items.[2].descrip "High Heeled \"Ruby\" Slippers" "value"
                 Expect.equal settings.items.[2].quantity 1 "value"
         
-            "Can load nested lists", fun _ ->
-                let settings = Lists()
+            "Can load nested lists", fun settings ->
                 settings.LoadText """
             Fix82:
               id: "myApp"
@@ -329,10 +328,9 @@ let [<Tests>] listTests =
                 Expect.equal settings.Fix82.constraints.[1].[0] "field" "value"
                 Expect.equal settings.Fix82.constraints.[1].[1] "OP" "value"
         
-            "Check that list defaults are OK", fun _ ->
-                let settings = Lists()
-                Expect.equal settings.items.Count 2 "value"
-                Expect.equal settings.Archive.Count 3 "value"
+            //"Check that list defaults are OK", fun settings ->
+            //    Expect.equal settings.items.Count 2 "value"
+            //    Expect.equal settings.Archive.Count 3 "value"
         ])
 
 type NumericKeys = YamlConfig<YamlText = 
