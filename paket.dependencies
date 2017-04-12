@@ -1,12 +1,11 @@
 source http://nuget.org/api/v2
 
-nuget FAKE
-nuget FSharp.Formatting
-nuget xUnit
-nuget xUnit.runners
+nuget FAKE ~> 4.58
+nuget FSharp.Formatting ~> 2.14
+nuget Expecto
 nuget Octokit
 nuget SourceLink.Fake
-nuget NuGet.CommandLine
+nuget NuGet.CommandLine ~> 3
 nuget SharpYaml
 nuget FSharp.Core 4.0.0.1
 

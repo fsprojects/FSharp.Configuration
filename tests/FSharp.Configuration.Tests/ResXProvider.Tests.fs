@@ -1,23 +1,18 @@
 module FSharp.Configuration.Tests.ResXTests
 
 open FSharp.Configuration
-open Xunit
+open Expecto
 
 type Resource1 = ResXProvider<"Resource1.resx">
 
-[<Fact>] 
-let ``Can return a string from the resource file``() =
-    Assert.Equal<string>(Resource1.Greetings, "Hello World!")
-
-[<Fact>] 
-let ``Can return an image from the resource file``() =
-    Assert.IsType<System.Drawing.Bitmap>(Resource1.Flowers) |> ignore
-    Assert.NotNull Resource1.Flowers
-
-[<Fact>] 
-let ``Can return an int from the resource file``() =
-    Assert.Equal(Resource1.Answer, 42)
-
-[<Fact>] 
-let ``Can return a text file from the resource file``() =
-    Assert.Equal<string>(Resource1.TextFile, "Text")
+let [<Tests>] tests =
+    testList "ResX Provider tests" [
+        testCase "Can return a string from the resource file" (fun _ -> Expect.equal Resource1.Greetings "Hello World!" "value")
+        
+        testCase "Can return an image from the resource file" (fun _ -> 
+            Expect.isNotNull Resource1.Flowers "Flowers"
+            Expect.equal typeof<System.Drawing.Bitmap> (Resource1.Flowers.GetType()) "value")
+        
+        testCase "Can return an int from the resource file" (fun _ -> Expect.equal Resource1.Answer 42 "value")
+        testCase "Can return a text file from the resource file" (fun _ -> Expect.equal Resource1.TextFile "Text" "value")
+    ]
