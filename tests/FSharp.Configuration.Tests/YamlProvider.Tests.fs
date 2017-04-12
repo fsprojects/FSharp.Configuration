@@ -16,7 +16,7 @@ type private Listener(event: IEvent<EventHandler, _>) =
     do event.Add (fun _ -> incr events)
     member __.Events = !events
 
-let [<Tests>] tests =
+let [<Tests>] tests = 
     testList "Yaml Config Provider tests" [
         testCase "Can return a string from the settings file" (fun _ ->
             let settings = Settings()  

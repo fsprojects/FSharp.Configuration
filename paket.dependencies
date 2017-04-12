@@ -1,11 +1,12 @@
 source http://nuget.org/api/v2
+framework net46
 
-nuget FAKE ~> 4.58
-nuget FSharp.Formatting ~> 2.14
+nuget FAKE
+nuget FSharp.Formatting
 nuget Expecto
 nuget Octokit
 nuget SourceLink.Fake
-nuget NuGet.CommandLine ~> 3
+nuget NuGet.CommandLine
 nuget SharpYaml
 nuget FSharp.Core 4.0.0.1
 
