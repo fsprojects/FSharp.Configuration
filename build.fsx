@@ -181,8 +181,8 @@ Target "NuGet" (fun _ ->
             ReleaseNotes = release.Notes |> toLines
             Tags = tags
             OutputPath = nugetDir
-            AccessKey = getBuildParamOrDefault "nugetkey" ""
-            Publish = hasBuildParam "nugetkey"
+            //AccessKey = getBuildParamOrDefault "nugetkey" ""
+            //Publish = hasBuildParam "nugetkey"
             Dependencies = [] })
         (project + ".nuspec")
 )

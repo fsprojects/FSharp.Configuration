@@ -1,3 +1,6 @@
+#### 1.0.0 - 12.04.2017
+* YamlConfig provider: add `InferTypesFromStrings` optional parameter
+
 #### 0.6.4 - 18.11.2016
 * Add support for Guids in Yaml and AppSettings
 
