@@ -1,12 +1,13 @@
 source http://nuget.org/api/v2
+framework net46
 
 nuget FAKE
 nuget FSharp.Formatting
-nuget xUnit ~> 1
-nuget xUnit.runners ~> 1
+nuget Expecto
 nuget Octokit
 nuget SourceLink.Fake
-nuget NuGet.CommandLine ~> 2
+nuget NuGet.CommandLine
 nuget SharpYaml
+nuget FSharp.Core 4.0.0.1
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx

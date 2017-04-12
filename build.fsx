@@ -49,7 +49,7 @@ let tags = "appsettings, YAML, F#, ResX, Ini, config"
 let solutionFile  = "FSharp.Configuration"
 
 // Pattern specifying assemblies to be tested using NUnit
-let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
+let testAssemblies = "tests/**/bin/Release/*Tests*.exe"
 
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted
@@ -133,11 +133,7 @@ open Fake.Testing
 
 Target "RunTests" (fun _ ->
     !! testAssemblies
-    |> xUnit (fun p ->
-        { p with
-            ShadowCopy = true
-            TimeOut = TimeSpan.FromMinutes 20.
-            XmlOutputPath = Some "TestResults.xml" })
+    |> Expecto.Expecto (fun p -> { p with FailOnFocusedTests = true })
 )
 
 #if MONO
