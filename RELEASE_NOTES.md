@@ -1,3 +1,6 @@
+#### 1.0.1 - 22.04.2017
+* NuGet package targets .NET 4.6
+
 #### 1.0.0 - 12.04.2017
 * YamlConfig provider: add `InferTypesFromStrings` optional parameter
 
