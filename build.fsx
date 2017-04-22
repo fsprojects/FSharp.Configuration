@@ -163,7 +163,7 @@ Target "SourceLink" (fun _ ->
 
 Target "NuGet" (fun _ ->
     let nugetDocsDir = nugetDir @@ "docs"
-    let nugetlibDir = nugetDir @@ "lib/net40"
+    let nugetlibDir = nugetDir @@ "lib/net46"
 
     CleanDir nugetDocsDir
     CleanDir nugetlibDir
