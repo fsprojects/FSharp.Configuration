@@ -1,3 +1,6 @@
+#### 1.1.0 - 12.05.2017
+* Mono 5 support
+ 
 #### 1.0.1 - 22.04.2017
 * NuGet package targets .NET 4.6
 
