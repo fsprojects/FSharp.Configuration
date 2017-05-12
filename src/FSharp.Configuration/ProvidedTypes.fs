@@ -27,17 +27,29 @@ module P = Quotations.Patterns
 module ES = Quotations.ExprShape
 module DP = Quotations.DerivedPatterns
 
-type internal ExpectedStackState = 
+type internal ExpectedStackState =
     | Empty = 1
     | Address = 2
     | Value = 3
 
 [<AutoOpen>]
 module internal Misc =
-    let TypeBuilderInstantiationType = 
-        let runningOnMono = try System.Type.GetType("Mono.Runtime") <> null with e -> false 
-        let typeName = if runningOnMono then "System.Reflection.MonoGenericClass" else "System.Reflection.Emit.TypeBuilderInstantiation"
-        typeof<TypeBuilder>.Assembly.GetType(typeName)
+    // TypeBuilderInstantiation should really be a public type, since we
+    // have to use alternative means for various Method/Field/Constructor lookups on this kind of type.
+    // Also, on Mono 3.x and 4.x this type had a different name.
+    let TypeBuilderInstantiationType =
+        let runningOnMono = try System.Type.GetType("Mono.Runtime") <> null with e-> false
+        let ty =
+            if runningOnMono then
+                let ty = Type.GetType("System.Reflection.MonoGenericClass")
+                match ty with
+                | null -> Type.GetType("System.Reflection.Emit.TypeBuilderInstantiation")
+                | _ -> ty
+            else
+                Type.GetType("System.Reflection.Emit.TypeBuilderInstantiation")
+
+        ty
+
     let GetTypeFromHandleMethod = typeof<Type>.GetMethod("GetTypeFromHandle")
     let LanguagePrimitivesType = typedefof<list<_>>.Assembly.GetType("Microsoft.FSharp.Core.LanguagePrimitives")
     let ParseInt32Method = LanguagePrimitivesType.GetMethod "ParseInt32"
