@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>The AppSettings type provider
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Type providers for the configuration of .NET projects.">
+    <meta name="author" content="FSProjects team">
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="./content/style.css" />
+    <script type="text/javascript" src="./content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="http://github.com/fsprojects/FSharp.Configuration">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="./index.html">FSharp.Configuration</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+<h1><a name="The-AppSettings-type-provider" class="anchor" href="#The-AppSettings-type-provider">The AppSettings type provider</a></h1>
+<p>This tutorial shows the use of the AppSettings type provider.
+It allows to access app.config files in a strongly typed way.</p>
+<h2><a name="Using-App-Settings-from-F-scripts" class="anchor" href="#Using-App-Settings-from-F-scripts">Using App.Settings from F# scripts</a></h2>
+<p>Create a config file called <code>app.config</code> like this:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="xml"><span class="prep">&lt;?</span>xml version=<span class="s">"1.0"</span> encoding=<span class="s">"utf-8"</span> <span class="prep">?&gt;</span>
+<span class="k">&lt;</span><span class="i">configuration</span><span class="k">&gt;</span>
+  <span class="k">&lt;</span><span class="i">appSettings</span><span class="k">&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="test2"</span> <span class="o">value</span><span class="k">="Some Test Value 5"</span><span class="k">/&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestInt"</span> <span class="o">value</span><span class="k">="102"</span><span class="k">/&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestBool"</span> <span class="o">value</span><span class="k">="True"</span><span class="k">/&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestDouble"</span> <span class="o">value</span><span class="k">="10.01"</span><span class="k">/&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestDateTime"</span> <span class="o">value</span><span class="k">="2014-05-18 11:14:28Z"</span><span class="k">/&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestTimeSpan"</span> <span class="o">value</span><span class="k">="00:12:30"</span><span class="k">/&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestUri"</span> <span class="o">value</span><span class="k">="http://fsharp.org"</span> <span class="k">/&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">key</span><span class="k">="TestGuid"</span> <span class="o">value</span><span class="k">="{7B7EB384-FEBA-4409-B560-66FF63F1E8D0}"</span><span class="k">/&gt;</span>
+  <span class="k">&lt;/</span><span class="i">appSettings</span><span class="k">&gt;</span>
+  <span class="k">&lt;</span><span class="i">connectionStrings</span><span class="k">&gt;</span>
+    <span class="k">&lt;</span><span class="i">add</span> <span class="o">name</span><span class="k">="Test"</span> <span class="o">connectionString</span><span class="k">="Server=.;Database=SomeDatabase;Integrated Security=true"</span><span class="k">/&gt;</span>
+  <span class="k">&lt;/</span><span class="i">connectionStrings</span><span class="k">&gt;</span>
+<span class="k">&lt;/</span><span class="i">configuration</span><span class="k">&gt;</span>
+</code></pre></td></tr></table>
+<p>Reference the type provider assembly and configure it to use your app.settings file:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;FSharp.Configuration.dll&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;System.Configuration.dll&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Configuration</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Settings</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">AppSettings</span><span class="o">&lt;</span><span class="s">&quot;app.config&quot;</span><span class="o">&gt;</span>
+</code></pre></td>
+</tr>
+</table>
+<p>Now you have typed access to your app.config files:</p>
+<p><img src="img/AppSettingsProvider.png" alt="alt text" title="Intellisense for the App.Settings" /></p>
+<h2><a name="Reading-and-writing-from-the-config" class="anchor" href="#Reading-and-writing-from-the-config">Reading and writing from the config</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// read a value from the config</span>
+<span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">Test2</span>
+<span class="fsi">val it : string = &quot;Some Test Value 5&quot;</span>
+
+<span class="c">// verify the file name</span>
+<span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">ConfigFileName</span>
+<span class="fsi">val it : string = &quot;C:\Code\FSharp.Configuration\docs\content\app.config&quot;</span>
+
+<span class="c">// read a connection string from the config</span>
+<span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="t">ConnectionStrings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">Test</span>
+<span class="fsi">val it : string = &quot;Server=.;Database=SomeDatabase;Integrated Security=true&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Using-AppSettingsProvider-in-fsx-script" class="anchor" href="#Using-AppSettingsProvider-in-fsx-script">Using AppSettingsProvider in *.fsx-script</a></h2>
+<p>The default executable is the current project .config. (Which is Fsi.exe.config in F# interactive.)
+How ever, if you want to modify the configuration of some other application, you can do with SelectExecutableFile-method:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">path</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">IO</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="t">Path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="f">Combine</span> [|<span class="k">__SOURCE_DIRECTORY__</span> ; <span class="s">&quot;bin&quot;</span>; <span class="s">&quot;myProject.exe&quot;</span> |]
+<span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="f">SelectExecutableFile</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">path</span>
+<span onmouseout="hideTip(event, 'fs3', 20)" onmouseover="showTip(event, 'fs3', 20)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="i">Test2</span>
+</code></pre></td>
+</tr>
+</table>
+
+<div class="tip" id="fs1">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">namespace FSharp.Configuration</div>
+<div class="tip" id="fs3">type Settings = AppSettings&lt;...&gt;<br /><br />Full name: AppSettingsProvider.Settings</div>
+<div class="tip" id="fs4">type AppSettings<br /><br />Full name: FSharp.Configuration.AppSettings</div>
+<div class="tip" id="fs5">property AppSettings&lt;...&gt;.Test2: string<br /><em><br /><br />Returns the value from app.config with key test2</em></div>
+<div class="tip" id="fs6">property AppSettings&lt;...&gt;.ConfigFileName: string<br /><em><br /><br />Returns the Filename</em></div>
+<div class="tip" id="fs7">type ConnectionStrings =<br />&#160;&#160;static member LocalSqlServer : string with get, set<br />&#160;&#160;static member Test : string with get, set<br /><br />Full name: FSharp.Configuration.AppSettings,configFileName=&quot;app.config&quot;.ConnectionStrings<br /><em><br /><br />Represents the available connection strings from app.config</em></div>
+<div class="tip" id="fs8">property AppSettings&lt;...&gt;.ConnectionStrings.Test: string<br /><em><br /><br />Returns the connection string from app.config with name Test</em></div>
+<div class="tip" id="fs9">val path : string<br /><br />Full name: AppSettingsProvider.path</div>
+<div class="tip" id="fs10">namespace System</div>
+<div class="tip" id="fs11">namespace System.IO</div>
+<div class="tip" id="fs12">type Path =<br />&#160;&#160;static val DirectorySeparatorChar : char<br />&#160;&#160;static val AltDirectorySeparatorChar : char<br />&#160;&#160;static val VolumeSeparatorChar : char<br />&#160;&#160;static val InvalidPathChars : char[]<br />&#160;&#160;static val PathSeparator : char<br />&#160;&#160;static member ChangeExtension : path:string * extension:string -&gt; string<br />&#160;&#160;static member Combine : [&lt;ParamArray&gt;] paths:string[] -&gt; string + 3 overloads<br />&#160;&#160;static member GetDirectoryName : path:string -&gt; string<br />&#160;&#160;static member GetExtension : path:string -&gt; string<br />&#160;&#160;static member GetFileName : path:string -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Path</div>
+<div class="tip" id="fs13">System.IO.Path.Combine([&lt;System.ParamArray&gt;] paths: string []) : string<br />System.IO.Path.Combine(path1: string, path2: string) : string<br />System.IO.Path.Combine(path1: string, path2: string, path3: string) : string<br />System.IO.Path.Combine(path1: string, path2: string, path3: string, path4: string) : string</div>
+<div class="tip" id="fs14">AppSettings&lt;...&gt;.SelectExecutableFile(pathOfExe: string) : Unit<br /><em><br /><br />Property to change the executable file that is read for configurations. This idea is that you can manage other executables also (e.g. from script).</em></div>
+
+        </div>
+        <div class="span3">
+          <img src="./img/logo.png" alt="FSharp.Configuration" style="width:150px;margin:10px" />
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">FSharp.Configuration</li>
+            <li><a href="./index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="./AppSettingsProvider.html">AppSettingsProvider</a></li>
+            <li><a href="./ResXProvider.html">ResXProvider</a></li>
+            <li><a href="./YamlConfigProvider.html">YamlConfigProvider</a></li>
+            <li><a href="./IniTypeProvider.html">IniTypeProvider</a></li>
+        </div>
+      </div>
+    </div>
+    <a href="http://github.com/fsprojects/FSharp.Configuration"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+  </body>
+  </html>

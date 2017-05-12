@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>The Ini type provider
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Type providers for the configuration of .NET projects.">
+    <meta name="author" content="FSProjects team">
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="./content/style.css" />
+    <script type="text/javascript" src="./content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="http://github.com/fsprojects/FSharp.Configuration">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="./index.html">FSharp.Configuration</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+<h1><a name="The-Ini-type-provider" class="anchor" href="#The-Ini-type-provider">The Ini type provider</a></h1>
+<p>This tutorial shows the use of the Ini type provider.</p>
+<h2><a name="Using-Ini-type-provider-from-F-scripts" class="anchor" href="#Using-Ini-type-provider-from-F-scripts">Using Ini type provider from F# scripts</a></h2>
+<p>Create a <code>Sample.ini</code> file like this:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip"><code lang="ini">[Section1]
+intSetting = 2
+stringSetting = stringValue
+;you are free to add comments like this
+[Section2]
+floatSetting = 1.23 ; float settings are also supported
+boolSetting = true
+anotherBoolSetting = False
+; settings with no value are OK
+emptySetting =
+</code></pre></td></tr></table>
+<p>Reference the type provider assembly and configure it to use your ini file:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;FSharp.Configuration.dll&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Configuration</span>
+
+<span class="c">// Let the type provider do it&#39;s work</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">IniFileType</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">IniFile</span><span class="o">&lt;</span><span class="s">&quot;Sample.ini &quot;</span><span class="o">&gt;</span>
+
+<span class="c">// read a value from the config</span>
+<span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">IniFileType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">Section1</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">intSetting</span>
+
+<span class="fsi">val it : int = </span>
+<span class="fsi">  2</span>
+</code></pre></td>
+</tr>
+</table>
+
+<div class="tip" id="fs1">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">namespace FSharp.Configuration</div>
+<div class="tip" id="fs3">type IniFileType = IniFile&lt;...&gt;<br /><br />Full name: IniTypeProvider.IniFileType</div>
+<div class="tip" id="fs4">type IniFile<br /><br />Full name: FSharp.Configuration.IniFile</div>
+<div class="tip" id="fs5">type Section1 =<br />&#160;&#160;static member intSetting : int<br />&#160;&#160;static member stringSetting : string<br /><br />Full name: FSharp.Configuration.IniFile,configFileName=&quot;Sample.ini &quot;.Section1</div>
+<div class="tip" id="fs6">property IniFile&lt;...&gt;.Section1.intSetting: int<br /><em><br /><br />Returns the value from Sample.ini  from section Section1 with key intSetting</em></div>
+
+        </div>
+        <div class="span3">
+          <img src="./img/logo.png" alt="FSharp.Configuration" style="width:150px;margin:10px" />
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">FSharp.Configuration</li>
+            <li><a href="./index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="./AppSettingsProvider.html">AppSettingsProvider</a></li>
+            <li><a href="./ResXProvider.html">ResXProvider</a></li>
+            <li><a href="./YamlConfigProvider.html">YamlConfigProvider</a></li>
+            <li><a href="./IniTypeProvider.html">IniTypeProvider</a></li>
+        </div>
+      </div>
+    </div>
+    <a href="http://github.com/fsprojects/FSharp.Configuration"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+  </body>
+  </html>

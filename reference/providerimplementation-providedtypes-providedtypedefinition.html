@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ProvidedTypeDefinition - FSharp.Configuration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="FSProjects team">
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="./../content/style.css" />
+    <script type="text/javascript" src="./../content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="http://github.com/fsprojects/FSharp.Configuration">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="./../index.html">FSharp.Configuration</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+
+
+
+<h1>ProvidedTypeDefinition</h1>
+<p>
+  <span>Namespace: ProviderImplementation.ProvidedTypes</span><br />
+</p>
+<div class="xmldoc">
+<p>Represents a provided type definition.</p>
+
+</div>
+  <h3>Constructors</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Constructor</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '142', 142)" onmouseover="showTip(event, '142', 142)">
+            new(className, baseType)
+          </code>
+          <div class="tip" id="142">
+            <strong>Signature:</strong> (className:string * baseType:Type option) -&gt; ProvidedTypeDefinition<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1269-1269" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Create a new provided type definition, to be located as a nested type in some type definition.</p>
+
+
+              <p>CompiledName: <code>.ctor</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '143', 143)" onmouseover="showTip(event, '143', 143)">
+            new(...)
+          </code>
+          <div class="tip" id="143">
+            <strong>Signature:</strong> (assembly:Assembly * namespaceName:string * className:string * baseType:Type option) -&gt; ProvidedTypeDefinition<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1268-1268" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Create a new provided type definition in a namespace.</p>
+
+
+              <p>CompiledName: <code>.ctor</code></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Instance members</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Instance member</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '144', 144)" onmouseover="showTip(event, '144', 144)">
+            AddAssemblyTypesAsNestedTypesDelayed(...)
+          </code>
+          <div class="tip" id="144">
+            <strong>Signature:</strong> (assemblyFunction:(unit -&gt; Assembly)) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1287-1287" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add the types of the generated assembly as generative types, where types in namespaces get hierarchically positioned as nested types.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '145', 145)" onmouseover="showTip(event, '145', 145)">
+            AddCustomAttribute(arg1)
+          </code>
+          <div class="tip" id="145">
+            <strong>Signature:</strong> CustomAttributeData -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1260-1260" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add a custom attribute to the provided type definition.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '146', 146)" onmouseover="showTip(event, '146', 146)">
+            AddDefinitionLocation(...)
+          </code>
+          <div class="tip" id="146">
+            <strong>Signature:</strong> (line:int * column:int * filePath:string) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1257-1257" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add definition location information to the provided type definition.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '147', 147)" onmouseover="showTip(event, '147', 147)">
+            AddInterfaceImplementation(...)
+          </code>
+          <div class="tip" id="147">
+            <strong>Signature:</strong> interfaceType:Type -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1396-1396" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add the given type as an implemented interface.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '148', 148)" onmouseover="showTip(event, '148', 148)">
+            AddInterfaceImplementationsDelayed(...)
+          </code>
+          <div class="tip" id="148">
+            <strong>Signature:</strong> (interfacesFunction:(unit -&gt; Type list)) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1397-1397" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add the given function as a set of on-demand computed interfaces.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '149', 149)" onmouseover="showTip(event, '149', 149)">
+            AddMember(memberInfo)
+          </code>
+          <div class="tip" id="149">
+            <strong>Signature:</strong> memberInfo:MemberInfo -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1284-1284" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add a method, property, nested type or other member to a ProvidedTypeDefinition</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '150', 150)" onmouseover="showTip(event, '150', 150)">
+            AddMemberDelayed(memberFunction)
+          </code>
+          <div class="tip" id="150">
+            <strong>Signature:</strong> (memberFunction:(unit -&gt; &#39;?7481)) -&gt; unit<br />
+                          <strong>Type parameters:</strong> '?7481          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1285-1285" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add a member to a ProvidedTypeDefinition, delaying computation of the members until required by the compilation context.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '151', 151)" onmouseover="showTip(event, '151', 151)">
+            AddMembers(memberInfos)
+          </code>
+          <div class="tip" id="151">
+            <strong>Signature:</strong> (memberInfos:&#39;a list) -&gt; unit<br />
+                          <strong>Type parameters:</strong> 'a          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1281-1281" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add a set of members to a ProvidedTypeDefinition</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '152', 152)" onmouseover="showTip(event, '152', 152)">
+            AddMembersDelayed(arg1)
+          </code>
+          <div class="tip" id="152">
+            <strong>Signature:</strong> ((unit -&gt; &#39;?7483 list)) -&gt; unit<br />
+                          <strong>Type parameters:</strong> '?7483          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1279-1279" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add a set of members to a ProvidedTypeDefinition, delaying computation of the members until required by the compilation context.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '153', 153)" onmouseover="showTip(event, '153', 153)">
+            AddObsoleteAttribute(message, isError)
+          </code>
+          <div class="tip" id="153">
+            <strong>Signature:</strong> (message:string * isError:bool option) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1256-1256" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add a 'System.Obsolete' attribute to this provided type definition</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '154', 154)" onmouseover="showTip(event, '154', 154)">
+            AddXmlDoc(xmlDoc)
+          </code>
+          <div class="tip" id="154">
+            <strong>Signature:</strong> xmlDoc:string -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1255-1255" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add XML documentation information to this provided constructor</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '155', 155)" onmouseover="showTip(event, '155', 155)">
+            AddXmlDocComputed(xmlDocFunction)
+          </code>
+          <div class="tip" id="155">
+            <strong>Signature:</strong> (xmlDocFunction:(unit -&gt; string)) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1253-1253" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary
+The documentation is re-computed  every time it is required.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '156', 156)" onmouseover="showTip(event, '156', 156)">
+            AddXmlDocDelayed(xmlDocFunction)
+          </code>
+          <div class="tip" id="156">
+            <strong>Signature:</strong> (xmlDocFunction:(unit -&gt; string)) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1254-1254" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Add XML documentation information to this provided constructor, where the computation of the documentation is delayed until necessary.
+The documentation is only computed once.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '157', 157)" onmouseover="showTip(event, '157', 157)">
+            DefineMethodOverride(...)
+          </code>
+          <div class="tip" id="157">
+            <strong>Signature:</strong> (methodInfoBody:ProvidedMethod * methodInfoDeclaration:MethodInfo) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1400-1400" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Specifies that the given method body implements the given method declaration.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '158', 158)" onmouseover="showTip(event, '158', 158)">
+            DefineStaticParameters(...)
+          </code>
+          <div class="tip" id="158">
+            <strong>Signature:</strong> (parameters:ProvidedStaticParameter list * instantiationFunction:(string -&gt; obj [] -&gt; ProvidedTypeDefinition)) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1325-1325" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '159', 159)" onmouseover="showTip(event, '159', 159)">
+            HideObjectMethods()
+          </code>
+          <div class="tip" id="159">
+            <strong>Signature:</strong> unit -&gt; bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1258-1258" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Suppress System.Object entries in intellisense menus in instances of this provided type</p>
+
+
+              <p>CompiledName: <code>set_HideObjectMethods</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '160', 160)" onmouseover="showTip(event, '160', 160)">
+            HideObjectMethods()
+          </code>
+          <div class="tip" id="160">
+            <strong>Signature:</strong> unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1258-1258" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Suppress System.Object entries in intellisense menus in instances of this provided type</p>
+
+
+              <p>CompiledName: <code>set_HideObjectMethods</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '161', 161)" onmouseover="showTip(event, '161', 161)">
+            IsErased()
+          </code>
+          <div class="tip" id="161">
+            <strong>Signature:</strong> unit -&gt; bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1546-1546" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Get or set a flag indicating if the ProvidedTypeDefinition is erased</p>
+
+
+              <p>CompiledName: <code>set_IsErased</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '162', 162)" onmouseover="showTip(event, '162', 162)">
+            IsErased()
+          </code>
+          <div class="tip" id="162">
+            <strong>Signature:</strong> unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1546-1546" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Get or set a flag indicating if the ProvidedTypeDefinition is erased</p>
+
+
+              <p>CompiledName: <code>get_IsErased</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '163', 163)" onmouseover="showTip(event, '163', 163)">
+            MakeParametricType(name, args)
+          </code>
+          <div class="tip" id="163">
+            <strong>Signature:</strong> (name:string * args:obj []) -&gt; ProvidedTypeDefinition<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1333-1333" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>FSharp.Data addition: this method is used by Debug.fs</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '164', 164)" onmouseover="showTip(event, '164', 164)">
+            ResetEnclosingType(enclosingType)
+          </code>
+          <div class="tip" id="164">
+            <strong>Signature:</strong> enclosingType:Type -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1266-1266" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Reset the enclosing type (for generated nested types)</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '165', 165)" onmouseover="showTip(event, '165', 165)">
+            SetAttributes(arg1)
+          </code>
+          <div class="tip" id="165">
+            <strong>Signature:</strong> TypeAttributes -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1277-1277" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Set the attributes on the provided type. This fully replaces the default TypeAttributes.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '166', 166)" onmouseover="showTip(event, '166', 166)">
+            SetBaseType(arg1)
+          </code>
+          <div class="tip" id="166">
+            <strong>Signature:</strong> Type -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1275-1275" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Set the base type</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '167', 167)" onmouseover="showTip(event, '167', 167)">
+            SetBaseTypeDelayed(arg1)
+          </code>
+          <div class="tip" id="167">
+            <strong>Signature:</strong> (Lazy&lt;Type option&gt;) -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1276-1276" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Set the base type to a lazily evaluated value</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '168', 168)" onmouseover="showTip(event, '168', 168)">
+            SetEnumUnderlyingType(arg1)
+          </code>
+          <div class="tip" id="168">
+            <strong>Signature:</strong> Type -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1273-1273" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Set underlying type for generated enums</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '169', 169)" onmouseover="showTip(event, '169', 169)">
+            SuppressRelocation()
+          </code>
+          <div class="tip" id="169">
+            <strong>Signature:</strong> unit -&gt; bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1552-1552" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Get or set a flag indicating if the ProvidedTypeDefinition has type-relocation suppressed</p>
+
+
+              <p>CompiledName: <code>set_SuppressRelocation</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '170', 170)" onmouseover="showTip(event, '170', 170)">
+            SuppressRelocation()
+          </code>
+          <div class="tip" id="170">
+            <strong>Signature:</strong> unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1552-1552" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Get or set a flag indicating if the ProvidedTypeDefinition has type-relocation suppressed</p>
+
+
+              <p>CompiledName: <code>get_SuppressRelocation</code></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Static members</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Static member</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '171', 171)" onmouseover="showTip(event, '171', 171)">
+            EraseType(t)
+          </code>
+          <div class="tip" id="171">
+            <strong>Signature:</strong> t:Type -&gt; Type<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1437-1437" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>FSharp.Data addition: this method is used by Debug.fs and QuotationBuilder.fs
+Emulate the F# type provider type erasure mechanism to get the
+actual (erased) type. We erase ProvidedTypes to their base type
+and we erase array of provided type to array of base type. In the
+case of generics all the generic type arguments are also recursively
+replaced with the erased-to types</p>
+
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+        </div>
+        <div class="span3">
+          <img src="./../img/logo.png" alt="FSharp.Configuration" style="width:150px;margin:10px" />
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">FSharp.Configuration</li>
+            <li><a href="./../index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
+            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="./../AppSettingsProvider.html">AppSettingsProvider</a></li>
+            <li><a href="./../ResXProvider.html">ResXProvider</a></li>
+            <li><a href="./../YamlConfigProvider.html">YamlConfigProvider</a></li>
+            <li><a href="./../IniTypeProvider.html">IniTypeProvider</a></li>
+        </div>
+      </div>
+    </div>
+    <a href="http://github.com/fsprojects/FSharp.Configuration"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+  </body>
+  </html>
