@@ -8,6 +8,6 @@ nuget Octokit
 nuget SourceLink.Fake
 nuget NuGet.CommandLine
 nuget SharpYaml
-nuget FSharp.Core 4.0.0.1
+nuget FSharp.Core
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx

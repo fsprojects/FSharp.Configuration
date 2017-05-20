@@ -8,7 +8,8 @@ NUGET
       Mono.Cecil (>= 0.9.6.4)
     FAKE (4.61.2)
     FSharp.Compiler.Service (2.0.0.6)
-    FSharp.Core (4.0.0.1)
+    FSharp.Core (4.1.17)
+      System.ValueTuple (>= 4.3)
     FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
       FSharpVSPowerTools.Core (>= 2.3 < 2.4)
@@ -19,7 +20,8 @@ NUGET
     Octokit (0.24)
     SharpYaml (1.6.1)
     SourceLink.Fake (1.1)
+    System.ValueTuple (4.3.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (43917109af4ef38194d8993215c3e7c862b19d36)
+    modules/Octokit/Octokit.fsx (1ada6a9c84aada940bd7e6a7b63c0dc62e2fa56e)
       Octokit (>= 0.20)
