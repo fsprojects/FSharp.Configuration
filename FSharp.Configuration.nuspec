@@ -16,11 +16,10 @@
     <tags>@tags@</tags>
     <references>
         <reference file="FSharp.Configuration.dll" />
-        <reference file="SharpYaml.dll" />
     </references>
     <dependencies>
       <group>
-          <dependency id="FSharp.Core" version="[4.1.17,4.2)" />
+          <dependency id="FSharp.Core" version="4.0.0.1" />
       </group>
     </dependencies>
   </metadata>

@@ -1,13 +1,25 @@
 source http://nuget.org/api/v2
-framework net46
+framework: >= net45
 
-nuget FAKE
-nuget FSharp.Formatting
-nuget Expecto
-nuget Octokit
-nuget SourceLink.Fake
-nuget NuGet.CommandLine
 nuget SharpYaml
-nuget FSharp.Core
+nuget FSharp.Core ~> 4.0.0
 
-github fsharp/FAKE modules/Octokit/Octokit.fsx
+
+group Build
+    framework: net45
+    source https://nuget.org/api/v2
+
+    nuget FAKE
+    nuget FSharp.Formatting
+    nuget Octokit
+    nuget NuGet.CommandLine
+    nuget SourceLink.Fake
+
+    github fsharp/FAKE modules/Octokit/Octokit.fsx
+
+group Test
+    framework: net461
+    source https://nuget.org/api/v2
+
+    nuget FSharp.Core redirects: force
+    nuget Expecto

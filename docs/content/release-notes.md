@@ -1,9 +1,14 @@
+#### 1.3.0 - 14.06.2017
+* Explicit dependency on FSharp.Core
+* Target .NET 4.5
+* Target FSharp.Core 4.0.0.1
+
 #### 1.2.0 - 20.05.2017
 * FSharp.Core 4.4.1.0
 
 #### 1.1.0 - 12.05.2017
 * Mono 5 support
- 
+
 #### 1.0.1 - 22.04.2017
 * NuGet package targets .NET 4.6
 
@@ -63,7 +68,7 @@
 * Add caching into all type providers
 
 #### 0.5.1 - 18.03.2015
-* fixed: YamlConfigProvider does not always parse floating point scalars 
+* fixed: YamlConfigProvider does not always parse floating point scalars
 
 #### 0.5.0 - 09.03.2015
 * YamlConfigProvider supports sequence of maps

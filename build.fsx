@@ -2,9 +2,9 @@
 // FAKE build script
 // --------------------------------------------------------------------------------------
 
-#r @"packages/FAKE/tools/FakeLib.dll"
-#load "paket-files/fsharp/FAKE/modules/Octokit/Octokit.fsx"
- 
+#r @"packages/build/FAKE/tools/FakeLib.dll"
+#load "paket-files/build/fsharp/FAKE/modules/Octokit/Octokit.fsx"
+
 open Fake
 open Fake.Git
 open Fake.AssemblyInfoFile
@@ -13,7 +13,7 @@ open System
 open Octokit
 #if MONO
 #else
-#load "packages/SourceLink.Fake/tools/Fake.fsx"
+#load "packages/build/SourceLink.Fake/tools/Fake.fsx"
 open SourceLink
 #endif
 
@@ -55,7 +55,7 @@ let testAssemblies = "tests/**/bin/Release/*Tests*.exe"
 // The profile where the project is posted
 let gitOwner = "fsprojects"
 let gitHome = "https://github.com/" + gitOwner
-// The name of the project on GitHub 
+// The name of the project on GitHub
 let gitName = "FSharp.Configuration"
 
 // The url for the raw files hosted
@@ -163,12 +163,12 @@ Target "SourceLink" (fun _ ->
 
 Target "NuGet" (fun _ ->
     let nugetDocsDir = nugetDir @@ "docs"
-    let nugetlibDir = nugetDir @@ "lib/net46"
+    let nugetlibDir = nugetDir @@ "lib/net45"
 
     CleanDir nugetDocsDir
     CleanDir nugetlibDir
 
-    CopyDir nugetlibDir "bin" (fun file -> true)
+    CopyDir nugetlibDir "bin" (fun file -> file.Contains "FSharp.Core." |> not)
     CopyDir nugetDocsDir "./docs/output" allFiles
 
     NuGet (fun p ->
@@ -190,7 +190,7 @@ Target "NuGet" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Generate the documentation
 
-let fakePath = "packages" @@ "FAKE" @@ "tools" @@ "FAKE.exe"
+let fakePath = "packages" @@ "build" @@ "FAKE" @@ "tools" @@ "FAKE.exe"
 let fakeStartInfo script workingDirectory args fsiargs environmentVars =
     (fun (info: System.Diagnostics.ProcessStartInfo) ->
         info.FileName <- System.IO.Path.GetFullPath fakePath

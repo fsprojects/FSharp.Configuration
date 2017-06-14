@@ -1,2 +1,3 @@
-FSharp.Core
-Expecto
+group Test
+  FSharp.Core
+  Expecto

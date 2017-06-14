@@ -175,7 +175,6 @@ nuget/
 # Nuget outputs
 nuget/*.nupkg
 *.bak
-.paket/paket.exe
 paket-files
 build_PRIVATE.cmd
 .fake/build.fsx_*
