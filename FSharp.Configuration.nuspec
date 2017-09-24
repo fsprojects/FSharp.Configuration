@@ -16,6 +16,7 @@
     <tags>@tags@</tags>
     <references>
         <reference file="FSharp.Configuration.dll" />
+        <reference file="SharpYaml.dll" />
     </references>
     <dependencies>
       <group>

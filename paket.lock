@@ -1,35 +1,35 @@
-FRAMEWORK: >= NET45
+RESTRICTION: >= net45
 NUGET
   remote: http://www.nuget.org/api/v2
     FSharp.Core (4.0.0.1)
     SharpYaml (1.6.1)
 
 GROUP Build
-FRAMEWORK: NET45
+RESTRICTION: == net45
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.61.3)
+    FAKE (4.63.2)
     FSharp.Compiler.Service (2.0.0.6)
     FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
       FSharpVSPowerTools.Core (>= 2.3 < 2.4)
     FSharpVSPowerTools.Core (2.3)
       FSharp.Compiler.Service (>= 2.0.0.3)
-    NuGet.CommandLine (4.1)
-    Octokit (0.24)
+    NuGet.CommandLine (4.3)
+    Octokit (0.26)
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (574f6259c4abec2ae45b8c888aa1bdc9b5d4e842)
+    modules/Octokit/Octokit.fsx (620269f1c7fc0da138a6181fb8029f5600310f79)
       Octokit (>= 0.20)
 GROUP Test
-FRAMEWORK: NET461
+RESTRICTION: == net461
 NUGET
   remote: https://www.nuget.org/api/v2
     Argu (3.7)
-    Expecto (4.2.1)
+    Expecto (5.0.1)
       Argu (>= 3.7)
       FSharp.Core (>= 4.1.12)
-      Mono.Cecil (>= 0.9.6.4)
-    FSharp.Core (4.2.1) - redirects: force
-    Mono.Cecil (0.9.6.4)
+      Mono.Cecil (>= 0.10.0-beta5)
+    FSharp.Core (4.2.3) - redirects: force
+    Mono.Cecil (0.10.0-beta6)

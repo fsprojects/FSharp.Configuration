@@ -1,3 +1,6 @@
+#### 1.3.1 - 24.09.2017
+* `SharpYaml.dll` added to NuGet package
+
 #### 1.3.0 - 14.06.2017
 * Explicit dependency on FSharp.Core
 * Target .NET 4.5
