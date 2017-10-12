@@ -181,3 +181,4 @@ build_PRIVATE.cmd
 docs/tools/.fake/generate.fsx_*
 /.idea
 /.paket/paket.exe
+/.paket/Paket.Restore.targets
