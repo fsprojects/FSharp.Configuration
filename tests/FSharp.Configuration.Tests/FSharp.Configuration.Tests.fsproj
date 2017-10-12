@@ -13,5 +13,10 @@
   <ItemGroup>
     <Content Include="paket.references" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FSharp.Configuration, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\src\FSharp.Configuration\bin\Debug\netstandard2.0\FSharp.Configuration.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
