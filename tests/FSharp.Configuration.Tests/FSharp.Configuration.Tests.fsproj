@@ -17,6 +17,9 @@
     <Reference Include="FSharp.Configuration, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\src\FSharp.Configuration\bin\Debug\netstandard2.0\FSharp.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\packages\build\NETStandard.Library.NETFramework\build\net461\lib\netstandard.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

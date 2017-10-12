@@ -11,6 +11,7 @@ group Build
     nuget Octokit
     nuget NuGet.CommandLine
     nuget SourceLink.Fake
+    nuget NetStandard.Library.NetFramework
 
     github fsharp/FAKE modules/Octokit/Octokit.fsx
     github fsprojects/FSharp.TypeProviders.StarterPack src/ProvidedTypes.fsi
