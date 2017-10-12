@@ -69,7 +69,7 @@ open ProviderImplementation.ProvidedTypes
 open System.Collections.Generic
 open System
 open System.Globalization
-open System.Runtime.Caching
+//open System.Runtime.Caching
 
 let getValue (iniFileName: string) (section: string) (key: string) = 
     match Parser.parse (Path.GetFileName iniFileName) with
@@ -82,56 +82,54 @@ let getValue (iniFileName: string) (section: string) (key: string) =
     | Choice2Of2 _ -> None
 
 let internal typedIniFile (context: Context) =
-    let iniFile = erasedType<obj> thisAssembly rootNamespace "IniFile"
-    let cache = new MemoryCache(name = "IniFileProvider")
-    context.AddDisposable cache    
+    let iniFile = context.ProvidedTypesContext.ProvidedTypeDefinition(thisAssembly, rootNamespace, "IniFile", Some typeof<obj>, true)
+    //let cache = new MemoryCache(name = "IniFileProvider")
+    //context.AddDisposable cache
     
     iniFile.DefineStaticParameters(
-        parameters = [ ProvidedStaticParameter ("configFileName", typeof<string>) ], 
+        parameters = [ context.ProvidedTypesContext.ProvidedStaticParameter ("configFileName", typeof<string>) ],
         instantiationFunction = (fun typeName parameterValues ->
-            let value = lazy (
+            //let value = lazy (
                 match parameterValues with 
                 | [| :? string as iniFileName |] ->
-                    let typeDef = erasedType<obj> thisAssembly rootNamespace typeName
-                    typeDef.HideObjectMethods <- true
+                    let typeDef = context.ProvidedTypesContext.ProvidedTypeDefinition(thisAssembly, rootNamespace, typeName, Some typeof<obj>, true)
                     let niceName = createNiceNameProvider()
                     try
                         let filePath = findConfigFile context.ResolutionFolder iniFileName
                         match Parser.parse filePath with
                         | Choice1Of2 sections ->
                             for section in sections do
-                                let sectionTy = ProvidedTypeDefinition(section.Name, Some typeof<obj>, HideObjectMethods = true)
+                                let sectionTy = context.ProvidedTypesContext.ProvidedTypeDefinition(section.Name, Some typeof<obj>, hideObjectMethods = true)
                                 for setting in section.Settings do
                                     let sectionName = section.Name
                                     let key = setting.Key
                                     let prop =
                                         match setting.Value with
-                                        | ValueParser.Int value -> ProvidedProperty(key, typeof<int>, GetterCode = fun _ -> 
+                                        | ValueParser.Int value -> context.ProvidedTypesContext.ProvidedProperty(key, typeof<int>, isStatic = true, getterCode = fun _ ->
                                             <@@ 
                                                 match getValue filePath sectionName key with 
                                                 | Some v -> Int32.Parse v
                                                 | None -> value
                                              @@>)
-                                        | ValueParser.Bool value -> ProvidedProperty(key, typeof<bool>, GetterCode = fun _ -> 
+                                        | ValueParser.Bool value -> context.ProvidedTypesContext.ProvidedProperty(key, typeof<bool>, isStatic = true, getterCode = fun _ ->
                                             <@@ 
                                                 match getValue filePath sectionName key with
                                                 | Some v -> Boolean.Parse v
                                                 | None -> value
                                              @@>)
-                                        | ValueParser.Float value -> ProvidedProperty(key, typeof<float>, GetterCode = fun _ -> 
+                                        | ValueParser.Float value -> context.ProvidedTypesContext.ProvidedProperty(key, typeof<float>, isStatic = true, getterCode = fun _ ->
                                             <@@ 
                                                 match getValue filePath sectionName key with
                                                 | Some v -> Double.Parse (v, NumberStyles.Any, CultureInfo.InvariantCulture)
                                                 | None -> value
                                              @@>)
-                                        | value -> ProvidedProperty(key, typeof<string>, GetterCode = fun _ -> 
+                                        | value -> context.ProvidedTypesContext.ProvidedProperty(key, typeof<string>, isStatic = true, getterCode = fun _ ->
                                             <@@ 
                                                 match getValue filePath sectionName key with
                                                 | Some v -> v
                                                 | None -> value
                                              @@>)
                 
-                                    prop.IsStatic <- true
                                     prop.AddXmlDoc (sprintf "Returns the value from %s from section %s with key %s" iniFileName section.Name setting.Key)
                                     prop.AddDefinitionLocation(1, 1, filePath)
                                     sectionTy.AddMember prop
@@ -141,15 +139,14 @@ let internal typedIniFile (context: Context) =
                 
                         let name = niceName "ConfigFileName"
                         let getValue = <@@ filePath @@>
-                        let prop = ProvidedProperty(name, typeof<string>, GetterCode = fun _ -> getValue)
+                        let prop = context.ProvidedTypesContext.ProvidedProperty(name, typeof<string>, isStatic = true, getterCode = fun _ -> getValue)
                 
-                        prop.IsStatic <- true
                         prop.AddXmlDoc "Returns the Filename"
-                
                         typeDef.AddMember prop
                         context.WatchFile filePath
                         typeDef
                     with _ -> typeDef
                 | x -> failwithf "unexpected parameter values %A" x)
-            cache.GetOrAdd (typeName, value)))
+            //cache.GetOrAdd (typeName, value)))
+            )
     iniFile

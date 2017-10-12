@@ -1,12 +1,9 @@
 source http://nuget.org/api/v2
-framework: >= net45
 
 nuget SharpYaml
-nuget FSharp.Core ~> 4.0.0
-
+nuget FSharp.Core
 
 group Build
-    framework: net45
     source https://nuget.org/api/v2
 
     nuget FAKE
@@ -16,9 +13,11 @@ group Build
     nuget SourceLink.Fake
 
     github fsharp/FAKE modules/Octokit/Octokit.fsx
+    github fsprojects/FSharp.TypeProviders.StarterPack src/ProvidedTypes.fsi
+    github fsprojects/FSharp.TypeProviders.StarterPack src/ProvidedTypes.fs
+    github fsprojects/FSharp.TypeProviders.StarterPack src/ProvidedTypesTesting.fs
 
 group Test
-    framework: net461
     source https://nuget.org/api/v2
 
     nuget FSharp.Core redirects: force
