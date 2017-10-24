@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\paket-files\build\fsprojects\FSharp.TypeProviders.StarterPack\src\ProvidedTypes.fsi" />
-    <Compile Include="..\..\paket-files\build\fsprojects\FSharp.TypeProviders.StarterPack\src\ProvidedTypes.fs" />
+    <Compile Include="..\..\paket-files\build\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi" />
+    <Compile Include="..\..\paket-files\build\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fs" />
     <Compile Include="TypeProviders.Helper.fs" />
     <Compile Include="ResXProvider.fs" />
     <Compile Include="AppSettingsProvider.fs" />
@@ -15,7 +15,10 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\..\packages\build\NETStandard.Library.NETFramework\build\net461\lib\netstandard.dll</HintPath>
+      <HintPath>..\..\packages\package\NETStandard.Library.NETFramework\build\net461\lib\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\packages\package\NETStandard.Library.NETFramework\build\net461\lib\netstandard.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

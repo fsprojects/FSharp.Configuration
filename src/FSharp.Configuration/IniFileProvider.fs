@@ -82,48 +82,48 @@ let getValue (iniFileName: string) (section: string) (key: string) =
     | Choice2Of2 _ -> None
 
 let internal typedIniFile (context: Context) =
-    let iniFile = context.ProvidedTypesContext.ProvidedTypeDefinition(thisAssembly, rootNamespace, "IniFile", Some typeof<obj>, true)
+    let iniFile = ProvidedTypeDefinition(thisAssembly, rootNamespace, "IniFile", Some typeof<obj>, true)
     //let cache = new MemoryCache(name = "IniFileProvider")
     //context.AddDisposable cache
     
     iniFile.DefineStaticParameters(
-        parameters = [ context.ProvidedTypesContext.ProvidedStaticParameter ("configFileName", typeof<string>) ],
+        parameters = [ ProvidedStaticParameter ("configFileName", typeof<string>) ],
         instantiationFunction = (fun typeName parameterValues ->
             //let value = lazy (
                 match parameterValues with 
                 | [| :? string as iniFileName |] ->
-                    let typeDef = context.ProvidedTypesContext.ProvidedTypeDefinition(thisAssembly, rootNamespace, typeName, Some typeof<obj>, true)
+                    let typeDef = ProvidedTypeDefinition(thisAssembly, rootNamespace, typeName, Some typeof<obj>, true)
                     let niceName = createNiceNameProvider()
                     try
                         let filePath = findConfigFile context.ResolutionFolder iniFileName
                         match Parser.parse filePath with
                         | Choice1Of2 sections ->
                             for section in sections do
-                                let sectionTy = context.ProvidedTypesContext.ProvidedTypeDefinition(section.Name, Some typeof<obj>, hideObjectMethods = true)
+                                let sectionTy = ProvidedTypeDefinition(section.Name, Some typeof<obj>, hideObjectMethods = true)
                                 for setting in section.Settings do
                                     let sectionName = section.Name
                                     let key = setting.Key
                                     let prop =
                                         match setting.Value with
-                                        | ValueParser.Int value -> context.ProvidedTypesContext.ProvidedProperty(key, typeof<int>, isStatic = true, getterCode = fun _ ->
+                                        | ValueParser.Int value -> ProvidedProperty(key, typeof<int>, isStatic = true, getterCode = fun _ ->
                                             <@@ 
                                                 match getValue filePath sectionName key with 
                                                 | Some v -> Int32.Parse v
                                                 | None -> value
                                              @@>)
-                                        | ValueParser.Bool value -> context.ProvidedTypesContext.ProvidedProperty(key, typeof<bool>, isStatic = true, getterCode = fun _ ->
+                                        | ValueParser.Bool value -> ProvidedProperty(key, typeof<bool>, isStatic = true, getterCode = fun _ ->
                                             <@@ 
                                                 match getValue filePath sectionName key with
                                                 | Some v -> Boolean.Parse v
                                                 | None -> value
                                              @@>)
-                                        | ValueParser.Float value -> context.ProvidedTypesContext.ProvidedProperty(key, typeof<float>, isStatic = true, getterCode = fun _ ->
+                                        | ValueParser.Float value -> ProvidedProperty(key, typeof<float>, isStatic = true, getterCode = fun _ ->
                                             <@@ 
                                                 match getValue filePath sectionName key with
                                                 | Some v -> Double.Parse (v, NumberStyles.Any, CultureInfo.InvariantCulture)
                                                 | None -> value
                                              @@>)
-                                        | value -> context.ProvidedTypesContext.ProvidedProperty(key, typeof<string>, isStatic = true, getterCode = fun _ ->
+                                        | value -> ProvidedProperty(key, typeof<string>, isStatic = true, getterCode = fun _ ->
                                             <@@ 
                                                 match getValue filePath sectionName key with
                                                 | Some v -> v
@@ -139,7 +139,7 @@ let internal typedIniFile (context: Context) =
                 
                         let name = niceName "ConfigFileName"
                         let getValue = <@@ filePath @@>
-                        let prop = context.ProvidedTypesContext.ProvidedProperty(name, typeof<string>, isStatic = true, getterCode = fun _ -> getValue)
+                        let prop = ProvidedProperty(name, typeof<string>, isStatic = true, getterCode = fun _ -> getValue)
                 
                         prop.AddXmlDoc "Returns the Filename"
                         typeDef.AddMember prop

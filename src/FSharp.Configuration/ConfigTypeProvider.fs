@@ -7,7 +7,7 @@ open ProviderImplementation.ProvidedTypes
 [<TypeProvider>]
 type FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
     class
-        inherit TypeProviderForNamespaces()
+        inherit TypeProviderForNamespaces(cfg)
         let context = new Context(this, cfg)
         do this.AddNamespace (
             rootNamespace,

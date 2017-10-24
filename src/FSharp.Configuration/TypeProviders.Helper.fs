@@ -268,8 +268,6 @@ type private ContextMessage =
     | Cancel
 
 type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
-    let ctx = ProvidedTypesContext.Create(cfg)
-
     let watcher: IDisposable option ref = ref None
 
     let disposeWatcher() =
@@ -305,10 +303,9 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
     member __.ResolutionFolder = cfg.ResolutionFolder
     member __.WatchFile (file: FilePath) = agent.Post (Watch file)
     member __.AddDisposable x = agent.Post (AddDisposable x) 
-    member __.ProvidedTypesContext = ctx
 
     member __.ErasedType<'T>(assemblyName, rootNamespace, typeName) =
-        ctx.ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>))
+        ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>))
 
     interface IDisposable with
         member __.Dispose() = agent.Post Cancel
