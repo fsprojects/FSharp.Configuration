@@ -10,6 +10,7 @@ group Build
     nuget SourceLink.Fake
     nuget FSharp.Core
     nuget SharpYaml
+    nuget NetStandard.Library.NetFramework
 
     github fsharp/FAKE modules/Octokit/Octokit.fsx
     github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fsi
@@ -24,7 +25,3 @@ group Test
     nuget Expecto
     nuget SharpYaml
 
-#group Package
-#    frameworks: net461
-#    source https://nuget.org/api/v2
-#    nuget NetStandard.Library.NetFramework

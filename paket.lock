@@ -39,6 +39,7 @@ NUGET
     Microsoft.NETCore.Targets (2.0) - restriction: == netstandard2.0
     NETStandard.Library (2.0.1) - restriction: || (&& (== net45) (< net35) (>= netstandard1.6)) (== netstandard2.0)
       Microsoft.NETCore.Platforms (>= 1.1)
+    NETStandard.Library.NETFramework (2.0.0-preview2-25405-01)
     NuGet.CommandLine (4.3)
     Octokit (0.27)
       NETStandard.Library (>= 1.6.1) - restriction: == netstandard2.0
@@ -419,9 +420,9 @@ GITHUB
     modules/Octokit/Octokit.fsx (838f43e1e6ac18014b2515799fe7fa0e23186fbc)
       Octokit (>= 0.20)
   remote: fsprojects/FSharp.TypeProviders.SDK
-    src/ProvidedTypes.fs (1928dbfca0f2f1eb26723cdb3f9a5cf493430bc0)
-    src/ProvidedTypes.fsi (1928dbfca0f2f1eb26723cdb3f9a5cf493430bc0)
-    src/ProvidedTypesTesting.fs (1928dbfca0f2f1eb26723cdb3f9a5cf493430bc0)
+    src/ProvidedTypes.fs (26f53c82fcfda79f0c7773b6d926c8e899ea3deb)
+    src/ProvidedTypes.fsi (26f53c82fcfda79f0c7773b6d926c8e899ea3deb)
+    src/ProvidedTypesTesting.fs (26f53c82fcfda79f0c7773b6d926c8e899ea3deb)
 GROUP Test
 RESTRICTION: == net461
 NUGET
