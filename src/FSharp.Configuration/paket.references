@@ -1,2 +1,3 @@
-SharpYaml
-FSharp.Core
+group Build
+  SharpYaml
+  FSharp.Core
