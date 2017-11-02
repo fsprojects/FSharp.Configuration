@@ -25,3 +25,4 @@ group Test
     nuget Expecto
     nuget SharpYaml
 
+    github fsprojects/FSharp.TypeProviders.SDK fsc.props

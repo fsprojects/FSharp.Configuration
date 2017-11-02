@@ -432,6 +432,16 @@ NUGET
       Argu (>= 3.7)
       FSharp.Core (>= 4.1.12)
       Mono.Cecil (>= 0.10.0-beta5)
-    FSharp.Core (4.2.3) - redirects: force
+    FAKE (4.63.2)
+    FSharp.Core (4.2.3)
     Mono.Cecil (0.10.0-beta6)
+    NuGet.CommandLine (4.3)
     SharpYaml (1.6.1)
+    xunit.runner.console (2.3.1)
+GITHUB
+  remote: fsprojects/FSharp.TypeProviders.SDK
+    fsc.props (565cb590627cac20013cfc31eb3476e6f09398cf)
+      FAKE
+      FSharp.Core (>= 4.2.3 < 4.3)
+      Nuget.CommandLine
+      xunit.runner.console

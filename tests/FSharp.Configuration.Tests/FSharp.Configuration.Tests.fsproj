@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
+  <Import Project="..\..\paket-files\test\fsprojects\FSharp.TypeProviders.SDK\fsc.props" />
   <ItemGroup>
     <Compile Include="AppSettingsProvider.Tests.fs" />
     <Compile Include="ResXProvider.Tests.fs" />
