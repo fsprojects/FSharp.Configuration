@@ -417,12 +417,12 @@ NUGET
       System.Runtime (>= 4.3)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (838f43e1e6ac18014b2515799fe7fa0e23186fbc)
+    modules/Octokit/Octokit.fsx (0341a2e614eb2a7f34607cec914eb0ed83ce9add)
       Octokit (>= 0.20)
   remote: fsprojects/FSharp.TypeProviders.SDK
-    src/ProvidedTypes.fs (26f53c82fcfda79f0c7773b6d926c8e899ea3deb)
-    src/ProvidedTypes.fsi (26f53c82fcfda79f0c7773b6d926c8e899ea3deb)
-    src/ProvidedTypesTesting.fs (26f53c82fcfda79f0c7773b6d926c8e899ea3deb)
+    src/ProvidedTypes.fs (565cb590627cac20013cfc31eb3476e6f09398cf)
+    src/ProvidedTypes.fsi (565cb590627cac20013cfc31eb3476e6f09398cf)
+    src/ProvidedTypesTesting.fs (565cb590627cac20013cfc31eb3476e6f09398cf)
 GROUP Test
 RESTRICTION: == net461
 NUGET
