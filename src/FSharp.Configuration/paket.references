@@ -1,2 +1,5 @@
 SharpYaml
 FSharp.Core
+File: ProvidedTypes.fsi .
+File: ProvidedTypes.fs .
+File: ProvidedTypesTesting.fs .

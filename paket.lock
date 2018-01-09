@@ -3,7 +3,11 @@ NUGET
   remote: http://www.nuget.org/api/v2
     FSharp.Core (4.0.0.1)
     SharpYaml (1.6.1)
-
+GITHUB
+  remote: fsprojects/FSharp.TypeProviders.SDK
+    src/ProvidedTypes.fs (bebf76af3ffd2f9723b42de68d191f2371ecefd0)
+    src/ProvidedTypes.fsi (bebf76af3ffd2f9723b42de68d191f2371ecefd0)
+    src/ProvidedTypesTesting.fs (bebf76af3ffd2f9723b42de68d191f2371ecefd0)
 GROUP Build
 RESTRICTION: == net45
 NUGET
