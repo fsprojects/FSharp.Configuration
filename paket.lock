@@ -5,9 +5,9 @@ NUGET
     SharpYaml (1.6.1)
 GITHUB
   remote: fsprojects/FSharp.TypeProviders.SDK
-    src/ProvidedTypes.fs (bebf76af3ffd2f9723b42de68d191f2371ecefd0)
-    src/ProvidedTypes.fsi (bebf76af3ffd2f9723b42de68d191f2371ecefd0)
-    src/ProvidedTypesTesting.fs (bebf76af3ffd2f9723b42de68d191f2371ecefd0)
+    src/ProvidedTypes.fs (b6d5c949e46c34f051e2adf88170e1a2d20cbfd9)
+    src/ProvidedTypes.fsi (b6d5c949e46c34f051e2adf88170e1a2d20cbfd9)
+    src/ProvidedTypesTesting.fs (b6d5c949e46c34f051e2adf88170e1a2d20cbfd9)
 GROUP Build
 RESTRICTION: == net45
 NUGET

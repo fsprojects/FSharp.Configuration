@@ -52,7 +52,7 @@ let private createResXProvider typeName resourceName filePath =
 let inline private replace (oldChar:char) (newChar:char) (s:string) = s.Replace(oldChar, newChar)
 
 let internal typedResources (context: Context) =
-    let resXType = erasedType<obj> thisAssembly rootNamespace "ResXProvider" false
+    let resXType = erasedType<obj> thisAssembly rootNamespace "ResXProvider" None
     let cache = new MemoryCache("ResXProvider")
     context.AddDisposable cache
 

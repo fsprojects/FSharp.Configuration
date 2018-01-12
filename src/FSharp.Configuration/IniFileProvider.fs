@@ -80,7 +80,7 @@ let getValue (iniFileName: string) (section: string) (key: string) =
     | Choice2Of2 _ -> None
 
 let internal typedIniFile (context: Context) =
-    let iniFile = erasedType<obj> thisAssembly rootNamespace "IniFile" false
+    let iniFile = erasedType<obj> thisAssembly rootNamespace "IniFile" None
     let cache = new MemoryCache(name = "IniFileProvider")
     context.AddDisposable cache
 
@@ -90,7 +90,7 @@ let internal typedIniFile (context: Context) =
             let value = lazy (
                 match parameterValues with
                 | [| :? string as iniFileName |] ->
-                    let typeDef = erasedType<obj> thisAssembly rootNamespace typeName true
+                    let typeDef = erasedType<obj> thisAssembly rootNamespace typeName (Some true)
                     let niceName = createNiceNameProvider()
                     try
                         let filePath = findConfigFile context.ResolutionFolder iniFileName

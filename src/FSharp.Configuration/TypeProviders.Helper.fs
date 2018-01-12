@@ -198,8 +198,10 @@ let findConfigFile resolutionFolder configFileName =
         let path = configFileName.Split([|@"\"; "/"|], StringSplitOptions.None)
         Array.append [|resolutionFolder|] path |> Path.Combine
 
-let erasedType<'T> assemblyName rootNamespace typeName hideObjectMethods =
-    ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>), hideObjectMethods = hideObjectMethods)
+let erasedType<'T> assemblyName rootNamespace typeName (hideObjectMethods: bool option) =
+    match hideObjectMethods with
+    | None -> ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>))
+    | Some hideObjectMethods -> ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>), hideObjectMethods = hideObjectMethods)
 
 // Get the assembly and namespace used to house the provided types
 let thisAssembly = System.Reflection.Assembly.GetExecutingAssembly()

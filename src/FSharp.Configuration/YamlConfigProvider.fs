@@ -295,9 +295,9 @@ module private TypesFactory =
         let rawType = node.UnderlyingType
         let field = ProvidedField("_" +  name, rawType)
         let prop =
-            if not readOnly
-            then ProvidedProperty (name, rawType, isStatic = false, getterCode = (fun [me] -> Expr.FieldGet(me, field)), setterCode = (fun [me;v] -> Expr.FieldSet(me, field, v)))
-            else ProvidedProperty (name, rawType, isStatic = false, getterCode = (fun [me] -> Expr.FieldGet(me, field)))
+            if readOnly
+            then ProvidedProperty (name, rawType, isStatic = false, getterCode = (fun [me] -> Expr.FieldGet(me, field)))
+            else ProvidedProperty (name, rawType, isStatic = false, getterCode = (fun [me] -> Expr.FieldGet(me, field)), setterCode = (fun [me;v] -> Expr.FieldSet(me, field, v)))
         let initValue = node.ToExpr()
 
         { MainType = Some rawType
@@ -365,11 +365,12 @@ module private TypesFactory =
             let field = ProvidedField("_" + name, fieldType)
 
             let prop =
-                if not readOnly
+                if readOnly
                 then ProvidedProperty (name, propType, isStatic=false,
+                        getterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)))
+                else ProvidedProperty (name, propType, isStatic=false,
                         getterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)),
                         setterCode = (fun [me; v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.Call(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))))
-                else ProvidedProperty (name, propType, isStatic=false, getterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)))
 
             { MainType = Some fieldType
               Types = childTypes @ [field :> MemberInfo; prop :> MemberInfo]
@@ -542,7 +543,8 @@ let internal typedYamlConfig (context: Context) =
                 let createTy yaml readOnly inferTypesFromStrings =
                     let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, Some baseTy, isErased = false,
                                                      SuppressRelocation = false, hideObjectMethods = true)
-                    let assembly = ProvidedAssembly()
+                    let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
+                    let assembly = ProvidedAssembly(AssemblyName rootNamespace, assemblyPath)
                     let types = TypesFactory.transform readOnly None (Parser.parse inferTypesFromStrings yaml)
                     let ctr = ProvidedConstructor([], invokeCode = fun (me :: _) -> types.Init me)
                     let baseCtor = baseTy.GetConstructor(BindingFlags.Public ||| BindingFlags.Instance, null, [|typeof<bool>|], null)

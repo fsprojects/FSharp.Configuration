@@ -45,7 +45,7 @@ let setConnectionString(file, key: string, value) =
     config.Save()
 
 let internal typedAppSettings (context: Context) =
-    let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings" false
+    let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings" None
     let cache = new MemoryCache("AppSettingProvider")
     context.AddDisposable cache
 
@@ -76,7 +76,7 @@ let internal typedAppSettings (context: Context) =
 
                 match parameterValues with
                 | [| :? string as configFileName |] ->
-                    let typeDef = erasedType<obj> thisAssembly rootNamespace typeName false
+                    let typeDef = erasedType<obj> thisAssembly rootNamespace typeName None
                     let niceName = createNiceNameProvider()
                     try
                         let filePath = findConfigFile context.ResolutionFolder configFileName
