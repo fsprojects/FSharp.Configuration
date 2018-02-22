@@ -519,7 +519,8 @@ type Root (inferTypesFromStrings: bool) =
 let internal typedYamlConfig (context: Context) =
     let baseTy = typeof<Root>
 
-    let yamlConfig = ProvidedTypeDefinition(thisAssembly, rootNamespace, "YamlConfig", Some baseTy, isErased = false, SuppressRelocation = false)
+    let asm = Assembly.GetExecutingAssembly()
+    let yamlConfig = ProvidedTypeDefinition(asm, rootNamespace, "YamlConfig", Some baseTy, isErased = false)
 
     let staticParams =
         [ ProvidedStaticParameter ("FilePath", typeof<string>, "")
@@ -541,16 +542,14 @@ let internal typedYamlConfig (context: Context) =
         instantiationFunction = fun typeName paramValues ->
             let value = lazy (
                 let createTy yaml readOnly inferTypesFromStrings =
-                    let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, Some baseTy, isErased = false,
-                                                     SuppressRelocation = false, hideObjectMethods = true)
-                    let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
-                    let assembly = ProvidedAssembly(AssemblyName rootNamespace, assemblyPath)
+                    let myAssem = ProvidedAssembly()
+                    let ty = ProvidedTypeDefinition (myAssem, rootNamespace, typeName, Some baseTy, isErased = false, hideObjectMethods = true)
                     let types = TypesFactory.transform readOnly None (Parser.parse inferTypesFromStrings yaml)
                     let ctr = ProvidedConstructor([], invokeCode = fun (me :: _) -> types.Init me)
                     let baseCtor = baseTy.GetConstructor(BindingFlags.Public ||| BindingFlags.Instance, null, [|typeof<bool>|], null)
                     ctr.BaseConstructorCall <- fun [me] -> baseCtor, [me; Expr.Value inferTypesFromStrings]
                     ty.AddMembers (ctr :> MemberInfo :: types.Types)
-                    assembly.AddTypes [ty]
+                    myAssem.AddTypes [ty]
                     ty
 
                 match paramValues with
