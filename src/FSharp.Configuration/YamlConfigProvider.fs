@@ -3,15 +3,19 @@
 #nowarn "57"
 
 open System.Reflection
-open ProviderImplementation.ProvidedTypes
 open System
 open System.IO
+open System.Collections.Generic
+open System.Runtime.Caching
+
+open Microsoft.FSharp.Quotations
+
 open SharpYaml.Serialization
 open SharpYaml.Serialization.Serializers
-open Microsoft.FSharp.Quotations
-open System.Collections.Generic
+
 open FSharp.Configuration.Helper
-open System.Runtime.Caching
+open ProviderImplementation.ProvidedTypes
+open ProviderImplementation.ProvidedTypes.UncheckedQuotations
 
 type Helper () =
     static member CreateResizeArray<'a>(data : 'a seq) :ResizeArray<'a> = ResizeArray<'a>(data)
@@ -357,7 +361,7 @@ module private TypesFactory =
 
         let initValue ty me =
             Expr.Coerce(
-                Expr.Call(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)), ctrType)]),
+                Expr.CallUnchecked(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)), ctrType)]),
                 ty)
 
         if generateField then
@@ -370,7 +374,7 @@ module private TypesFactory =
                         getterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)))
                 else ProvidedProperty (name, propType, isStatic=false,
                         getterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)),
-                        setterCode = (fun [me; v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.Call(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))))
+                        setterCode = (fun [me; v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.CallUnchecked(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))))
 
             { MainType = Some fieldType
               Types = childTypes @ [field :> MemberInfo; prop :> MemberInfo]
