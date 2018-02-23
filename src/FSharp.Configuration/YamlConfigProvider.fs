@@ -3,15 +3,19 @@
 #nowarn "57"
 
 open System.Reflection
-open ProviderImplementation.ProvidedTypes
 open System
 open System.IO
+open System.Collections.Generic
+open System.Runtime.Caching
+
+open Microsoft.FSharp.Quotations
+
 open SharpYaml.Serialization
 open SharpYaml.Serialization.Serializers
-open Microsoft.FSharp.Quotations
-open System.Collections.Generic
+
 open FSharp.Configuration.Helper
-open System.Runtime.Caching
+open ProviderImplementation.ProvidedTypes
+open ProviderImplementation.ProvidedTypes.UncheckedQuotations
 
 type Helper () =
     static member CreateResizeArray<'a>(data : 'a seq) :ResizeArray<'a> = ResizeArray<'a>(data)
@@ -26,13 +30,13 @@ module private Parser =
         | Uri of Uri
         | Float of double
         | Guid of Guid
-        
+
         static member ParseStr = function
             | ValueParser.TimeSpan x -> TimeSpan x
             | ValueParser.Uri x -> Uri x
             | ValueParser.Guid x -> Guid x
             | x -> String x
-        
+
         static member FromObj (inferTypesFromStrings: bool) : obj -> Scalar = function
             | null -> String ""
             | :? System.Boolean as b -> Bool b
@@ -43,8 +47,8 @@ module private Parser =
                 if inferTypesFromStrings then Scalar.ParseStr s
                 else Scalar.String s
             | t -> failwithf "Unknown type %s" (string (t.GetType()))
-        
-        member x.UnderlyingType = 
+
+        member x.UnderlyingType =
             match x with
             | Int x -> x.GetType()
             | Int64 x -> x.GetType()
@@ -54,7 +58,7 @@ module private Parser =
             | Uri x -> x.GetType()
             | Float x -> x.GetType()
             | Guid x -> x.GetType()
-        
+
         member x.BoxedValue =
             match x with
             | Int x -> box x
@@ -75,8 +79,8 @@ module private Parser =
         let rec loop (n: obj) =
             match n with
             | :? List<obj> as l -> Node.List (l |> Seq.map loop |> Seq.toList)
-            | :? Dictionary<obj,obj> as map -> 
-                map 
+            | :? Dictionary<obj,obj> as map ->
+                map
                 |> Seq.map (fun p -> string p.Key, loop p.Value)
                 |> Seq.toList
                 |> Map
@@ -84,7 +88,7 @@ module private Parser =
 
         let settings = SerializerSettings (EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false)
         let serializer = Serializer(settings)
-        fun text -> 
+        fun text ->
             try serializer.Deserialize(fromText=text) |> loop
             with
               | :? SharpYaml.YamlException as e when e.InnerException <> null ->
@@ -93,12 +97,12 @@ module private Parser =
 
     let private inferListType (targetType: Type) (nodes: Node list) =
         let types =
-            nodes 
+            nodes
             |> List.choose (function Scalar x -> Some x | _ -> None)
-            |> Seq.groupBy (fun n -> n.UnderlyingType) 
-            |> Seq.map fst 
+            |> Seq.groupBy (fun n -> n.UnderlyingType)
+            |> Seq.map fst
             |> Seq.toList
-            
+
         match types with
         | [] -> targetType
         | [ty] -> typedefof<ResizeArray<_>>.MakeGenericType ty
@@ -107,23 +111,23 @@ module private Parser =
     let update (target: 'a) (updater: Node) =
         let tryGetField x name = x.GetType().GetField(name, BindingFlags.Instance ||| BindingFlags.NonPublic) |> Option.ofNull
 
-        let getChangedDelegate x = 
-            x.GetType().GetField("_changed", BindingFlags.Instance ||| BindingFlags.NonPublic).GetValue x :?> MulticastDelegate 
+        let getChangedDelegate x =
+            x.GetType().GetField("_changed", BindingFlags.Instance ||| BindingFlags.NonPublic).GetValue x :?> MulticastDelegate
 
         let rec update (target: obj) name (updater: Node) =
             match name, updater with
-            | _, Scalar x -> updateScalar target name x 
+            | _, Scalar x -> updateScalar target name x
             | _, Map m -> updateMap target name m
             | Some name, List l -> updateList target name l
             | None, _ -> failwithf "Only Maps are allowed at the root level."
-    
+
         and updateScalar (target: obj) name (node: Scalar) =
             maybe {
                 let! name = name
                 let! field = tryGetField target ("_" + name)
 
-                let newValue = 
-                    if field.FieldType <> node.UnderlyingType then 
+                let newValue =
+                    if field.FieldType <> node.UnderlyingType then
                         if node.UnderlyingType <> typeof<string> && field.FieldType = typeof<string> then
                             node.BoxedValue |> string |> box
                         elif node.UnderlyingType = typeof<int32> && field.FieldType = typeof<int64> then
@@ -134,8 +138,8 @@ module private Parser =
                         node.BoxedValue
 
                 let oldValue = field.GetValue(target)
-        
-                return! 
+
+                return!
                     if oldValue <> newValue then
                         field.SetValue(target, newValue)
                         Some (getChangedDelegate target)
@@ -143,16 +147,16 @@ module private Parser =
             } |> Option.toList
 
         and makeListItemUpdaters (itemType: Type) (itemNodes: Node list) =
-            itemNodes 
-            |> List.choose (function 
-                | Scalar x -> Some x.BoxedValue 
-                | Map m -> 
+            itemNodes
+            |> List.choose (function
+                | Scalar x -> Some x.BoxedValue
+                | Map m ->
                     let mapItem = Activator.CreateInstance itemType
                     updateMap mapItem None m |> ignore
                     Some mapItem
                 | List l -> Some (fillList itemType l))
 
-        and makeListInstance (listType: Type) (itemType: Type) (updaters: obj list) = 
+        and makeListInstance (listType: Type) (itemType: Type) (updaters: obj list) =
             let list = Activator.CreateInstance listType
             let addMethod = listType.GetMethod("Add", [|itemType|])
             for updater in updaters do
@@ -163,29 +167,29 @@ module private Parser =
             let fieldType = inferListType targetType updaters
             let itemType = fieldType.GetGenericArguments().[0]
             let updaters = makeListItemUpdaters itemType updaters
-            
-            if not (targetType.IsAssignableFrom fieldType) then 
+
+            if not (targetType.IsAssignableFrom fieldType) then
                 failwithf "Cannot assign %O to %O." fieldType.Name targetType.Name
-            
+
             makeListInstance fieldType itemType updaters
 
         and updateList (target: obj) name (updaters: Node list) =
             maybe {
                 let! field = tryGetField target ("_" + name)
                 let fieldType = inferListType field.FieldType updaters
-                
-                if field.FieldType <> fieldType then 
+
+                if field.FieldType <> fieldType then
                     failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
-                
+
                 let isComparable (x: obj) = x :? Uri || x :? IComparable
                 let values = field.GetValue target :?> Collections.IEnumerable |> Seq.cast<obj>
                 // NOTE: another solution would be to make our provided type implement IComparable
                 // On the other side I'm not completely sure why we sort at all.
                 // What if the ordering of the item matters for the user?
                 let isSortable = values |> Seq.forall isComparable
-                
-                let sort (xs: obj seq) = 
-                    xs 
+
+                let sort (xs: obj seq) =
+                    xs
                     |> Seq.sortBy (function
                        | :? Uri as uri -> uri.OriginalString :> IComparable
                        | :? IComparable as x -> x
@@ -208,12 +212,12 @@ module private Parser =
             } |> function Some dlg -> [dlg] | None -> []
 
         and updateMap (target: obj) name (updaters: (string * Node) list) =
-            let target = 
+            let target =
                 maybe {
-                    let! name = name 
+                    let! name = name
                     let ty = target.GetType()
                     let mapProp = Option.ofNull (ty.GetProperty name)
-                    return! 
+                    return!
                         match mapProp with
                         | None ->
                             debug "Type %s does not contain %s property." ty.Name name
@@ -236,14 +240,14 @@ module private TypesFactory =
     open Parser
 
     type Scalar with
-        member x.ToExpr() = 
+        member x.ToExpr() =
             match x with
             | Int x -> Expr.Value x
             | Int64 x -> Expr.Value x
             | String x -> Expr.Value x
             | Bool x -> Expr.Value x
             | Float x -> Expr.Value x
-            | TimeSpan x -> 
+            | TimeSpan x ->
                 let parse = typeof<TimeSpan>.GetMethod("Parse", [|typeof<string>|])
                 Expr.Call(parse, [Expr.Value (x.ToString())])
             | Uri x ->
@@ -266,9 +270,8 @@ module private TypesFactory =
 
         fun() ->
             let eventField = ProvidedField("_changed", eventType)
-            let event = ProvidedEvent("Changed", eventType)
 
-            let changeEvent m me v = 
+            let changeEvent m me v =
                 let current = Expr.Coerce (Expr.FieldGet(me, eventField), delegateType)
                 let other = Expr.Coerce (v, delegateType)
                 Expr.Coerce (Expr.Call (m, [current; other]), eventType)
@@ -276,8 +279,13 @@ module private TypesFactory =
             let adder = changeEvent combineMethod
             let remover = changeEvent removeMethod
 
-            event.AdderCode <- fun [me; v] -> Expr.FieldSet(me, eventField, adder me v)
-            event.RemoverCode <- fun [me; v] -> Expr.FieldSet(me, eventField, remover me v)
+            let event =
+                ProvidedEvent(
+                    "Changed",
+                    eventType,
+                    adderCode = (fun [me; v] -> Expr.FieldSet(me, eventField, adder me v)),
+                    removerCode = (fun [me; v] -> Expr.FieldSet(me, eventField, remover me v))
+                )
             eventField, event
 
     let rec transform readOnly name (node: Node) =
@@ -286,12 +294,14 @@ module private TypesFactory =
         | _, Map m -> transformMap readOnly name m
         | Some name, List l -> transformList readOnly name true l
         | None, _ -> failwithf "Only Maps are allowed at the root level."
-    
+
     and transformScalar readOnly name (node: Scalar) =
         let rawType = node.UnderlyingType
         let field = ProvidedField("_" +  name, rawType)
-        let prop = ProvidedProperty (name, rawType, IsStatic = false, GetterCode = (fun [me] -> Expr.FieldGet(me, field)))
-        if not readOnly then prop.SetterCode <- (fun [me;v] -> Expr.FieldSet(me, field, v))
+        let prop =
+            if readOnly
+            then ProvidedProperty (name, rawType, isStatic = false, getterCode = (fun [me] -> Expr.FieldGet(me, field)))
+            else ProvidedProperty (name, rawType, isStatic = false, getterCode = (fun [me] -> Expr.FieldGet(me, field)), setterCode = (fun [me;v] -> Expr.FieldSet(me, field, v)))
         let initValue = node.ToExpr()
 
         { MainType = Some rawType
@@ -302,7 +312,7 @@ module private TypesFactory =
         let elements =
             children
             |> List.map (function
-               | Scalar x -> 
+               | Scalar x ->
                    { MainType = Some x.UnderlyingType
                      Types = []
                      Init = fun _ -> x.ToExpr() }
@@ -320,10 +330,16 @@ module private TypesFactory =
                 let childTypes, childInits = foldChildren readOnly headChildren
                 let eventField, event = generateChangedEvent()
 
-                let mapTy = ProvidedTypeDefinition(name + "_Item_Type", Some typeof<obj>, HideObjectMethods = true,
-                                                   IsErased = false, SuppressRelocation = false)
+                let mapTy =
+                    ProvidedTypeDefinition(
+                        name + "_Item_Type",
+                        Some typeof<obj>,
+                        hideObjectMethods = true,
+                        isErased = false,
+                        SuppressRelocation = false
+                    )
 
-                let ctr = ProvidedConstructor([], InvokeCode = (fun [me] -> childInits me))
+                let ctr = ProvidedConstructor([], invokeCode = (fun [me] -> childInits me))
                 mapTy.AddMembers (ctr :> MemberInfo :: childTypes)
                 mapTy.AddMember eventField
                 mapTy.AddMember event
@@ -336,28 +352,29 @@ module private TypesFactory =
 
         let propType = ProvidedTypeBuilder.MakeGenericType(typedefof<IList<_>>, [elementType])
         let ctrType = ProvidedTypeBuilder.MakeGenericType(typedefof<seq<_>>, [elementType])
-        
+
         let listCtr =
             let meth = typeof<Helper>.GetMethod("CreateResizeArray")
             ProvidedTypeBuilder.MakeGenericMethod(meth, [elementType])
-        
+
         let childTypes = elements |> List.collect (fun x -> x.Types)
 
         let initValue ty me =
             Expr.Coerce(
-                Expr.Call(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)), ctrType)]),
+                Expr.CallUnchecked(listCtr, [Expr.Coerce(Expr.NewArray(elementType, elements |> List.map (fun x -> x.Init me)), ctrType)]),
                 ty)
 
         if generateField then
             let fieldType = ProvidedTypeBuilder.MakeGenericType(typedefof<ResizeArray<_>>, [elementType])
             let field = ProvidedField("_" + name, fieldType)
-            
-            let prop = 
-                ProvidedProperty (name, propType, IsStatic=false, GetterCode = 
-                    fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType))
 
-            if not readOnly then 
-                prop.SetterCode <- fun [me; v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.Call(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))
+            let prop =
+                if readOnly
+                then ProvidedProperty (name, propType, isStatic=false,
+                        getterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)))
+                else ProvidedProperty (name, propType, isStatic=false,
+                        getterCode = (fun [me] -> Expr.Coerce(Expr.FieldGet(me, field), propType)),
+                        setterCode = (fun [me; v] -> Expr.FieldSet(me, field, Expr.Coerce(Expr.CallUnchecked(listCtr, [Expr.Coerce(v, ctrType)]), fieldType))))
 
             { MainType = Some fieldType
               Types = childTypes @ [field :> MemberInfo; prop :> MemberInfo]
@@ -372,12 +389,12 @@ module private TypesFactory =
             children
             |> List.map (fun (name, node) -> transform readOnly (Some name) node)
             |> List.fold (fun (types, inits) t -> types @ t.Types, inits @ [t.Init]) ([], [])
-        
+
         let affinedChildInits me =
-            childInits 
+            childInits
             |> List.fold (fun acc expr -> expr me :: acc) []
             |> List.reduce (fun res expr -> Expr.Sequential(res, expr))
-        
+
         childTypes, affinedChildInits
 
     and transformMap readOnly name (children: (string * Node) list) =
@@ -385,35 +402,35 @@ module private TypesFactory =
         let eventField, event = generateChangedEvent()
         match name with
         | Some name ->
-            let mapTy = ProvidedTypeDefinition(name + "_Type", Some typeof<obj>, HideObjectMethods=true, 
-                                               IsErased=false, SuppressRelocation=false)
-            let ctr = ProvidedConstructor([], InvokeCode = (fun [me] -> childInits me))
+            let mapTy = ProvidedTypeDefinition(name + "_Type", Some typeof<obj>, hideObjectMethods=true,
+                                               isErased=false, SuppressRelocation=false)
+            let ctr = ProvidedConstructor([], invokeCode = (fun [me] -> childInits me))
             mapTy.AddMembers (ctr :> MemberInfo :: childTypes)
             let field = ProvidedField("_" + name, mapTy)
-            let prop = ProvidedProperty (name, mapTy, IsStatic = false, GetterCode = (fun [me] -> Expr.FieldGet(me, field)))
+            let prop = ProvidedProperty (name, mapTy, isStatic = false, getterCode = (fun [me] -> Expr.FieldGet(me, field)))
             mapTy.AddMember eventField
             mapTy.AddMember event
 
             { MainType = Some (mapTy :> _)
               Types = [mapTy :> MemberInfo; field :> MemberInfo; prop :> MemberInfo]
               Init = fun me -> Expr.FieldSet(me, field, Expr.NewObject(ctr, [])) }
-        | None -> 
+        | None ->
             { MainType = None
               Types = [eventField :> MemberInfo; event :> MemberInfo] @ childTypes
               Init = childInits }
 
-type Root (inferTypesFromStrings: bool) = 
-    let serializer = 
-        let settings = SerializerSettings(EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false, 
+type Root (inferTypesFromStrings: bool) =
+    let serializer =
+        let settings = SerializerSettings(EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false,
                                           EmitAlias = false, ComparerForKeySorting = null)
         settings.RegisterSerializer (
-            typeof<System.Uri>, 
+            typeof<System.Uri>,
             { new ScalarSerializerBase() with
-                member __.ConvertFrom (_, scalar) = 
+                member __.ConvertFrom (_, scalar) =
                     match System.Uri.TryCreate (scalar.Value, UriKind.Absolute) with
                     | true, uri -> box uri
                     | _ -> null
-                member __.ConvertTo ctx = 
+                member __.ConvertTo ctx =
                     match ctx.Instance with
                     | :? Uri as uri -> uri.OriginalString
                     | _ -> "" })
@@ -444,7 +461,7 @@ type Root (inferTypesFromStrings: bool) =
         reraise()
 
     /// Load Yaml config from a TextReader and update itself with it.
-    member x.Load (reader: TextReader) = 
+    member x.Load (reader: TextReader) =
       try
         reader.ReadToEnd() |> Parser.parse inferTypesFromStrings |> Parser.update x
       with e ->
@@ -452,7 +469,7 @@ type Root (inferTypesFromStrings: bool) =
         reraise()
 
     /// Load Yaml config from a file and update itself with it.
-    member x.Load (filePath: string) = 
+    member x.Load (filePath: string) =
       try
         filePath |> Helper.File.tryReadNonEmptyTextFile |> x.LoadText
         lastLoadedFrom <- Some filePath
@@ -462,13 +479,13 @@ type Root (inferTypesFromStrings: bool) =
 
     /// Load Yaml config from a file, update itself with it, then start watching it for changes.
     /// If it detects any change, it reloads the file.
-    member x.LoadAndWatch (filePath: string) = 
+    member x.LoadAndWatch (filePath: string) =
         x.Load filePath
         Helper.File.watch true filePath <| fun _ ->
             Diagnostics.Debug.WriteLine (sprintf "Loading %s..." filePath)
-            try 
+            try
                 x.Load filePath
-            with e -> 
+            with e ->
                 Diagnostics.Debug.WriteLine (sprintf "Cannot load file %s: %O" filePath e.Message)
 
     /// Saves configuration as Yaml text into a stream.
@@ -482,11 +499,11 @@ type Root (inferTypesFromStrings: bool) =
     /// Saves configuration as Yaml text into a file.
     member x.Save (filePath: string) =
         // forbid any access to the file for atomicity
-        use file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None) 
+        use file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None)
         x.Save file
 
     /// Saves configuration as Yaml text into the last file it was loaded (if any).
-    /// Throws InvalidOperationException if configuration has not been loaded at all or if it has loaded from 
+    /// Throws InvalidOperationException if configuration has not been loaded at all or if it has loaded from
     /// a different kind of source (string or TextReader).
     member x.Save () =
         match lastLoadedFrom with
@@ -494,27 +511,28 @@ type Root (inferTypesFromStrings: bool) =
         | None -> invalidOp "Cannot save configuration because it was not loaded from a file."
 
     /// Returns content as Yaml text.
-    override x.ToString() = 
+    override x.ToString() =
         use writer = new StringWriter()
         x.Save writer
         writer.ToString()
 
     // Error channel to announce parse errors on
     [<CLIEvent>]
-    member x.Error = errorEvent.Publish
+    member __.Error = errorEvent.Publish
 
 let internal typedYamlConfig (context: Context) =
     let baseTy = typeof<Root>
 
-    let yamlConfig = ProvidedTypeDefinition(thisAssembly, rootNamespace, "YamlConfig", Some baseTy, IsErased=false, SuppressRelocation=false)
+    let asm = Assembly.GetExecutingAssembly()
+    let yamlConfig = ProvidedTypeDefinition(asm, rootNamespace, "YamlConfig", Some baseTy, isErased = false)
 
-    let staticParams = 
-        [ ProvidedStaticParameter ("FilePath", typeof<string>, "") 
+    let staticParams =
+        [ ProvidedStaticParameter ("FilePath", typeof<string>, "")
           ProvidedStaticParameter ("ReadOnly", typeof<bool>, false)
           ProvidedStaticParameter ("YamlText", typeof<string>, "")
           ProvidedStaticParameter ("InferTypesFromStrings", typeof<bool>, true) ]
 
-    yamlConfig.AddXmlDoc 
+    yamlConfig.AddXmlDoc
         """<summary>Statically typed YAML config.</summary>
            <param name='FilePath'>Path to YAML file.</param>
            <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
@@ -528,27 +546,25 @@ let internal typedYamlConfig (context: Context) =
         instantiationFunction = fun typeName paramValues ->
             let value = lazy (
                 let createTy yaml readOnly inferTypesFromStrings =
-                    let ty = ProvidedTypeDefinition (thisAssembly, rootNamespace, typeName, Some baseTy, IsErased=false, 
-                                                     SuppressRelocation=false, HideObjectMethods=true)
-                    let assemblyPath = Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".dll")
-                    let assembly = ProvidedAssembly assemblyPath
+                    let myAssem = ProvidedAssembly()
+                    let ty = ProvidedTypeDefinition (myAssem, rootNamespace, typeName, Some baseTy, isErased = false, hideObjectMethods = true)
                     let types = TypesFactory.transform readOnly None (Parser.parse inferTypesFromStrings yaml)
-                    let ctr = ProvidedConstructor([], InvokeCode = fun (me :: _) -> types.Init me)
+                    let ctr = ProvidedConstructor([], invokeCode = fun (me :: _) -> types.Init me)
                     let baseCtor = baseTy.GetConstructor(BindingFlags.Public ||| BindingFlags.Instance, null, [|typeof<bool>|], null)
                     ctr.BaseConstructorCall <- fun [me] -> baseCtor, [me; Expr.Value inferTypesFromStrings]
-                    ty.AddMembers (ctr :> MemberInfo :: types.Types) 
-                    assembly.AddTypes [ty]
+                    ty.AddMembers (ctr :> MemberInfo :: types.Types)
+                    myAssem.AddTypes [ty]
                     ty
-                
+
                 match paramValues with
-                | [| :? string as filePath; :? bool as readOnly; :? string as yamlText; :? bool as inferTypesFromStrings |] -> 
+                | [| :? string as filePath; :? bool as readOnly; :? string as yamlText; :? bool as inferTypesFromStrings |] ->
                      match filePath, yamlText with
                      | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
                      | "", yamlText -> createTy yamlText readOnly inferTypesFromStrings
-                     | filePath, _ -> 
+                     | filePath, _ ->
                           let filePath =
-                              if Path.IsPathRooted filePath 
-                              then filePath 
+                              if Path.IsPathRooted filePath
+                              then filePath
                               else context.ResolutionFolder </> filePath
                               |> Path.GetFullPath
                           context.WatchFile filePath

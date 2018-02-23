@@ -4,6 +4,9 @@ framework: >= net45
 nuget SharpYaml
 nuget FSharp.Core ~> 4.0.0
 
+github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fs
+github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fsi
+github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypesTesting.fs
 
 group Build
     framework: net45
