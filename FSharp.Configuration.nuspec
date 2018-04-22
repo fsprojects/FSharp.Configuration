@@ -12,7 +12,7 @@
     <summary>@summary@</summary>
     <description>@description@</description>
     <releaseNotes>@releaseNotes@</releaseNotes>
-    <copyright>Copyright 2017</copyright>
+    <copyright>Copyright 2014-2018</copyright>
     <tags>@tags@</tags>
     <references>
         <reference file="FSharp.Configuration.dll" />
