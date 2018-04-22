@@ -1,6 +1,6 @@
 language: csharp
-
-sudo: false  # use the new container-based Travis infrastructure 
+dist: trusty
+sudo: true 
 
 script: 
   - ./build.sh
