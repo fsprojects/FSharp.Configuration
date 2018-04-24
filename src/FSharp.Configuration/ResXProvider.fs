@@ -63,7 +63,7 @@ let internal typedResources (context: Context) =
                 match parameterValues with
                 | [| :? string as resourcePath|] ->
                     let filePath = findConfigFile context.ResolutionFolder resourcePath
-                    if not (File.Exists filePath) then invalidArg "file" "Resouce file not found"
+                    if not (File.Exists filePath) then invalidArg "file" "Resource file not found"
                     let resourceName =
                         Path.ChangeExtension (resourcePath, null)
                         |> replace '\\' '.'

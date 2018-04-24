@@ -1,6 +1,8 @@
 language: csharp
+dist: trusty
+sudo: true 
 
-sudo: false  # use the new container-based Travis infrastructure 
+dotnet: 2.1.101
 
 script: 
   - ./build.sh

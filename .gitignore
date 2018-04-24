@@ -158,6 +158,9 @@ $RECYCLE.BIN/
 # Exclude F# project specific directories and files
 # ===================================================
 
+.idea/
+.vs/
+
 # NuGet Packages Directory
 packages/
 

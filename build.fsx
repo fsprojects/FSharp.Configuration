@@ -44,7 +44,7 @@ let tags = "appsettings, YAML, F#, ResX, Ini, config"
 let solutionFile  = "FSharp.Configuration"
 
 // Pattern specifying assemblies to be tested using NUnit
-let testAssemblies = "tests/**/bin/Release/*Tests*.exe"
+let testAssemblies = "tests/**/bin/Release/net461/*Tests*.exe"
 
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted
@@ -108,14 +108,32 @@ Target "CleanDocs" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build library & test project
 
-Target "Build" (fun _ ->
-    !! (solutionFile + ".sln")
-    |> MSBuildRelease "" "Rebuild"
-    |> ignore
+let mutable dotnetExePath = "dotnet"
+let dotnetcliVersion = "2.1.101"
 
-    !! (solutionFile + ".Tests.sln")
-    |> MSBuildRelease "" "Rebuild"
-    |> ignore
+Target "InstallDotNetCore" (fun _ ->
+    dotnetExePath <- DotNetCli.InstallDotNetSDK dotnetcliVersion
+    Environment.SetEnvironmentVariable("DOTNET_EXE_PATH", dotnetExePath)
+)
+
+Target "Build" (fun _ ->
+    DotNetCli.Build (fun c ->
+        { c with
+            Project = "FSharp.Configuration.sln"
+            Configuration = "Release"
+            ToolPath = dotnetExePath })
+
+    CopyDir "bin/lib/net45"
+        "src/FSharp.Configuration/bin/Release/net45/"
+        (fun _ -> true)
+)
+
+Target "BuildTests" (fun _ ->
+    DotNetCli.Build (fun c ->
+        { c with
+            Project = "FSharp.Configuration.Tests.sln"
+            Configuration = "Release"
+            ToolPath = dotnetExePath })
 )
 
 // --------------------------------------------------------------------------------------
@@ -139,7 +157,7 @@ Target "NuGet" (fun _ ->
     CleanDir nugetDocsDir
     CleanDir nugetlibDir
 
-    CopyDir nugetlibDir "bin" (fun file -> file.Contains "FSharp.Core." |> not)
+    CopyDir nugetlibDir "bin/lib/net45" (fun file -> file.Contains "FSharp.Core." |> not)
     CopyDir nugetDocsDir "./docs/output" allFiles
 
     NuGet (fun p ->
@@ -263,7 +281,9 @@ Target "All" DoNothing
 
 "Clean"
   ==> "AssemblyInfo"
+  ==> "InstallDotNetCore"
   ==> "Build"
+  ==> "BuildTests"
   ==> "RunTests"
   =?> ("GenerateReferenceDocs",isLocalBuild && not isMono)
   =?> ("GenerateDocs",isLocalBuild && not isMono)

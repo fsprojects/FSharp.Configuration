@@ -1,6 +1,7 @@
 ﻿module FSharp.Configuration.YamlConfigTypeProvider
 
 #nowarn "57"
+#nowarn "25"
 
 open System.Reflection
 open System
