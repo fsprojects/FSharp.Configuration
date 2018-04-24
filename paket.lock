@@ -4,7 +4,7 @@ GROUP Build
 RESTRICTION: || (== net45) (== netstandard2.0)
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.63.2)
+    FAKE (4.64.12)
     FSharp.Compiler.Service (2.0.0.6)
     FSharp.Core (4.2.3)
       System.Collections (>= 4.0.11) - restriction: == netstandard2.0
@@ -427,14 +427,14 @@ GROUP Test
 RESTRICTION: == net461
 NUGET
   remote: https://www.nuget.org/api/v2
-    Argu (3.7)
-    Expecto (5.0.1)
-      Argu (>= 3.7)
-      FSharp.Core (>= 4.1.12)
-      Mono.Cecil (>= 0.10.0-beta5)
+    Argu (5.1)
+      FSharp.Core (>= 4.0.0.1)
+    Expecto (7.0.1)
+      Argu (>= 5.1)
+      Mono.Cecil (>= 0.10)
     FAKE (4.63.2)
-    FSharp.Core (4.2.3)
-    Mono.Cecil (0.10.0-beta6)
+    FSharp.Core (4.3.4)
+    Mono.Cecil (0.10)
     NuGet.CommandLine (4.3)
     SharpYaml (1.6.1)
     xunit.runner.console (2.3.1)

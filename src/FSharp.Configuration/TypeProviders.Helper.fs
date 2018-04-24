@@ -15,15 +15,15 @@ type FilePath = string
 type String with
     member x.TryGetChar i = if i >= x.Length then None else Some x.[i]
 
-let inline satisfies predicate (charOption:option<char>) = 
-    match charOption with 
-    | Some c when predicate c -> charOption 
+let inline satisfies predicate (charOption:option<char>) =
+    match charOption with
+    | Some c when predicate c -> charOption
     | _ -> None
 
 let dispose (x: IDisposable) = if x = null then () else x.Dispose()
 let inline debug msg = Printf.kprintf Diagnostics.Debug.WriteLine msg
 
-let (|EOF|_|) = function 
+let (|EOF|_|) = function
     | Some _ -> None
     | _ -> Some ()
 
@@ -121,13 +121,13 @@ module ValueParser =
     let (|Float|_|) = tryParseWith (fun x -> Double.TryParse(x, NumberStyles.Any, CultureInfo.InvariantCulture))
     let (|TimeSpan|_|) = tryParseWith (fun x -> TimeSpan.TryParse(x, CultureInfo.InvariantCulture))
     let (|Guid|_|) = tryParseWith Guid.TryParse
-    
-    let (|DateTime|_|) =  
+
+    let (|DateTime|_|) =
         tryParseWith (fun x -> DateTime.TryParse(x, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal))
 
-    let (|Uri|_|) (text: string) = 
-        ["http"; "https"; "ftp"; "ftps"; "sftp"; "amqp"; "file"; "ssh"; "tcp"] 
-        |> List.tryPick (fun x -> 
+    let (|Uri|_|) (text: string) =
+        ["http"; "https"; "ftp"; "ftps"; "sftp"; "amqp"; "file"; "ssh"; "tcp"]
+        |> List.tryPick (fun x ->
             if text.Trim().StartsWith(x + ":", StringComparison.InvariantCultureIgnoreCase) then
                 match System.Uri.TryCreate(text, UriKind.Absolute) with
                 | true, uri -> Some uri
@@ -139,45 +139,45 @@ let createNiceNameProvider() =
     let set = HashSet()
     fun (s: string) ->
         if s = s.ToUpper() then s else
-        // Starting to parse a new segment 
-        let rec restart i = 
+        // Starting to parse a new segment
+        let rec restart i =
           seq {
-            match s.TryGetChar i with 
+            match s.TryGetChar i with
             | EOF -> ()
             | LetterDigit _ & Upper _ -> yield! upperStart i (i + 1)
             | LetterDigit _ -> yield! consume i false (i + 1)
-            | _ -> yield! restart (i + 1) 
+            | _ -> yield! restart (i + 1)
           }
-        
+
         // Parsed first upper case letter, continue either all lower or all upper
-        and upperStart from i = 
+        and upperStart from i =
           seq {
-            match s.TryGetChar i with 
-            | Upper _ -> yield! consume from true (i + 1) 
-            | Lower _ -> yield! consume from false (i + 1) 
-            | _ -> yield! restart (i + 1) 
+            match s.TryGetChar i with
+            | Upper _ -> yield! consume from true (i + 1)
+            | Lower _ -> yield! consume from false (i + 1)
+            | _ -> yield! restart (i + 1)
           }
-        
+
         // Consume are letters of the same kind (either all lower or all upper)
-        and consume from takeUpper i = 
+        and consume from takeUpper i =
           seq {
             match s.TryGetChar i with
             | Lower _ when not takeUpper -> yield! consume from takeUpper (i + 1)
             | Upper _ when takeUpper -> yield! consume from takeUpper (i + 1)
-            | _ -> 
+            | _ ->
                 yield from, i
-                yield! restart i 
+                yield! restart i
           }
-        
+
         // Split string into segments and turn them to PascalCase
         let mutable name =
-            seq { for i1, i2 in restart 0 do 
-                    let sub = s.Substring(i1, i2 - i1) 
+            seq { for i1, i2 in restart 0 do
+                    let sub = s.Substring(i1, i2 - i1)
                     if Seq.forall Char.IsLetterOrDigit sub then
                         yield sub.[0].ToString().ToUpper() + sub.[1..].ToLower() }
             |> String.concat ""
-        
-        while set.Contains name do 
+
+        while set.Contains name do
           let mutable lastLetterPos = String.length name - 1
           while Char.IsDigit name.[lastLetterPos] && lastLetterPos > 0 do
             lastLetterPos <- lastLetterPos - 1
@@ -192,9 +192,9 @@ let createNiceNameProvider() =
         name
 
 let findConfigFile resolutionFolder configFileName =
-    if Path.IsPathRooted configFileName then 
-        configFileName 
-    else 
+    if Path.IsPathRooted configFileName then
+        configFileName
+    else
         let path = configFileName.Split([|@"\"; "/"|], StringSplitOptions.None)
         Array.append [|resolutionFolder|] path |> Path.Combine
 
@@ -221,27 +221,27 @@ module File =
                     use reader = new StreamReader (file)
                     match attemptsLeft, reader.ReadToEnd() with
                     | 0, x -> return x
-                    | _, "" -> 
+                    | _, "" ->
                         printfn "Attempt %d of %d: %s is empty. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
                         return! sleepAndRun attemptsLeft
-                    | _, content -> return content 
-                finally file.Dispose() 
-            | None ->  
-                if attemptsLeft = 0 
+                    | _, content -> return content
+                finally file.Dispose()
+            | None ->
+                if attemptsLeft = 0
                     then return raise (FileNotFoundException(sprintf "File, %s could not be opened after %d attempts." filePath maxAttempts))
-                
+
                 printfn "Attempt %d of %d: cannot read %s. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
                 return! sleepAndRun attemptsLeft }
         loop maxAttempts |> Async.RunSynchronously
 
-    type private State = 
+    type private State =
         { LastFileWriteTime: DateTime
           Updated: DateTime }
 
     let watch changesOnly filePath onChanged =
         let getLastWrite() = File.GetLastWriteTime filePath
         let state = ref { LastFileWriteTime = getLastWrite(); Updated = DateTime.Now }
-        
+
         let changed (_: FileSystemEventArgs) =
             let curr = getLastWrite()
             if curr <> (!state).LastFileWriteTime && DateTime.Now - (!state).Updated > TimeSpan.FromMilliseconds 500. then
@@ -251,13 +251,13 @@ module File =
         let watcher = new FileSystemWatcher(Path.GetDirectoryName filePath, Path.GetFileName filePath)
         watcher.NotifyFilter <- NotifyFilters.CreationTime ||| NotifyFilters.LastWrite ||| NotifyFilters.Size
         watcher.Changed.Add changed
-        if not changesOnly then 
+        if not changesOnly then
             watcher.Deleted.Add changed
             watcher.Renamed.Add changed
         watcher.EnableRaisingEvents <- true
         watcher :> IDisposable
 
-    let getFullPath resolutionFolder fileName = 
+    let getFullPath resolutionFolder fileName =
         if Path.IsPathRooted fileName then
           fileName
         else resolutionFolder </> fileName
@@ -278,12 +278,12 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
         disposeWatcher()
         let fileName = File.getFullPath cfg.ResolutionFolder fileName
         File.watch false fileName provider.Invalidate
-    
+
     let agent = MailboxProcessor.Start(fun inbox ->
         let rec loop (files: Map<string, IDisposable>) (disposables: IDisposable list) = async {
             let unwatch file =
                 match files |> Map.tryFind file with
-                | Some disposable -> 
+                | Some disposable ->
                     disposable.Dispose()
                     files |> Map.remove file
                 | None -> files
@@ -293,7 +293,7 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
             match msg with
             | Watch file -> return! loop (unwatch file |> Map.add file (watchForChanges file)) disposables
             | AddDisposable x -> return! loop files (x :: disposables)
-            | Cancel -> 
+            | Cancel ->
                 files |> Map.toSeq |> Seq.map snd |> Seq.iter dispose
                 disposables |> List.iter dispose
         }
@@ -302,7 +302,7 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
 
     member __.ResolutionFolder = cfg.ResolutionFolder
     member __.WatchFile (file: FilePath) = agent.Post (Watch file)
-    member __.AddDisposable x = agent.Post (AddDisposable x) 
+    member __.AddDisposable x = agent.Post (AddDisposable x)
 
     member __.ErasedType<'T>(assemblyName, rootNamespace, typeName) =
         ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>))
@@ -312,17 +312,17 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
 
 //open System.Runtime.Caching
 //
-//type MemoryCache with
-//    member x.GetOrAdd(key: string, value: Lazy<ProvidedTypeDefinition>, ?expiration: TimeSpan) =
+//type MemoryCache with 
+//    member x.GetOrAdd(key: string, value: Lazy<ProvidedTypeDefinition>, ?expiration: TimeSpan) = 
 //        let policy = CacheItemPolicy()
 //        policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
-//
+        //
 //        match x.AddOrGetExisting(key, value, policy) with
-//        | :? Lazy<ProvidedTypeDefinition> as item ->
+//        | :? Lazy<ProvidedTypeDefinition> as item -> 
 //            try item.Value
-//            with _ ->
+//            with _ -> 
 //                x.Remove key |> ignore
 //                value.Value
-//        | x ->
+//        | x -> 
 //            assert(x = null)
 //            value.Value

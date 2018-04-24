@@ -9,7 +9,7 @@ This tutorial shows the use of the YamlConfig type provider.
 
 It's generated, hence the types can be used from any .NET language, not only from F# code.
 
-It can produce mutable properties for Yaml scalars (leafs), which means the object tree can be loaded, modified and saved into the original file or a stream as Yaml text. Adding new properties is not supported, however lists can be replaced with new ones atomically. This is intentionally, see below.
+It can produce mutable properties for Yaml scalars (leafs), which means the object tree can be loaded, modified and saved into the original file or a stream as Yaml text. Adding new properties is not supported, however lists can be replaced with new ones atomically. This is intentional, see below.
 
 The main purpose for this is to be used as part of a statically typed application configuration system which would have a single master source of configuration structure - a Yaml file. Then any F#/C# project in a solution will able to use the generated read-only object graph.
 
