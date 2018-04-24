@@ -1,7 +1,7 @@
 
 
 GROUP Build
-RESTRICTION: || (== net45) (== netstandard2.0)
+RESTRICTION: == netstandard2.0
 NUGET
   remote: https://www.nuget.org/api/v2
     FAKE (4.64.12)
@@ -12,18 +12,19 @@ NUGET
       FSharpVSPowerTools.Core (>= 2.3 < 2.4)
     FSharpVSPowerTools.Core (2.3)
       FSharp.Compiler.Service (>= 2.0.0.3)
-    Microsoft.NETCore.Platforms (2.0.2) - restriction: == netstandard2.0
-    NETStandard.Library (2.0.2) - restriction: == netstandard2.0
+    Microsoft.NETCore.Platforms (2.0.2)
+    NETStandard.Library (2.0.2)
       Microsoft.NETCore.Platforms (>= 1.1)
     NETStandard.Library.NETFramework (2.0.0-preview2-25405-01)
     NuGet.CommandLine (4.6.2)
     Octokit (0.29)
-      NETStandard.Library (>= 1.6) - restriction: == netstandard2.0
+      NETStandard.Library (>= 1.6)
     SharpYaml (1.6.3)
-      NETStandard.Library (>= 1.6.1) - restriction: || (&& (== net45) (< net35) (>= netstandard1.3)) (&& (== net45) (< net35) (>= netstandard1.6)) (== netstandard2.0)
-      System.Reflection.TypeExtensions (>= 4.3) - restriction: || (&& (== net45) (< net35) (>= netstandard1.3)) (&& (== net45) (< net35) (>= netstandard1.6)) (== netstandard2.0)
+      NETStandard.Library (>= 1.6.1)
+      System.Reflection.TypeExtensions (>= 4.3)
     SourceLink.Fake (1.1)
-    System.Reflection.TypeExtensions (4.4) - restriction: || (&& (== net45) (< net35) (>= netstandard1.3)) (&& (== net45) (< net35) (>= netstandard1.6)) (== netstandard2.0)
+    System.Reflection.TypeExtensions (4.4)
+    System.Runtime.Caching (4.5.0-preview2-26406-04)
 GITHUB
   remote: fsharp/FAKE
     modules/Octokit/Octokit.fsx (b3961e973484a8dc61ee94af13fc6898d0bee705)

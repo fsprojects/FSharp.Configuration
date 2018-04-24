@@ -1,6 +1,7 @@
 group Build
   SharpYaml
   FSharp.Core
+  System.Runtime.Caching
   File: ProvidedTypes.fsi .
   File: ProvidedTypes.fs .
   File: ProvidedTypesTesting.fs .

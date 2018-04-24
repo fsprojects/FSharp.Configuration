@@ -1,29 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <RootNamespace>FSharp.Configuration.Tests</RootNamespace>
-    <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <Name>FSharp.Configuration.Tests</Name>
-    <TargetFrameworkProfile />
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <Import Project="..\..\paket-files\test\fsprojects\FSharp.TypeProviders.SDK\fsc.props" />
   <Import Project="../../fsc.props" />
   <Import Project="../../netfx.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp20</TargetFrameworks>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
-    <!-- <EnableDefaultCompileItems>false</EnableDefaultCompileItems> -->
-    <!-- <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems> -->
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AppSettingsProvider.Tests.fs" />
@@ -34,14 +16,6 @@
     <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
-    <!-- Note: I don't understand why Paket isn't working out this reference from the paket.references file -->
-    <Reference Include="Expecto">
-      <HintPath>..\..\packages\test\Expecto\lib\netstandard1.6\Expecto.dll</HintPath>
-    </Reference>
-    <!-- Note: This is referring to the Debug version, which is not normally what we want?-->
-    <Reference Include="FSharp.Configuration, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\src\FSharp.Configuration\bin\Debug\netstandard2.0\FSharp.Configuration.dll</HintPath>
-    </Reference>
     <!-- These files are the facades necessary to run .NET Standard 2.0 components on .NET Framweork 4.6.1 (.NET Framework 4.7 will -->
     <!-- come with these facades included). Because the type provider is a .NET Standard 2.0 component, the deployment of the type -->
     <!--  provider must include these facade DLLs if it is to run hosted inside an F# compiler executing using  .NET Framework 4.6.1 or Mono 5.0. -->
@@ -65,66 +39,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\..\.paket\paket.targets" />
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="Argu">
-          <HintPath>..\..\packages\test\Argu\lib\net45\Argu.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="Expecto">
-          <HintPath>..\..\packages\test\Expecto\lib\net461\Expecto.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="FSharp.Core">
-          <HintPath>..\..\packages\test\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="Mono.Cecil">
-          <HintPath>..\..\packages\test\Mono.Cecil\lib\net40\Mono.Cecil.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Mono.Cecil.Mdb">
-          <HintPath>..\..\packages\test\Mono.Cecil\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Mono.Cecil.Pdb">
-          <HintPath>..\..\packages\test\Mono.Cecil\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Mono.Cecil.Rocks">
-          <HintPath>..\..\packages\test\Mono.Cecil\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
+  <ItemGroup>
     <None Include="Lists.yaml" />
     <None Include="Sample.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -141,14 +56,16 @@
     <Content Include="TextFile.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Configuration">
-      <HintPath>..\..\bin\lib\net45\FSharp.Configuration.dll</HintPath>
+    <Reference Include="Expecto, Version=7.0.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\test\Expecto\lib\netstandard2.0\Expecto.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Configuration, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\src\FSharp.Configuration\bin\Debug\netstandard2.0\FSharp.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
     <!-- <Reference Include="System.Management.Automation">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
     </Reference> -->

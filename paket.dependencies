@@ -1,6 +1,6 @@
 
 group Build
-    frameworks: net45, netstandard2.0
+    frameworks: netstandard2.0
     source https://nuget.org/api/v2
 
     nuget FAKE ~> 4
@@ -11,6 +11,7 @@ group Build
     nuget FSharp.Core
     nuget SharpYaml
     nuget NetStandard.Library.NetFramework
+    nuget System.Runtime.Caching
 
     github fsharp/FAKE modules/Octokit/Octokit.fsx
     github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fsi

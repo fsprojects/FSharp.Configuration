@@ -571,5 +571,7 @@ let internal typedYamlConfig (context: Context) =
                           context.WatchFile filePath
                           createTy (File.ReadAllText filePath) readOnly inferTypesFromStrings
                 | _ -> failwith "Wrong parameters")
-            cache.GetOrAdd (typeName, value))
+            
+            cache.AddOrGetExisting(typeName, value, DateTimeOffset(DateTime.Now + TimeSpan.FromMinutes(1.0))) :?> ProvidedTypeDefinition
+    )
     yamlConfig
