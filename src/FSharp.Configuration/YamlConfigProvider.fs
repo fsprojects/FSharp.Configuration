@@ -1,6 +1,7 @@
 ﻿module FSharp.Configuration.YamlConfigTypeProvider
 
 #nowarn "57"
+#nowarn "25"
 
 open System.Reflection
 open System
@@ -570,5 +571,7 @@ let internal typedYamlConfig (context: Context) =
                           context.WatchFile filePath
                           createTy (File.ReadAllText filePath) readOnly inferTypesFromStrings
                 | _ -> failwith "Wrong parameters")
-            cache.GetOrAdd (typeName, value))
+            
+            cache.AddOrGetExisting(typeName, value, DateTimeOffset(DateTime.Now + TimeSpan.FromMinutes(1.0))) :?> ProvidedTypeDefinition
+    )
     yamlConfig

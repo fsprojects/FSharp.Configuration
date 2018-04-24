@@ -198,11 +198,6 @@ let findConfigFile resolutionFolder configFileName =
         let path = configFileName.Split([|@"\"; "/"|], StringSplitOptions.None)
         Array.append [|resolutionFolder|] path |> Path.Combine
 
-let erasedType<'T> assemblyName rootNamespace typeName (hideObjectMethods: bool option) =
-    match hideObjectMethods with
-    | None -> ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>))
-    | Some hideObjectMethods -> ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>), hideObjectMethods = hideObjectMethods)
-
 // Get the assembly and namespace used to house the provided types
 let thisAssembly = System.Reflection.Assembly.GetExecutingAssembly()
 let rootNamespace = "FSharp.Configuration"
@@ -309,22 +304,25 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
     member __.WatchFile (file: FilePath) = agent.Post (Watch file)
     member __.AddDisposable x = agent.Post (AddDisposable x)
 
+    member __.ErasedType<'T>(assemblyName, rootNamespace, typeName) =
+        ProvidedTypeDefinition(assemblyName, rootNamespace, typeName, Some(typeof<'T>))
+
     interface IDisposable with
         member __.Dispose() = agent.Post Cancel
 
-open System.Runtime.Caching
-
-type MemoryCache with
-    member x.GetOrAdd(key: string, value: Lazy<ProvidedTypeDefinition>, ?expiration: TimeSpan) =
-        let policy = CacheItemPolicy()
-        policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
-
-        match x.AddOrGetExisting(key, value, policy) with
-        | :? Lazy<ProvidedTypeDefinition> as item ->
-            try item.Value
-            with _ ->
-                x.Remove key |> ignore
-                value.Value
-        | x ->
-            assert(x = null)
-            value.Value
+//open System.Runtime.Caching
+//
+//type MemoryCache with 
+//    member x.GetOrAdd(key: string, value: Lazy<ProvidedTypeDefinition>, ?expiration: TimeSpan) = 
+//        let policy = CacheItemPolicy()
+//        policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
+        //
+//        match x.AddOrGetExisting(key, value, policy) with
+//        | :? Lazy<ProvidedTypeDefinition> as item -> 
+//            try item.Value
+//            with _ -> 
+//                x.Remove key |> ignore
+//                value.Value
+//        | x -> 
+//            assert(x = null)
+//            value.Value

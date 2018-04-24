@@ -1,31 +1,38 @@
-RESTRICTION: >= net45
-NUGET
-  remote: http://www.nuget.org/api/v2
-    FSharp.Core (4.0.0.1)
-    SharpYaml (1.6.2)
-GITHUB
-  remote: fsprojects/FSharp.TypeProviders.SDK
-    src/ProvidedTypes.fs (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
-    src/ProvidedTypes.fsi (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
-    src/ProvidedTypesTesting.fs (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
+
+
 GROUP Build
-RESTRICTION: == net45
+RESTRICTION: == netstandard2.0
 NUGET
   remote: https://www.nuget.org/api/v2
     FAKE (4.64.12)
     FSharp.Compiler.Service (2.0.0.6)
+    FSharp.Core (4.3.4)
     FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
       FSharpVSPowerTools.Core (>= 2.3 < 2.4)
     FSharpVSPowerTools.Core (2.3)
       FSharp.Compiler.Service (>= 2.0.0.3)
+    Microsoft.NETCore.Platforms (2.0.2)
+    NETStandard.Library (2.0.2)
+      Microsoft.NETCore.Platforms (>= 1.1)
+    NETStandard.Library.NETFramework (2.0.0-preview2-25405-01)
     NuGet.CommandLine (4.6.2)
     Octokit (0.29)
+      NETStandard.Library (>= 1.6)
+    SharpYaml (1.6.3)
+      NETStandard.Library (>= 1.6.1)
+      System.Reflection.TypeExtensions (>= 4.3)
     SourceLink.Fake (1.1)
+    System.Reflection.TypeExtensions (4.4)
+    System.Runtime.Caching (4.5.0-preview2-26406-04)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (800579e69ce35b77345ee21923ddf117168067cd)
+    modules/Octokit/Octokit.fsx (b3961e973484a8dc61ee94af13fc6898d0bee705)
       Octokit (>= 0.20)
+  remote: fsprojects/FSharp.TypeProviders.SDK
+    src/ProvidedTypes.fs (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
+    src/ProvidedTypes.fsi (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
+    src/ProvidedTypesTesting.fs (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
 GROUP Test
 RESTRICTION: == net461
 NUGET
@@ -35,5 +42,25 @@ NUGET
     Expecto (7.0.1)
       Argu (>= 5.1)
       Mono.Cecil (>= 0.10)
-    FSharp.Core (4.3.4) - redirects: force
+    FAKE (4.64.12)
+    FSharp.Core (4.2.3)
+    Microsoft.NETCore.App (2.0.7)
+    Microsoft.NETCore.Platforms (2.0.2)
     Mono.Cecil (0.10)
+    NETStandard.Library (2.0.2)
+      Microsoft.NETCore.Platforms (>= 1.1)
+    NETStandard.Library.NETFramework (2.0.0-preview2-25405-01)
+      Microsoft.NETCore.Platforms (>= 2.0.0-preview2-25405-01)
+      NETStandard.Library (>= 2.0.0-preview2-25401-01)
+    NuGet.CommandLine (4.6.2)
+    SharpYaml (1.6.3)
+    xunit.runner.console (2.3.1)
+GITHUB
+  remote: fsprojects/FSharp.TypeProviders.SDK
+    fsc.props (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
+      FAKE
+      FSharp.Core (>= 4.2.3 < 4.3)
+      Microsoft.NETCore.App
+      NetStandard.Library.NetFramework
+      Nuget.CommandLine
+      xunit.runner.console
