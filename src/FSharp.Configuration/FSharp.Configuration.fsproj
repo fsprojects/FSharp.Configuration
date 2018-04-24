@@ -3,9 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="..\..\paket-files\build\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi" />
-    <Compile Include="..\..\paket-files\build\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fs" />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>

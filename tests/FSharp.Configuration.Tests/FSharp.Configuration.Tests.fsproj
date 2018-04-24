@@ -37,16 +37,15 @@
     <!-- We are not yet sure if the presence of these files will prevent an otherwise .NET Standard 2.0 type provider running inside a -->
     <!-- F# compiler executing using .NET CoreApp 2.0, as until recently F# compilers running using .NET CoreApp 2.0 do not load type providers correctly. -->
     <None Include="..\..\packages\build\NETStandard.Library.NETFramework\build\net461\lib\netstandard.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\..\packages\build\NETStandard.Library.NETFramework\build\net461\lib\System.Reflection.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\..\packages\build\NETStandard.Library.NETFramework\build\net461\lib\System.Runtime.dll">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -114,4 +113,5 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
