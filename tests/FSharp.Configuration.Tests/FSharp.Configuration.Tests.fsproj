@@ -47,6 +47,9 @@
     <Reference Include="SharpYaml"  >
       <HintPath>..\..\bin\lib\netstandard2.0\SharpYaml.dll</HintPath>
     </Reference>
+    <Reference Include="System.Reflection.TypeExtensions"  >
+      <HintPath>..\..\bin\lib\netstandard2.0\System.Reflection.TypeExtensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
