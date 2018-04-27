@@ -159,29 +159,11 @@ Target "RunTestsNetCore" (fun _ ->
 // Build a NuGet package
 
 Target "NuGet" (fun _ ->
-    let nugetDocsDir = nugetDir @@ "docs"
-    let nugetlibDir = nugetDir @@ "lib/net45"
-
-    CleanDir nugetDocsDir
-    CleanDir nugetlibDir
-
-    CopyDir nugetlibDir "bin/lib/net45" (fun file -> file.Contains "FSharp.Core." |> not)
-    CopyDir nugetDocsDir "./docs/output" allFiles
-
-    NuGet (fun p ->
+    Paket.Pack(fun p ->
         { p with
-            Authors = authors
-            Project = project
-            Summary = summary
-            Description = description
+            OutputPath = "bin"
             Version = release.NugetVersion
-            ReleaseNotes = release.Notes |> toLines
-            Tags = tags
-            OutputPath = nugetDir
-            //AccessKey = getBuildParamOrDefault "nugetkey" ""
-            //Publish = hasBuildParam "nugetkey"
-            Dependencies = [] })
-        (project + ".nuspec")
+            ReleaseNotes = toLines release.Notes})
 )
 
 // --------------------------------------------------------------------------------------
