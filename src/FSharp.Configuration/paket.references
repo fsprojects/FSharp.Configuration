@@ -1,4 +1,4 @@
-SharpYaml
+YamlDotNet
 FSharp.Core
 
 System.Runtime.Caching
@@ -9,4 +9,4 @@ File: ProvidedTypesTesting.fs .
 
 group Legacy
   FSharp.Core
-  SharpYaml
+  YamlDotNet

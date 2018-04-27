@@ -2,8 +2,8 @@ source http://nuget.org/api/v2
 framework: netstandard2.0
 redirects: force
 
-nuget SharpYaml
-nuget FSharp.Core >= 4.3.2 lowest_matching:true
+nuget YamlDotNet
+nuget FSharp.Core >= 4.3.2
 
 nuget System.Runtime.Caching
 
@@ -16,7 +16,7 @@ group Legacy
   framework: net45
   redirects: force
 
-  nuget SharpYaml
+  nuget YamlDotNet
   nuget FSharp.Core >= 4.0 lowest_matching:true
 
 group Build

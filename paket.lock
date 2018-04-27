@@ -3,14 +3,8 @@ RESTRICTION: == netstandard2.0
 NUGET
   remote: http://www.nuget.org/api/v2
     FSharp.Core (4.3.2)
-    Microsoft.NETCore.Platforms (2.0.2)
-    NETStandard.Library (2.0.2)
-      Microsoft.NETCore.Platforms (>= 1.1)
-    SharpYaml (1.6.3)
-      NETStandard.Library (>= 1.6.1)
-      System.Reflection.TypeExtensions (>= 4.3)
-    System.Reflection.TypeExtensions (4.4)
     System.Runtime.Caching (4.5.0-preview2-26406-04)
+    YamlDotNet (4.3.1)
 GITHUB
   remote: fsprojects/FSharp.TypeProviders.SDK
     src/ProvidedTypes.fs (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
@@ -40,7 +34,7 @@ RESTRICTION: == net45
 NUGET
   remote: https://api.nuget.org/v3/index.json
     FSharp.Core (4.0.0.1)
-    SharpYaml (1.6.3)
+    YamlDotNet (4.3.1)
 
 GROUP Test
 REDIRECTS: FORCE

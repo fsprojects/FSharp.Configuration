@@ -11,8 +11,7 @@ open System.Runtime.Caching
 
 open Microsoft.FSharp.Quotations
 
-open SharpYaml.Serialization
-open SharpYaml.Serialization.Serializers
+open YamlDotNet.Serialization
 
 open FSharp.Configuration.Helper
 open ProviderImplementation.ProvidedTypes
@@ -33,6 +32,10 @@ module private Parser =
         | Guid of Guid
 
         static member ParseStr = function
+            | ValueParser.Bool x -> Bool x
+            | ValueParser.Int x -> Int x
+            | ValueParser.Int64 x -> Int64 x
+            | ValueParser.Float x -> Float x
             | ValueParser.TimeSpan x -> TimeSpan x
             | ValueParser.Uri x -> Uri x
             | ValueParser.Guid x -> Guid x
@@ -87,12 +90,13 @@ module private Parser =
                 |> Map
             | scalar -> Scalar (Scalar.FromObj inferTypesFromStrings scalar)
 
-        let settings = SerializerSettings (EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false)
-        let serializer = Serializer(settings)
+        //let settings = SerializerSettings (EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false)
+        let deserializer = DeserializerBuilder().Build()
         fun text ->
-            try serializer.Deserialize(fromText=text) |> loop
+            try
+                deserializer.Deserialize(text) |> loop
             with
-              | :? SharpYaml.YamlException as e when e.InnerException <> null ->
+              | :? YamlDotNet.Core.YamlException as e when e.InnerException <> null ->
                   raise e.InnerException // inner exceptions are much more informative
               | _ -> reraise()
 
@@ -422,6 +426,7 @@ module private TypesFactory =
 
 type Root (inferTypesFromStrings: bool) =
     let serializer =
+        (**
         let settings = SerializerSettings(EmitDefaultValues = true, EmitTags = false, SortKeyForMapping = false,
                                           EmitAlias = false, ComparerForKeySorting = null)
         settings.RegisterSerializer (
@@ -447,7 +452,22 @@ type Root (inferTypesFromStrings: bool) =
                     match ctx.Instance with
                     | :? Guid as guid -> guid.ToString("D")
                     | _ -> "" })
-        Serializer settings
+        Serializer settings *)
+        SerializerBuilder()
+            .WithTypeConverter(
+            {   new IYamlTypeConverter with
+                    member __.Accepts ty =
+                        ty = typeof<TimeSpan>
+                    member __.ReadYaml(parser, ty) =
+                        failwith "Not implemented"
+                    member __.WriteYaml(emitter:YamlDotNet.Core.IEmitter, value, ty) =
+                        match value with
+                        | :? TimeSpan as ts ->
+                            let formattedValue = ts.ToString("G")
+                            emitter.Emit(YamlDotNet.Core.Events.Scalar(null, formattedValue));
+                        | _ -> failwithf "Expected TimeSpan but received %A" value
+            })
+            .Build()
 
     let mutable lastLoadedFrom = None
 
