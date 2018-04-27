@@ -2,12 +2,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../netfx.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0; net45</TargetFrameworks>
     <AssemblyName>FSharp.Configuration</AssemblyName>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+    <DefineConstants>NET45</DefineConstants>
   </PropertyGroup>
    <ItemGroup>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi">
@@ -32,13 +33,10 @@
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net45'" />
+    <Reference Include="System.Runtime.Caching" Condition="'$(TargetFramework)' == 'net45'" />
+    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' == 'net45'" />
+    <Reference Include="System.Windows.Forms" Condition="'$(TargetFramework)' == 'net45'" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

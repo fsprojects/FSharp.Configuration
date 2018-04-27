@@ -11,8 +11,11 @@ type FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
         let context = new Context(this, cfg)
         do this.AddNamespace (
             rootNamespace,
-            [ AppSettingsTypeProvider.typedAppSettings context
+            [ 
+#if NET45
+              AppSettingsTypeProvider.typedAppSettings context
               ResXProvider.typedResources context
+#endif
               YamlConfigTypeProvider.typedYamlConfig context
               IniFileProvider.typedIniFile context ])
         do this.Disposing.Add (fun _ -> dispose context)

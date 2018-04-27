@@ -2,6 +2,8 @@ module FSharp.Configuration.AppSettingsTypeProvider
 
 #nowarn "57"
 
+#if NET45
+
 open FSharp.Configuration.Helper
 open ProviderImplementation.ProvidedTypes
 open System
@@ -165,3 +167,5 @@ let internal typedAppSettings (context: Context) =
                 | x -> failwithf "unexpected parameter values %A" x)
             cache.GetOrAdd (typeName, value)))
     appSettings
+
+#endif

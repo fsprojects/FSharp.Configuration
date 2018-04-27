@@ -3,6 +3,8 @@ module FSharp.Configuration.Tests.ResXTests
 open FSharp.Configuration
 open Expecto
 
+#if NET461
+
 type Resource1 = ResXProvider<"Resource1.resx">
 
 let [<Tests>] tests =
@@ -20,3 +22,5 @@ let [<Tests>] tests =
         testCase "Can return a text file from the resource file" (fun _ ->
             Expect.equal Resource1.TextFile "Text" "value")
     ]
+
+#endif

@@ -43,9 +43,6 @@ let tags = "appsettings, YAML, F#, ResX, Ini, config"
 // File system information
 let solutionFile  = "FSharp.Configuration"
 
-// Pattern specifying assemblies to be tested using NUnit
-let testAssemblies = "tests/**/bin/Release/net461/*Tests*.exe"
-
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted
 let gitOwner = "fsprojects"
@@ -126,6 +123,14 @@ Target "Build" (fun _ ->
     CopyDir "bin/lib/net45"
         "src/FSharp.Configuration/bin/Release/net45/"
         (fun _ -> true)
+
+    let outDir = "../../bin/lib/netstandard2.0/"
+    CreateDir outDir
+    DotNetCli.Publish (fun p -> 
+        { p with
+            Output = outDir
+            Framework = "netstandard2.0"
+            WorkingDir = "src/FSharp.Configuration/" })
 )
 
 Target "BuildTests" (fun _ ->
@@ -142,10 +147,23 @@ Target "BuildTests" (fun _ ->
 open Fake.Testing
 
 Target "RunTests" (fun _ ->
-    !! testAssemblies
+    !! "tests/**/bin/Release/net461/*Tests*.exe"
     |> Expecto.Expecto (fun p -> { p with FailOnFocusedTests = true })
 )
 
+Target "RunTestsNetCore" (fun _ ->
+    let outDir = "../../temp/"
+    CreateDir outDir
+    DotNetCli.Publish (fun p -> 
+        { p with
+            Output = outDir
+            Framework = "netcoreapp2.0"
+            WorkingDir = "tests/FSharp.Configuration.Tests/" })
+
+    DotNetCli.RunCommand 
+        (fun r -> { r with WorkingDir = "temp"}) 
+        "FSharp.Configuration.Tests.dll"
+)
 
 // --------------------------------------------------------------------------------------
 // Build a NuGet package
@@ -285,6 +303,7 @@ Target "All" DoNothing
   ==> "Build"
   ==> "BuildTests"
   ==> "RunTests"
+  ==> "RunTestsNetCore"
   =?> ("GenerateReferenceDocs",isLocalBuild && not isMono)
   =?> ("GenerateDocs",isLocalBuild && not isMono)
   ==> "All"

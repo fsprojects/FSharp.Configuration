@@ -1,5 +1,7 @@
 ﻿module FSharp.Configuration.ResXProvider
 
+#if NET45
+
 open System
 open System.IO
 open System.Reflection
@@ -74,3 +76,5 @@ let internal typedResources (context: Context) =
                 | _ -> failwith "unexpected parameter values")
             cache.GetOrAdd (typeName, value)))
     resXType
+
+#endif

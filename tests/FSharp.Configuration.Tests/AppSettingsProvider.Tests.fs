@@ -4,6 +4,8 @@ open System
 open FSharp.Configuration
 open Expecto
 
+#if NET461
+
 type Settings = AppSettings<"app.config">
 
 let [<Tests>] tests = 
@@ -37,4 +39,5 @@ let [<Tests>] test =
         FakeSettings.ServerName =! "localhost"
     #endif
     )
-    
+
+#endif
