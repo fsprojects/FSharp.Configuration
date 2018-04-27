@@ -114,17 +114,15 @@ Target "InstallDotNetCore" (fun _ ->
 )
 
 Target "Build" (fun _ ->
-    DotNetCli.Build (fun c ->
-        { c with
-            Project = "FSharp.Configuration.sln"
-            Configuration = "Release"
-            ToolPath = dotnetExePath })
+    let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/net45/"
+    CreateDir outDir
+    DotNetCli.Publish (fun p -> 
+        { p with
+            Output = outDir
+            Framework = "net45"
+            WorkingDir = "src/FSharp.Configuration/" })
 
-    CopyDir "bin/lib/net45"
-        "src/FSharp.Configuration/bin/Release/net45/"
-        (fun _ -> true)
-
-    let outDir = "../../bin/lib/netstandard2.0/"
+    let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/netstandard2.0/"
     CreateDir outDir
     DotNetCli.Publish (fun p -> 
         { p with
@@ -152,17 +150,9 @@ Target "RunTests" (fun _ ->
 )
 
 Target "RunTestsNetCore" (fun _ ->
-    let outDir = "../../temp/"
-    CreateDir outDir
-    DotNetCli.Publish (fun p -> 
-        { p with
-            Output = outDir
-            Framework = "netcoreapp2.0"
-            WorkingDir = "tests/FSharp.Configuration.Tests/" })
-
     DotNetCli.RunCommand 
-        (fun r -> { r with WorkingDir = "temp"}) 
-        "FSharp.Configuration.Tests.dll"
+        (fun r -> { r with  WorkingDir = "tests/FSharp.Configuration.Tests/" }) 
+        "run --framework netcoreapp2.0"
 )
 
 // --------------------------------------------------------------------------------------

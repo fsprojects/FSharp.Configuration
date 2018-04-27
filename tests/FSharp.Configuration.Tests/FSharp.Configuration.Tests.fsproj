@@ -21,7 +21,6 @@
     <None Include="Sample.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <!-- <EmbeddedResource Include="Resource1.resx" /> -->
     <None Include="paket.references" />
     <Content Include="app.config" />
     <Content Include="Settings.yaml">
@@ -36,21 +35,21 @@
     <Reference Include="FSharp.Configuration"  >
       <HintPath>..\..\bin\lib\net45\FSharp.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="SharpYaml"  >
+    <Reference Include="SharpYaml">
       <HintPath>..\..\bin\lib\net45\SharpYaml.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-    <Reference Include="FSharp.Configuration" >
+    <Reference Include="FSharp.Configuration">
       <HintPath>..\..\bin\lib\netstandard2.0\FSharp.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="SharpYaml"  >
+    <Reference Include="SharpYaml">
       <HintPath>..\..\bin\lib\netstandard2.0\SharpYaml.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reflection.TypeExtensions"  >
+    <Reference Include="System.Reflection.TypeExtensions">
       <HintPath>..\..\bin\lib\netstandard2.0\System.Reflection.TypeExtensions.dll</HintPath>
     </Reference>
-      <Reference Include="System.Runtime.Caching"  >
+    <Reference Include="System.Runtime.Caching">
       <HintPath>..\..\bin\lib\netstandard2.0\System.Runtime.Caching.dll</HintPath>
     </Reference>
   </ItemGroup>
