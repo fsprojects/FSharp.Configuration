@@ -2,6 +2,7 @@ YamlDotNet
 FSharp.Core
 
 System.Runtime.Caching
+System.Configuration.ConfigurationManager
 
 File: ProvidedTypes.fsi .
 File: ProvidedTypes.fs .

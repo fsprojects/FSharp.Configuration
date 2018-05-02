@@ -2,15 +2,15 @@ module FSharp.Configuration.AppSettingsTypeProvider
 
 #nowarn "57"
 
-#if NET45
-
 open FSharp.Configuration.Helper
 open ProviderImplementation.ProvidedTypes
 open System
 open System.Configuration
 open System.Collections.Generic
 open System.Globalization
+#if NET45
 open System.Web.Hosting
+#endif
 open System.Runtime.Caching
 
 let mutable private exePath = Map.empty
@@ -21,9 +21,13 @@ let getConfig file =
     if path.ContainsKey(file) && System.IO.File.Exists(path.[file]) then
         ConfigurationManager.OpenExeConfiguration path.[file]
     else
+#if NET45
         if HostingEnvironment.IsHosted then
             Web.Configuration.WebConfigurationManager.OpenWebConfiguration "~"
         else ConfigurationManager.OpenExeConfiguration ConfigurationUserLevel.None
+#else
+        ConfigurationManager.OpenExeConfiguration ConfigurationUserLevel.None
+#endif
 
 let getConfigValue(file,key) =
     let conf = getConfig file
@@ -168,4 +172,3 @@ let internal typedAppSettings (context: Context) =
             cache.GetOrAdd (typeName, value)))
     appSettings
 
-#endif

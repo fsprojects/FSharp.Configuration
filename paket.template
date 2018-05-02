@@ -28,6 +28,8 @@ files
     bin/lib/netstandard2.0/FSharp.Configuration.dll ==> lib/netstandard2.0
     bin/lib/netstandard2.0/YamlDotNet.dll ==> lib/netstandard2.0
     bin/lib/netstandard2.0/System.Runtime.Caching.dll ==> lib/netstandard2.0
+    bin/lib/netstandard2.0/System.Configuration.ConfigurationManager.dll ==> lib/netstandard2.0
+    bin/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll ==> lib/netstandard2.0
     docs/output/*.* => docs
     docs/output/content/*.* => docs/content
     docs/output/content/img/*.* => docs/content/img

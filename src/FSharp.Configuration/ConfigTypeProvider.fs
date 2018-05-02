@@ -13,9 +13,9 @@ type FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
             rootNamespace,
             [ 
 #if NET45
-              AppSettingsTypeProvider.typedAppSettings context
               ResXProvider.typedResources context
 #endif
+              AppSettingsTypeProvider.typedAppSettings context
               YamlConfigTypeProvider.typedYamlConfig context
               IniFileProvider.typedIniFile context ])
         do this.Disposing.Add (fun _ -> dispose context)

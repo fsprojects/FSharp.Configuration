@@ -6,6 +6,7 @@ nuget YamlDotNet
 nuget FSharp.Core >= 4.3.2
 
 nuget System.Runtime.Caching
+nuget System.Configuration.ConfigurationManager
 
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fs
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fsi

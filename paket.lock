@@ -3,7 +3,10 @@ RESTRICTION: == netstandard2.0
 NUGET
   remote: http://www.nuget.org/api/v2
     FSharp.Core (4.3.2)
+    System.Configuration.ConfigurationManager (4.4.1)
+      System.Security.Cryptography.ProtectedData (>= 4.4)
     System.Runtime.Caching (4.5.0-preview2-26406-04)
+    System.Security.Cryptography.ProtectedData (4.4)
     YamlDotNet (4.3.1)
 GITHUB
   remote: fsprojects/FSharp.TypeProviders.SDK
