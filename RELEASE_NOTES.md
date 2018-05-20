@@ -2,7 +2,7 @@
 * AppSettingsProvider targets net45 and netstandard2.0
 
 #### 2.0.0-alpha1 - 27.04.2018
-* Migrtion to project system
+* Migration to project system
 * YamlConfigTypeProvider targets net45 and netstandard2.0
 * Migration from SharpYaml to YamlDotNet
 * IniFileProvider targets net45 and netstandard2.0
