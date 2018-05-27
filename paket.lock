@@ -5,19 +5,19 @@ NUGET
     FSharp.Core (4.3.2)
     System.Configuration.ConfigurationManager (4.4.1)
       System.Security.Cryptography.ProtectedData (>= 4.4)
-    System.Runtime.Caching (4.5.0-preview2-26406-04)
+    System.Runtime.Caching (4.5.0-rc1)
     System.Security.Cryptography.ProtectedData (4.4)
     YamlDotNet (4.3.1)
 GITHUB
   remote: fsprojects/FSharp.TypeProviders.SDK
-    src/ProvidedTypes.fs (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
-    src/ProvidedTypes.fsi (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
-    src/ProvidedTypesTesting.fs (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
+    src/ProvidedTypes.fs (4b9ce4b75b6fd727a96378eb4c0f303638db2e71)
+    src/ProvidedTypes.fsi (4b9ce4b75b6fd727a96378eb4c0f303638db2e71)
+    src/ProvidedTypesTesting.fs (4b9ce4b75b6fd727a96378eb4c0f303638db2e71)
 GROUP Build
 RESTRICTION: == net45
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.64.12)
+    FAKE (4.64.13)
     FSharp.Compiler.Service (2.0.0.6)
     FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
@@ -28,7 +28,7 @@ NUGET
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (7f99a9c4350b6b15a044254977c882574cd72b61)
+    modules/Octokit/Octokit.fsx (896e227b6da98b21001a1e5940df01d442bc7a25)
       Octokit (>= 0.20)
 GROUP Legacy
 REDIRECTS: FORCE
@@ -47,7 +47,7 @@ NUGET
       FSharp.Core (>= 4.0.0.1) - restriction: || (== net461) (&& (== netcoreapp2.0) (>= net45))
       FSharp.Core (>= 4.3.2) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (== netcoreapp2.0)
       System.Configuration.ConfigurationManager (>= 4.4) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (== netcoreapp2.0)
-    Expecto (7.0.1)
+    Expecto (8.0)
       Argu (>= 5.1)
       Mono.Cecil (>= 0.10)
       System.Diagnostics.FileVersionInfo (>= 4.3) - restriction: == netcoreapp2.0
