@@ -20,10 +20,9 @@ let [<Tests>] tests =
             Expect.isTrue IniFileType.Section2.key5 "key5"
             Expect.isFalse IniFileType.Section2.key6 "key6")
 
-
         testCase "Can return a semicolon in the value" (fun _ ->
             Expect.equal IniFileType.Section2.key8 @"Data Source=localhost\sqlexpress;Initial Catalog=DB with Spaces" "value")
 
-        testCase "Trailing spaces are significant" (fun _ ->
+        testCase "Trailing spaces are not significant" (fun _ ->
             Expect.equal IniFileType.Section2.key9 @"Trailing spaces     are not significant" "value")
     ]
