@@ -40,7 +40,7 @@
   <span>Namespace: ProviderImplementation.ProvidedTypes</span><br />
 </p>
 <div class="xmldoc">
-<p>Provides symbolic provided types</p>
+<p>Helpers to build symbolic provided types</p>
 
 </div>
   <h3>Static members</h3>
@@ -52,15 +52,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '140', 140)" onmouseover="showTip(event, '140', 140)">
+          <code onmouseout="hideTip(event, '122', 122)" onmouseover="showTip(event, '122', 122)">
             MakeGenericMethod(...)
           </code>
-          <div class="tip" id="140">
+          <div class="tip" id="122">
             <strong>Signature:</strong> (genericMethodDefinition:MethodInfo * genericArguments:Type list) -&gt; MethodInfo<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1093-1093" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L7960-7960" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -72,19 +72,39 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '141', 141)" onmouseover="showTip(event, '141', 141)">
+          <code onmouseout="hideTip(event, '123', 123)" onmouseover="showTip(event, '123', 123)">
             MakeGenericType(...)
           </code>
-          <div class="tip" id="141">
+          <div class="tip" id="123">
             <strong>Signature:</strong> (genericTypeDefinition:Type * genericArguments:Type list) -&gt; Type<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L1092-1092" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L7952-7952" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           <p>Like typ.MakeGenericType, but will also work with unit-annotated types</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '124', 124)" onmouseover="showTip(event, '124', 124)">
+            MakeTupleType(args)
+          </code>
+          <div class="tip" id="124">
+            <strong>Signature:</strong> (args:Type list) -&gt; Type<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L7964-7964" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Like FsharpType.MakeTupleType, but will also work with unit-annotated types and provided types</p>
 
 
         </td>
@@ -101,8 +121,8 @@
             <li class="divider"></li>
             <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
             <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            <li><a href="./../license.html">License</a></li>
+            <li><a href="./../release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
             <li><a href="./../AppSettingsProvider.html">AppSettingsProvider</a></li>

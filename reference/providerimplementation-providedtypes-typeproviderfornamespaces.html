@@ -40,8 +40,7 @@
   <span>Namespace: ProviderImplementation.ProvidedTypes</span><br />
 </p>
 <div class="xmldoc">
-<p>A base type providing default implementations of type provider functionality when all provided
-types are of type ProvidedTypeDefinition.</p>
+<p>A base type providing default implementations of type provider functionality.</p>
 
 </div>
   <h3>Constructors</h3>
@@ -53,19 +52,19 @@ types are of type ProvidedTypeDefinition.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '178', 178)" onmouseover="showTip(event, '178', 178)">
-            new()
+          <code onmouseout="hideTip(event, '169', 169)" onmouseover="showTip(event, '169', 169)">
+            new(...)
           </code>
-          <div class="tip" id="178">
-            <strong>Signature:</strong> unit -&gt; TypeProviderForNamespaces<br />
+          <div class="tip" id="169">
+            <strong>Signature:</strong> (config:TypeProviderConfig * sourceAssemblies:Assembly list option * assemblyReplacementMap:(string * string) list option) -&gt; TypeProviderForNamespaces<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2435-2435" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14286-14286" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Initializes a type provider</p>
+          <p>Initializes a type provider.</p>
 
 
               <p>CompiledName: <code>.ctor</code></p>
@@ -74,15 +73,15 @@ types are of type ProvidedTypeDefinition.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '179', 179)" onmouseover="showTip(event, '179', 179)">
-            new(namespaceName, types)
+          <code onmouseout="hideTip(event, '170', 170)" onmouseover="showTip(event, '170', 170)">
+            new(...)
           </code>
-          <div class="tip" id="179">
-            <strong>Signature:</strong> (namespaceName:string * types:ProvidedTypeDefinition list) -&gt; TypeProviderForNamespaces<br />
+          <div class="tip" id="170">
+            <strong>Signature:</strong> (config:TypeProviderConfig * namespaceName:string * types:ProvidedTypeDefinition list * sourceAssemblies:Assembly list option * assemblyReplacementMap:(string * string) list option) -&gt; TypeProviderForNamespaces<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2434-2434" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14281-14281" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -103,15 +102,15 @@ types are of type ProvidedTypeDefinition.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '180', 180)" onmouseover="showTip(event, '180', 180)">
+          <code onmouseout="hideTip(event, '171', 171)" onmouseover="showTip(event, '171', 171)">
             add_Disposing(arg1)
           </code>
-          <div class="tip" id="180">
+          <div class="tip" id="171">
             <strong>Signature:</strong> EventHandler -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2438-2438" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14294-14294" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -121,19 +120,19 @@ types are of type ProvidedTypeDefinition.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '181', 181)" onmouseover="showTip(event, '181', 181)">
+          <code onmouseout="hideTip(event, '172', 172)" onmouseover="showTip(event, '172', 172)">
             AddNamespace(namespaceName, types)
           </code>
-          <div class="tip" id="181">
+          <div class="tip" id="172">
             <strong>Signature:</strong> (namespaceName:string * types:ProvidedTypeDefinition list) -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2471-2471" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14332-14332" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Add a namespace of provided types.</p>
+          <p>Invoked by the type provider to add a namespace of provided types in the specification of the type provider.</p>
 
 
         </td>
@@ -141,15 +140,35 @@ types are of type ProvidedTypeDefinition.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '182', 182)" onmouseover="showTip(event, '182', 182)">
+          <code onmouseout="hideTip(event, '173', 173)" onmouseover="showTip(event, '173', 173)">
+            ApplyStaticArgumentsForMethod(...)
+          </code>
+          <div class="tip" id="173">
+            <strong>Signature:</strong> (MethodBase * string * obj []) -&gt; MethodBase<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14343-14343" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Invoked by the host of the type provider to apply the static argumetns for a method.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '174', 174)" onmouseover="showTip(event, '174', 174)">
             Disposing
           </code>
-          <div class="tip" id="182">
+          <div class="tip" id="174">
             <strong>Signature:</strong> IEvent&lt;EventHandler,EventArgs&gt;<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2438-2438" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14294-14294" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -160,19 +179,19 @@ types are of type ProvidedTypeDefinition.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '183', 183)" onmouseover="showTip(event, '183', 183)">
-            Invalidate()
+          <code onmouseout="hideTip(event, '175', 175)" onmouseover="showTip(event, '175', 175)">
+            GetStaticParametersForMethod(arg1)
           </code>
-          <div class="tip" id="183">
-            <strong>Signature:</strong> unit -&gt; unit<br />
+          <div class="tip" id="175">
+            <strong>Signature:</strong> MethodBase -&gt; ParameterInfo []<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2474-2474" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14338-14338" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Invalidate the information provided by the provider</p>
+          <p>Invoked by the host of the type provider to get the static parameters for a method.</p>
 
 
         </td>
@@ -180,20 +199,39 @@ types are of type ProvidedTypeDefinition.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '184', 184)" onmouseover="showTip(event, '184', 184)">
-            Namespaces
+          <code onmouseout="hideTip(event, '176', 176)" onmouseover="showTip(event, '176', 176)">
+            Invalidate()
           </code>
-          <div class="tip" id="184">
-            <strong>Signature:</strong> seq&lt;string * ProvidedTypeDefinition list&gt;<br />
+          <div class="tip" id="176">
+            <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2473-2473" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14336-14336" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>FSharp.Data addition: this method is used by Debug.fs
-Get all namespace with their provided types.</p>
+          <p>Invoked by the type provider to invalidate the information provided by the provider</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '177', 177)" onmouseover="showTip(event, '177', 177)">
+            Namespaces
+          </code>
+          <div class="tip" id="177">
+            <strong>Signature:</strong> IProvidedNamespace []<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14334-14334" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Invoked by the type provider to get all provided namespaces with their provided types.</p>
 
 
               <p>CompiledName: <code>get_Namespaces</code></p>
@@ -202,15 +240,37 @@ Get all namespace with their provided types.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '185', 185)" onmouseover="showTip(event, '185', 185)">
+          <code onmouseout="hideTip(event, '178', 178)" onmouseover="showTip(event, '178', 178)">
+            RegisterGeneratedTargetAssembly(...)
+          </code>
+          <div class="tip" id="178">
+            <strong>Signature:</strong> fileName:string -&gt; Assembly<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14422-14422" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Register that a given file is a provided generated target assembly, e.g. an assembly produced by an external
+code generation tool.  This assembly should be a target assembly, i.e. use the same asssembly references
+as given by TargetContext.ReferencedAssemblyPaths</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '179', 179)" onmouseover="showTip(event, '179', 179)">
             RegisterProbingFolder(folder)
           </code>
-          <div class="tip" id="185">
+          <div class="tip" id="179">
             <strong>Signature:</strong> folder:string -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2456-2456" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14316-14316" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -222,15 +282,15 @@ Get all namespace with their provided types.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '186', 186)" onmouseover="showTip(event, '186', 186)">
+          <code onmouseout="hideTip(event, '180', 180)" onmouseover="showTip(event, '180', 180)">
             RegisterRuntimeAssemblyLocationAsProbingFolder(...)
           </code>
-          <div class="tip" id="186">
-            <strong>Signature:</strong> cfg:TypeProviderConfig -&gt; unit<br />
+          <div class="tip" id="180">
+            <strong>Signature:</strong> config:TypeProviderConfig -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2460-2460" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14321-14321" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -242,15 +302,15 @@ Get all namespace with their provided types.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '187', 187)" onmouseover="showTip(event, '187', 187)">
+          <code onmouseout="hideTip(event, '181', 181)" onmouseover="showTip(event, '181', 181)">
             remove_Disposing(arg1)
           </code>
-          <div class="tip" id="187">
+          <div class="tip" id="181">
             <strong>Signature:</strong> EventHandler -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2438-2438" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14294-14294" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -260,22 +320,45 @@ Get all namespace with their provided types.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '188', 188)" onmouseover="showTip(event, '188', 188)">
+          <code onmouseout="hideTip(event, '182', 182)" onmouseover="showTip(event, '182', 182)">
             ResolveAssembly(arg1)
           </code>
-          <div class="tip" id="188">
+          <div class="tip" id="182">
             <strong>Signature:</strong> ResolveEventArgs -&gt; Assembly<br />
               <strong>Modifiers:</strong> abstract<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2445-2445" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14304-14304" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           <p>AssemblyResolve handler. Default implementation searches <assemblyname>.dll file in registered folders</p>
 
 
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '183', 183)" onmouseover="showTip(event, '183', 183)">
+            TargetContext
+          </code>
+          <div class="tip" id="183">
+            <strong>Signature:</strong> ProvidedTypesContext<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L14291-14291" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The context for which code is eventually to be generated. You should not normally
+need to use this property directly, as translation from the compiler-hosted context to
+the design-time context will normally be performed automatically.</p>
+
+
+              <p>CompiledName: <code>get_TargetContext</code></p>
         </td>
       </tr>
     </tbody>
@@ -290,8 +373,8 @@ Get all namespace with their provided types.</p>
             <li class="divider"></li>
             <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
             <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            <li><a href="./../license.html">License</a></li>
+            <li><a href="./../release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
             <li><a href="./../AppSettingsProvider.html">AppSettingsProvider</a></li>

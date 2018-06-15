@@ -47,17 +47,21 @@
 <span class="l"> 8: </span>
 <span class="l"> 9: </span>
 <span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip"><code lang="ini">[Section1]
 intSetting = 2
 stringSetting = stringValue
-;you are free to add comments like this
+; you are free to add comments like this. They are only valid if they begin a new line
 [Section2]
-floatSetting = 1.23 ; float settings are also supported
+; float settings are also supported
+floatSetting = 1.23
 boolSetting = true
 anotherBoolSetting = False
 ; settings with no value are OK
 emptySetting =
+stringWithSemiColonValue = DataSource=foo@bar;UserName=blah 
 </code></pre></td></tr></table>
 <p>Reference the type provider assembly and configure it to use your ini file:</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
@@ -73,13 +77,13 @@ emptySetting =
 <span class="l">11: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;FSharp.Configuration.dll&quot;</span>
-<span class="k">open</span> <span class="i">FSharp</span><span class="o">.</span><span class="i">Configuration</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Configuration</span>
 
 <span class="c">// Let the type provider do it&#39;s work</span>
-<span class="k">type</span> <span class="i">IniFileType</span> <span class="o">=</span> <span class="i">IniFile</span><span class="o">&lt;</span><span class="s">&quot;Sample.ini &quot;</span><span class="o">&gt;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">IniFileType</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">IniFile</span><span class="o">&lt;</span><span class="s">&quot;Sample.ini &quot;</span><span class="o">&gt;</span>
 
 <span class="c">// read a value from the config</span>
-<span class="i">IniFileType</span><span class="o">.</span><span class="i">Section1</span><span class="o">.</span><span class="i">intSetting</span>
+<span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">IniFileType</span><span class="o">.</span><span class="i">Section1</span><span class="o">.</span><span class="i">intSetting</span>
 
 <span class="fsi">val it : int = </span>
 <span class="fsi">  2</span>
@@ -87,6 +91,10 @@ emptySetting =
 </tr>
 </table>
 
+<div class="tip" id="fs1">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">namespace FSharp.Configuration</div>
+<div class="tip" id="fs3">type IniFileType = IniFile&lt;...&gt;<br /><br />Full name: IniTypeProvider.IniFileType</div>
+<div class="tip" id="fs4">type IniFile<br /><br />Full name: FSharp.Configuration.IniFile</div>
 
         </div>
         <div class="span3">
@@ -97,8 +105,8 @@ emptySetting =
             <li class="divider"></li>
             <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
             <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            <li><a href="./license.html">License</a></li>
+            <li><a href="./release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
             <li><a href="./AppSettingsProvider.html">AppSettingsProvider</a></li>

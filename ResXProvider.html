@@ -48,10 +48,10 @@ It allows typed access to .resx files.</p>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// reference the type provider dll</span>
 <span class="prep">#r</span> <span class="s">&quot;FSharp.Configuration.dll&quot;</span>
-<span class="k">open</span> <span class="i">FSharp</span><span class="o">.</span><span class="i">Configuration</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Configuration</span>
 
 <span class="c">// Let the type provider do it&#39;s work</span>
-<span class="k">type</span> <span class="i">Resource1</span> <span class="o">=</span> <span class="i">ResXProvider</span><span class="o">&lt;</span><span class="i">file</span><span class="o">=</span><span class="s">&quot;Resource1.resx&quot;</span><span class="o">&gt;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Resource1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">ResXProvider</span><span class="o">&lt;</span><span class="i">file</span><span class="o">=</span><span class="s">&quot;Resource1.resx&quot;</span><span class="o">&gt;</span>
 </code></pre></td>
 </tr>
 </table>
@@ -61,12 +61,17 @@ It allows typed access to .resx files.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 <span class="l">2: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="i">Resource1</span><span class="o">.</span><span class="i">Greetings</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">Resource1</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">Greetings</span>
 <span class="fsi">val it : string = &quot;Hello World!&quot;</span>
 </code></pre></td>
 </tr>
 </table>
 
+<div class="tip" id="fs1">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">namespace FSharp.Configuration</div>
+<div class="tip" id="fs3">type Resource1 = ResXProvider&lt;...&gt;<br /><br />Full name: ResXProvider.Resource1</div>
+<div class="tip" id="fs4">Multiple items<br />module ResXProvider<br /><br />from FSharp.Configuration<br /><br />--------------------<br />type ResXProvider<br /><br />Full name: FSharp.Configuration.ResXProvider</div>
+<div class="tip" id="fs5">property ResXProvider&lt;...&gt;.Greetings: string<br /><em><br /><br />Greetings</em></div>
 
         </div>
         <div class="span3">
@@ -77,8 +82,8 @@ It allows typed access to .resx files.</p>
             <li class="divider"></li>
             <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
             <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            <li><a href="./license.html">License</a></li>
+            <li><a href="./release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
             <li><a href="./AppSettingsProvider.html">AppSettingsProvider</a></li>

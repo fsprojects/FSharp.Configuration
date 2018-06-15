@@ -52,19 +52,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '60', 60)" onmouseover="showTip(event, '60', 60)">
-            new(parameters)
+          <code onmouseout="hideTip(event, '61', 61)" onmouseover="showTip(event, '61', 61)">
+            new(parameters, invokeCode)
           </code>
-          <div class="tip" id="60">
-            <strong>Signature:</strong> (parameters:ProvidedParameter list) -&gt; ProvidedConstructor<br />
+          <div class="tip" id="61">
+            <strong>Signature:</strong> (parameters:ProvidedParameter list * invokeCode:(Expr list -&gt; Expr)) -&gt; ProvidedConstructor<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L503-503" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L900-900" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Create a new provided constructor. It is not initially associated with any specific provided type definition.</p>
+          <p>When making a cross-targeting type provider, use this method instead of the ProvidedConstructor constructor from ProvidedTypes</p>
 
 
               <p>CompiledName: <code>.ctor</code></p>
@@ -81,15 +81,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '61', 61)" onmouseover="showTip(event, '61', 61)">
+          <code onmouseout="hideTip(event, '62', 62)" onmouseover="showTip(event, '62', 62)">
             AddDefinitionLocation(...)
           </code>
-          <div class="tip" id="61">
+          <div class="tip" id="62">
             <strong>Signature:</strong> (line:int * column:int * filePath:string) -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L525-525" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L913-913" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -101,19 +101,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '62', 62)" onmouseover="showTip(event, '62', 62)">
+          <code onmouseout="hideTip(event, '63', 63)" onmouseover="showTip(event, '63', 63)">
             AddObsoleteAttribute(message, isError)
           </code>
-          <div class="tip" id="62">
+          <div class="tip" id="63">
             <strong>Signature:</strong> (message:string * isError:bool option) -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L524-524" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L912-912" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Add a 'System.Obsolete' attribute to this provided constructor</p>
+          <p>Add a 'Obsolete' attribute to this provided constructor</p>
 
 
         </td>
@@ -121,15 +121,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '63', 63)" onmouseover="showTip(event, '63', 63)">
+          <code onmouseout="hideTip(event, '64', 64)" onmouseover="showTip(event, '64', 64)">
             AddXmlDoc(xmlDoc)
           </code>
-          <div class="tip" id="63">
+          <div class="tip" id="64">
             <strong>Signature:</strong> xmlDoc:string -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L523-523" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L911-911" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -141,15 +141,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '64', 64)" onmouseover="showTip(event, '64', 64)">
+          <code onmouseout="hideTip(event, '65', 65)" onmouseover="showTip(event, '65', 65)">
             AddXmlDocComputed(xmlDocFunction)
           </code>
-          <div class="tip" id="64">
+          <div class="tip" id="65">
             <strong>Signature:</strong> (xmlDocFunction:(unit -&gt; string)) -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L521-521" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L909-909" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -161,15 +161,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '65', 65)" onmouseover="showTip(event, '65', 65)">
+          <code onmouseout="hideTip(event, '66', 66)" onmouseover="showTip(event, '66', 66)">
             AddXmlDocDelayed(xmlDocFunction)
           </code>
-          <div class="tip" id="65">
+          <div class="tip" id="66">
             <strong>Signature:</strong> (xmlDocFunction:(unit -&gt; string)) -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L522-522" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L910-910" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -181,36 +181,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '66', 66)" onmouseover="showTip(event, '66', 66)">
-            BaseConstructorCall()
-          </code>
-          <div class="tip" id="66">
-            <strong>Signature:</strong> unit -&gt; Expr list -&gt; ConstructorInfo * Expr list<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L544-544" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Set the target and arguments of the base constructor call. Only used for generated types.</p>
-
-
-              <p>CompiledName: <code>set_BaseConstructorCall</code></p>
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
           <code onmouseout="hideTip(event, '67', 67)" onmouseover="showTip(event, '67', 67)">
             BaseConstructorCall()
           </code>
           <div class="tip" id="67">
-            <strong>Signature:</strong> unit -&gt; unit<br />
+            <strong>Signature:</strong> unit -&gt; Expr list -&gt; ConstructorInfo * Expr list<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L544-544" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L916-916" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -224,56 +203,58 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '68', 68)" onmouseover="showTip(event, '68', 68)">
-            InvokeCode()
+            BaseConstructorCall()
           </code>
           <div class="tip" id="68">
-            <strong>Signature:</strong> unit -&gt; Expr list -&gt; Expr<br />
+            <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L538-538" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L916-916" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Set the quotation used to compute the implementation of invocations of this constructor.</p>
+          <p>Set the target and arguments of the base constructor call. Only used for generated types.</p>
 
 
-              <p>CompiledName: <code>set_InvokeCode</code></p>
+              <p>CompiledName: <code>set_BaseConstructorCall</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '69', 69)" onmouseover="showTip(event, '69', 69)">
-            InvokeCode()
+            IsImplicitConstructor()
           </code>
           <div class="tip" id="69">
-            <strong>Signature:</strong> unit -&gt; unit<br />
+            <strong>Signature:</strong> unit -&gt; bool<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L538-538" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L922-922" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Set the quotation used to compute the implementation of invocations of this constructor.</p>
+          <p>Set a flag indicating that the constructor acts like an F# implicit constructor, so the
+parameters of the constructor become fields and can be accessed using Expr.GlobalVar with the
+same name.</p>
 
 
-              <p>CompiledName: <code>set_InvokeCode</code></p>
+              <p>CompiledName: <code>set_IsImplicitConstructor</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '70', 70)" onmouseover="showTip(event, '70', 70)">
-            IsImplicitCtor()
+            IsImplicitConstructor()
           </code>
           <div class="tip" id="70">
-            <strong>Signature:</strong> unit -&gt; bool<br />
+            <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L566-566" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L922-922" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -282,44 +263,21 @@ parameters of the constructor become fields and can be accessed using Expr.Globa
 same name.</p>
 
 
-              <p>CompiledName: <code>set_IsImplicitCtor</code></p>
+              <p>CompiledName: <code>get_IsImplicitConstructor</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '71', 71)" onmouseover="showTip(event, '71', 71)">
-            IsImplicitCtor()
-          </code>
-          <div class="tip" id="71">
-            <strong>Signature:</strong> unit -&gt; unit<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L566-566" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Set a flag indicating that the constructor acts like an F# implicit constructor, so the
-parameters of the constructor become fields and can be accessed using Expr.GlobalVar with the
-same name.</p>
-
-
-              <p>CompiledName: <code>get_IsImplicitCtor</code></p>
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '72', 72)" onmouseover="showTip(event, '72', 72)">
             IsTypeInitializer()
           </code>
-          <div class="tip" id="72">
+          <div class="tip" id="71">
             <strong>Signature:</strong> unit -&gt; bool<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L515-515" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L903-903" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -330,15 +288,15 @@ same name.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '73', 73)" onmouseover="showTip(event, '73', 73)">
+          <code onmouseout="hideTip(event, '72', 72)" onmouseover="showTip(event, '72', 72)">
             IsTypeInitializer()
           </code>
-          <div class="tip" id="73">
+          <div class="tip" id="72">
             <strong>Signature:</strong> unit -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L515-515" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L903-903" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -358,8 +316,8 @@ same name.</p>
             <li class="divider"></li>
             <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
             <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            <li><a href="./../license.html">License</a></li>
+            <li><a href="./../release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
             <li><a href="./../AppSettingsProvider.html">AppSettingsProvider</a></li>

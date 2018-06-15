@@ -52,19 +52,42 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '56', 56)" onmouseover="showTip(event, '56', 56)">
-            new(assemblyFileName)
+          <code onmouseout="hideTip(event, '57', 57)" onmouseover="showTip(event, '57', 57)">
+            new()
           </code>
-          <div class="tip" id="56">
-            <strong>Signature:</strong> assemblyFileName:string -&gt; ProvidedAssembly<br />
+          <div class="tip" id="57">
+            <strong>Signature:</strong> unit -&gt; ProvidedAssembly<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2356-2356" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L7863-7863" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>Create a provided generated assembly using a temporary file as the interim assembly storage</p>
+
+
+              <p>CompiledName: <code>.ctor</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '58', 58)" onmouseover="showTip(event, '58', 58)">
+            new(assemblyName, assemblyFileName)
+          </code>
+          <div class="tip" id="58">
+            <strong>Signature:</strong> (assemblyName:AssemblyName * assemblyFileName:string) -&gt; ProvidedAssembly<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L7870-7870" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Create a provided generated assembly</p>
+
+
               <p>CompiledName: <code>.ctor</code></p>
         </td>
       </tr>
@@ -79,33 +102,37 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '57', 57)" onmouseover="showTip(event, '57', 57)">
+          <code onmouseout="hideTip(event, '59', 59)" onmouseover="showTip(event, '59', 59)">
             AddNestedTypes(...)
           </code>
-          <div class="tip" id="57">
+          <div class="tip" id="59">
             <strong>Signature:</strong> (types:ProvidedTypeDefinition list * enclosingGeneratedTypeNames:string list) -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2380-2380" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L7875-7875" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>Emit the given nested provided type definitions as part of the assembly.
+and adjust the 'Assembly' property of all provided type definitions to return that
+assembly.</p>
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '58', 58)" onmouseover="showTip(event, '58', 58)">
+          <code onmouseout="hideTip(event, '60', 60)" onmouseover="showTip(event, '60', 60)">
             AddTypes(types)
           </code>
-          <div class="tip" id="58">
+          <div class="tip" id="60">
             <strong>Signature:</strong> (types:ProvidedTypeDefinition list) -&gt; unit<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2381-2381" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L7878-7878" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -114,34 +141,6 @@ and adjust the 'Assembly' property of all provided type definitions to return th
 assembly.</p>
 <p>The assembly is only emitted when the Assembly property on the root type is accessed for the first time.
 The host F# compiler does this when processing a generative type declaration for the type.</p>
-
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <h3>Static members</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Static member</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '59', 59)" onmouseover="showTip(event, '59', 59)">
-            RegisterGenerated(fileName)
-          </code>
-          <div class="tip" id="59">
-            <strong>Signature:</strong> fileName:string -&gt; Assembly<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/ProvidedTypes.fs#L2384-2384" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Register that a given file is a provided generated assembly</p>
 
 
         </td>
@@ -158,8 +157,8 @@ The host F# compiler does this when processing a generative type declaration for
             <li class="divider"></li>
             <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
             <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            <li><a href="./../license.html">License</a></li>
+            <li><a href="./../release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
             <li><a href="./../AppSettingsProvider.html">AppSettingsProvider</a></li>

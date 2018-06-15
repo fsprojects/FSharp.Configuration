@@ -151,14 +151,6 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="providerimplementation-providedtypes-providedliteralfield.html">ProvidedLiteralField</a>
-          </td>
-          <td class="xmldoc"><p>Represents an erased provided field.</p>
-
-</td>
-        </tr>
-        <tr>
-          <td class="type-name">
             <a href="providerimplementation-providedtypes-providedmeasurebuilder.html">ProvidedMeasureBuilder</a>
           </td>
           <td class="xmldoc"><p>Helps create erased provided unit-of-measure annotations.</p>
@@ -197,20 +189,9 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="providerimplementation-providedtypes-providedsymboltype.html">ProvidedSymbolType</a>
-          </td>
-          <td class="xmldoc"><p>FSharp.Data addition: ProvidedSymbolType is used by AssemblyReplacer.fs
-Represents an array or other symbolic type involving a provided type as the argument.
-See the type provider spec for the methods that must be implemented.
-Note that the type provider specification does not require us to implement pointer-equality for provided types.</p>
-
-</td>
-        </tr>
-        <tr>
-          <td class="type-name">
             <a href="providerimplementation-providedtypes-providedtypebuilder.html">ProvidedTypeBuilder</a>
           </td>
-          <td class="xmldoc"><p>Provides symbolic provided types</p>
+          <td class="xmldoc"><p>Helpers to build symbolic provided types</p>
 
 </td>
         </tr>
@@ -224,10 +205,19 @@ Note that the type provider specification does not require us to implement point
         </tr>
         <tr>
           <td class="type-name">
-            <a href="providerimplementation-providedtypes-symbolkind.html">SymbolKind</a>
+            <a href="providerimplementation-providedtypes-providedtypesymbol.html">ProvidedTypeSymbol</a>
           </td>
-          <td class="xmldoc"><p>FSharp.Data addition: SymbolKind is used by AssemblyReplacer.fs
-Represents the type constructor in a provided symbol type.</p>
+          <td class="xmldoc"><p>Represents an array or other symbolic type involving a provided type as the argument.
+See the type provider spec for the methods that must be implemented.
+Note that the type provider specification does not require us to implement pointer-equality for provided types.</p>
+
+</td>
+        </tr>
+        <tr>
+          <td class="type-name">
+            <a href="providerimplementation-providedtypes-providedtypescontext.html">ProvidedTypesContext</a>
+          </td>
+          <td class="xmldoc"><p>Represents the context for which code is to be generated. Normally you should not need to use this directly.</p>
 
 </td>
         </tr>
@@ -235,10 +225,26 @@ Represents the type constructor in a provided symbol type.</p>
           <td class="type-name">
             <a href="providerimplementation-providedtypes-typeproviderfornamespaces.html">TypeProviderForNamespaces</a>
           </td>
-          <td class="xmldoc"><p>A base type providing default implementations of type provider functionality when all provided
-types are of type ProvidedTypeDefinition.</p>
+          <td class="xmldoc"><p>A base type providing default implementations of type provider functionality.</p>
 
 </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+  <h2>ProviderImplementation.ProvidedTypesTesting Namespace</h2>
+    <div>
+      <table class="table table-bordered module-list">
+    <thead>
+      <tr><td>Module</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td class="module-name">
+            <a href="providerimplementation-providedtypestesting-utils.html">Utils</a>
+          </td>
+          <td class="xmldoc"></td>
         </tr>
     </tbody>
   </table>
@@ -254,8 +260,8 @@ types are of type ProvidedTypeDefinition.</p>
             <li class="divider"></li>
             <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
             <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            <li><a href="./../license.html">License</a></li>
+            <li><a href="./../release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
             <li><a href="./../AppSettingsProvider.html">AppSettingsProvider</a></li>

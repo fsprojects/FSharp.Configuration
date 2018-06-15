@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Stream - FSharp.Configuration</title>
+    <title>ProvidedTypeSymbol - FSharp.Configuration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="FSProjects team">
@@ -35,35 +35,62 @@
 
 
 
-<h1>Stream</h1>
+<h1>ProvidedTypeSymbol</h1>
 <p>
-  <span>Namespace: FSharp.Configuration</span><br />
-  <span>Parent Module: <a href="fsharp-configuration-inifileprovider-parser.html">Parser</a></span>
+  <span>Namespace: ProviderImplementation.ProvidedTypes</span><br />
 </p>
 <div class="xmldoc">
+<p>Represents an array or other symbolic type involving a provided type as the argument.
+See the type provider spec for the methods that must be implemented.
+Note that the type provider specification does not require us to implement pointer-equality for provided types.</p>
+
 </div>
-  <h3>Union Cases</h3>
+  <h3>Instance members</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Union Case</td><td>Description</td></tr>
+      <tr><td>Instance member</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
-            Stream(int,string list)
+          <code onmouseout="hideTip(event, '155', 155)" onmouseover="showTip(event, '155', 155)">
+            IsFSharpTypeAbbreviation
           </code>
-          <div class="tip" id="34">
-            <strong>Signature:</strong> int * string list<br />
+          <div class="tip" id="155">
+            <strong>Signature:</strong> bool<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/src/FSharp.Configuration/IniFileProvider.fs#L15-15" class="github-link">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L605-605" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>For example, kg</p>
+
+
+              <p>CompiledName: <code>get_IsFSharpTypeAbbreviation</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '156', 156)" onmouseover="showTip(event, '156', 156)">
+            IsFSharpUnitAnnotated
+          </code>
+          <div class="tip" id="156">
+            <strong>Signature:</strong> bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FSharp.Configuration/tree/master/paket-files/fsprojects/FSharp.TypeProviders.SDK/src/ProvidedTypes.fs#L608-608" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>For example, int<kg> or int<kilogram></p>
+
+
+              <p>CompiledName: <code>get_IsFSharpUnitAnnotated</code></p>
         </td>
       </tr>
     </tbody>

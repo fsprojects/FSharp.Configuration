@@ -81,9 +81,9 @@ It allows to access app.config files in a strongly typed way.</p>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;FSharp.Configuration.dll&quot;</span>
 <span class="prep">#r</span> <span class="s">&quot;System.Configuration.dll&quot;</span>
-<span class="k">open</span> <span class="i">FSharp</span><span class="o">.</span><span class="i">Configuration</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Configuration</span>
 
-<span class="k">type</span> <span class="i">Settings</span> <span class="o">=</span> <span class="i">AppSettings</span><span class="o">&lt;</span><span class="s">&quot;app.config&quot;</span><span class="o">&gt;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Settings</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">AppSettings</span><span class="o">&lt;</span><span class="s">&quot;app.config&quot;</span><span class="o">&gt;</span>
 </code></pre></td>
 </tr>
 </table>
@@ -103,15 +103,15 @@ It allows to access app.config files in a strongly typed way.</p>
 <span class="l">11: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// read a value from the config</span>
-<span class="i">Settings</span><span class="o">.</span><span class="i">Test2</span>
+<span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">Test2</span>
 <span class="fsi">val it : string = &quot;Some Test Value 5&quot;</span>
 
 <span class="c">// verify the file name</span>
-<span class="i">Settings</span><span class="o">.</span><span class="i">ConfigFileName</span>
+<span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">ConfigFileName</span>
 <span class="fsi">val it : string = &quot;C:\Code\FSharp.Configuration\docs\content\app.config&quot;</span>
 
 <span class="c">// read a connection string from the config</span>
-<span class="i">Settings</span><span class="o">.</span><span class="i">ConnectionStrings</span><span class="o">.</span><span class="i">Test</span>
+<span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="t">ConnectionStrings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">Test</span>
 <span class="fsi">val it : string = &quot;Server=.;Database=SomeDatabase;Integrated Security=true&quot;</span>
 </code></pre></td>
 </tr>
@@ -123,13 +123,27 @@ How ever, if you want to modify the configuration of some other application, you
 <span class="l">2: </span>
 <span class="l">3: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span class="i">path</span> <span class="o">=</span> <span class="i">System</span><span class="o">.</span><span class="i">IO</span><span class="o">.</span><span class="i">Path</span><span class="o">.</span><span class="i">Combine</span> [|<span class="k">__SOURCE_DIRECTORY__</span> ; <span class="s">&quot;bin&quot;</span>; <span class="s">&quot;myProject.exe&quot;</span> |]
-<span class="i">Settings</span><span class="o">.</span><span class="i">SelectExecutableFile</span> <span class="i">path</span>
-<span class="i">Settings</span><span class="o">.</span><span class="i">Test2</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">path</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">IO</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="t">Path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="f">Combine</span> [|<span class="k">__SOURCE_DIRECTORY__</span> ; <span class="s">&quot;bin&quot;</span>; <span class="s">&quot;myProject.exe&quot;</span> |]
+<span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="f">SelectExecutableFile</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">path</span>
+<span onmouseout="hideTip(event, 'fs3', 20)" onmouseover="showTip(event, 'fs3', 20)" class="t">Settings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="i">Test2</span>
 </code></pre></td>
 </tr>
 </table>
 
+<div class="tip" id="fs1">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">namespace FSharp.Configuration</div>
+<div class="tip" id="fs3">type Settings = AppSettings&lt;...&gt;<br /><br />Full name: AppSettingsProvider.Settings</div>
+<div class="tip" id="fs4">type AppSettings<br /><br />Full name: FSharp.Configuration.AppSettings</div>
+<div class="tip" id="fs5">property AppSettings&lt;...&gt;.Test2: string<br /><em><br /><br />Returns the value from app.config with key test2</em></div>
+<div class="tip" id="fs6">property AppSettings&lt;...&gt;.ConfigFileName: string<br /><em><br /><br />Returns the Filename</em></div>
+<div class="tip" id="fs7">type ConnectionStrings =<br />&#160;&#160;static member LocalSqlServer : string with get, set<br />&#160;&#160;static member LocalSqliteServer : string with get, set<br />&#160;&#160;static member Test : string with get, set<br /><br />Full name: FSharp.Configuration.AppSettings,configFileName=&quot;app.config&quot;.ConnectionStrings<br /><em><br /><br />Represents the available connection strings from app.config</em></div>
+<div class="tip" id="fs8">property AppSettings&lt;...&gt;.ConnectionStrings.Test: string<br /><em><br /><br />Returns the connection string from app.config with name Test</em></div>
+<div class="tip" id="fs9">val path : string<br /><br />Full name: AppSettingsProvider.path</div>
+<div class="tip" id="fs10">namespace System</div>
+<div class="tip" id="fs11">namespace System.IO</div>
+<div class="tip" id="fs12">type Path =<br />&#160;&#160;static val InvalidPathChars : char[]<br />&#160;&#160;static val AltDirectorySeparatorChar : char<br />&#160;&#160;static val DirectorySeparatorChar : char<br />&#160;&#160;static val PathSeparator : char<br />&#160;&#160;static val VolumeSeparatorChar : char<br />&#160;&#160;static member ChangeExtension : path:string * extension:string -&gt; string<br />&#160;&#160;static member Combine : [&lt;ParamArray&gt;] paths:string[] -&gt; string + 3 overloads<br />&#160;&#160;static member GetDirectoryName : path:string -&gt; string<br />&#160;&#160;static member GetExtension : path:string -&gt; string<br />&#160;&#160;static member GetFileName : path:string -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Path</div>
+<div class="tip" id="fs13">System.IO.Path.Combine([&lt;System.ParamArray&gt;] paths: string []) : string<br />System.IO.Path.Combine(path1: string, path2: string) : string<br />System.IO.Path.Combine(path1: string, path2: string, path3: string) : string<br />System.IO.Path.Combine(path1: string, path2: string, path3: string, path4: string) : string</div>
+<div class="tip" id="fs14">AppSettings&lt;...&gt;.SelectExecutableFile(pathOfExe: string) : Unit<br /><em><br /><br />Property to change the executable file that is read for configurations. This idea is that you can manage other executables also (e.g. from script).</em></div>
 
         </div>
         <div class="span3">
@@ -140,8 +154,8 @@ How ever, if you want to modify the configuration of some other application, you
             <li class="divider"></li>
             <li><a href="https://www.nuget.org/packages/FSharp.Configuration">Get Library via NuGet</a></li>
             <li><a href="http://github.com/fsprojects/FSharp.Configuration">Source Code on GitHub</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt">License</a></li>
-            <li><a href="http://github.com/fsprojects/FSharp.Configuration/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+            <li><a href="./license.html">License</a></li>
+            <li><a href="./release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
             <li><a href="./AppSettingsProvider.html">AppSettingsProvider</a></li>
