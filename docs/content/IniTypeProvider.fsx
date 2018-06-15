@@ -16,13 +16,15 @@ Create a `Sample.ini` file like this:
     [Section1]
     intSetting = 2
     stringSetting = stringValue
-    ;you are free to add comments like this
+    ; you are free to add comments like this. They are only valid if they begin a new line
     [Section2]
-    floatSetting = 1.23 ; float settings are also supported
+    ; float settings are also supported
+    floatSetting = 1.23
     boolSetting = true
     anotherBoolSetting = False
     ; settings with no value are OK
     emptySetting =
+    stringWithSemiColonValue = DataSource=foo@bar;UserName=blah 
 
 Reference the type provider assembly and configure it to use your ini file:
 *)

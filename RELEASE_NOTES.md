@@ -1,3 +1,7 @@
+#### 1.5.0 - 15.06.2018
+* Tweak INI File Parser to allow semicolon characters inside string values (thanks [@zakakula](https://github.com/zakaluka)!).
+  * NOTE: This will result in comments no longer being valid beside string values, instead comments should go on a line above the key-value pair
+
 #### 1.4.0 - 23.02.2018
 * Migration to latest TPSDK
 
