@@ -1,3 +1,6 @@
+#### 1.4.0 - 23.02.2018
+* Migration to latest TPSDK
+
 #### 1.3.1 - 24.09.2017
 * `SharpYaml.dll` added to NuGet package
 
