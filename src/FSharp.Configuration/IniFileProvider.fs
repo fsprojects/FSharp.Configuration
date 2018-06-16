@@ -32,8 +32,8 @@ module Parser =
         | _ -> None
 
     let (|Setting|_|) = function
-        | Regex @"\s*(\S+)\s*=\s*([^;]*)" ([_; key; value], s) ->
-            Some ({ Key = key; Value = value }, s)
+        | Regex @"\s*(\S+)\s*=\s*(.*)" ([_; key; value], s) ->
+            Some ({ Key = key; Value = value.Trim() }, s)
         | _ -> None
 
     let (|Settings|_|) s =
