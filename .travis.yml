@@ -2,7 +2,7 @@ language: csharp
 dist: trusty
 sudo: true 
 
-dotnet: 2.1.101
+dotnet: 2.1.300
 
 script: 
   - ./build.sh
