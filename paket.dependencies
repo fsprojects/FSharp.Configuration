@@ -3,7 +3,7 @@ framework: netstandard2.0
 redirects: force
 
 nuget YamlDotNet
-nuget FSharp.Core >= 4.3.2
+nuget FSharp.Core 4.3.4
 
 nuget System.Runtime.Caching
 nuget System.Configuration.ConfigurationManager
@@ -24,7 +24,7 @@ group Build
     framework: net45
     source https://nuget.org/api/v2
 
-    nuget FAKE
+    nuget FAKE ~> 4.0
     nuget FSharp.Formatting
     nuget Octokit
     nuget SourceLink.Fake
@@ -36,5 +36,5 @@ group Test
     source https://nuget.org/api/v2
     redirects: force
 
-    nuget FSharp.Core redirects: force
+    nuget FSharp.Core 4.3.4 redirects: force
     nuget Expecto

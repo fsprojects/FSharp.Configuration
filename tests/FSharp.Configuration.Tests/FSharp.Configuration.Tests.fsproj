@@ -6,7 +6,6 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.0; net461</TargetFrameworks>
     <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>NET461</DefineConstants>

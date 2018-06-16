@@ -2,12 +2,26 @@ REDIRECTS: FORCE
 RESTRICTION: == netstandard2.0
 NUGET
   remote: http://www.nuget.org/api/v2
-    FSharp.Core (4.3.2)
-    System.Configuration.ConfigurationManager (4.4.1)
-      System.Security.Cryptography.ProtectedData (>= 4.4)
-    System.Runtime.Caching (4.5.0-rc1)
-    System.Security.Cryptography.ProtectedData (4.4)
-    YamlDotNet (4.3.1)
+    FSharp.Core (4.3.4)
+    System.Buffers (4.5)
+    System.Configuration.ConfigurationManager (4.5)
+      System.Security.Cryptography.ProtectedData (>= 4.5)
+      System.Security.Permissions (>= 4.5)
+    System.Memory (4.5)
+      System.Buffers (>= 4.4)
+      System.Numerics.Vectors (>= 4.4)
+      System.Runtime.CompilerServices.Unsafe (>= 4.5)
+    System.Numerics.Vectors (4.5)
+    System.Runtime.Caching (4.5)
+    System.Runtime.CompilerServices.Unsafe (4.5)
+    System.Security.AccessControl (4.5)
+      System.Security.Principal.Windows (>= 4.5)
+    System.Security.Cryptography.ProtectedData (4.5)
+      System.Memory (>= 4.5)
+    System.Security.Permissions (4.5)
+      System.Security.AccessControl (>= 4.5)
+    System.Security.Principal.Windows (4.5)
+    YamlDotNet (4.3.2)
 GITHUB
   remote: fsprojects/FSharp.TypeProviders.SDK
     src/ProvidedTypes.fs (4b9ce4b75b6fd727a96378eb4c0f303638db2e71)
@@ -28,7 +42,7 @@ NUGET
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (896e227b6da98b21001a1e5940df01d442bc7a25)
+    modules/Octokit/Octokit.fsx (6ba51f5612a914e161be2a9b642907f75e28780f)
       Octokit (>= 0.20)
 GROUP Legacy
 REDIRECTS: FORCE
@@ -36,7 +50,7 @@ RESTRICTION: == net45
 NUGET
   remote: https://api.nuget.org/v3/index.json
     FSharp.Core (4.0.0.1)
-    YamlDotNet (4.3.1)
+    YamlDotNet (4.3.2)
 
 GROUP Test
 REDIRECTS: FORCE
@@ -47,13 +61,13 @@ NUGET
       FSharp.Core (>= 4.0.0.1) - restriction: || (== net461) (&& (== netcoreapp2.0) (>= net45))
       FSharp.Core (>= 4.3.2) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (== netcoreapp2.0)
       System.Configuration.ConfigurationManager (>= 4.4) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (== netcoreapp2.0)
-    Expecto (8.0)
+    Expecto (8.1.1)
       Argu (>= 5.1)
       Mono.Cecil (>= 0.10)
       System.Diagnostics.FileVersionInfo (>= 4.3) - restriction: == netcoreapp2.0
     FSharp.Core (4.3.4) - redirects: force
-    Microsoft.NETCore.Platforms (2.0.2) - restriction: == netcoreapp2.0
-    Microsoft.NETCore.Targets (2.0) - restriction: == netcoreapp2.0
+    Microsoft.NETCore.Platforms (2.1) - restriction: || (&& (== net461) (>= netcoreapp2.0)) (== netcoreapp2.0)
+    Microsoft.NETCore.Targets (2.1) - restriction: == netcoreapp2.0
     Mono.Cecil (0.10)
       System.Collections (>= 4.0.11) - restriction: || (&& (== net461) (< net35)) (== netcoreapp2.0)
       System.IO.FileSystem (>= 4.0.1) - restriction: || (&& (== net461) (< net35)) (== netcoreapp2.0)
@@ -102,8 +116,10 @@ NUGET
       System.Runtime.Extensions (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wpa81)) (== netcoreapp2.0)
       System.Threading (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wpa81)) (== netcoreapp2.0)
       System.Threading.Tasks (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wpa81)) (== netcoreapp2.0)
-    System.Configuration.ConfigurationManager (4.4.1) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (== netcoreapp2.0)
-      System.Security.Cryptography.ProtectedData (>= 4.4) - restriction: || (&& (== net461) (>= netcoreapp2.0)) (== netcoreapp2.0)
+    System.Collections.Immutable (1.5) - restriction: == netcoreapp2.0
+    System.Configuration.ConfigurationManager (4.5) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (== netcoreapp2.0)
+      System.Security.Cryptography.ProtectedData (>= 4.5) - restriction: == netcoreapp2.0
+      System.Security.Permissions (>= 4.5)
     System.Diagnostics.Debug (4.3) - restriction: || (&& (== net461) (< net35)) (== netcoreapp2.0)
       Microsoft.NETCore.Platforms (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       Microsoft.NETCore.Targets (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
@@ -149,13 +165,16 @@ NUGET
       System.Resources.ResourceManager (>= 4.3) - restriction: || (&& (== net461) (< net45) (>= netstandard1.6)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       System.Runtime (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       System.Runtime.Extensions (>= 4.3) - restriction: || (&& (== net461) (< net45) (>= netstandard1.6)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
+    System.Memory (4.5) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (== netcoreapp2.0)
+      System.Runtime.CompilerServices.Unsafe (>= 4.5)
     System.Reflection (4.3) - restriction: == netcoreapp2.0
       Microsoft.NETCore.Platforms (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       Microsoft.NETCore.Targets (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       System.IO (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       System.Reflection.Primitives (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       System.Runtime (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
-    System.Reflection.Metadata (1.5) - restriction: == netcoreapp2.0
+    System.Reflection.Metadata (1.6) - restriction: == netcoreapp2.0
+      System.Collections.Immutable (>= 1.5)
     System.Reflection.Primitives (4.3) - restriction: == netcoreapp2.0
       Microsoft.NETCore.Platforms (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       Microsoft.NETCore.Targets (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
@@ -169,6 +188,7 @@ NUGET
     System.Runtime (4.3) - restriction: == netcoreapp2.0
       Microsoft.NETCore.Platforms (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       Microsoft.NETCore.Targets (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
+    System.Runtime.CompilerServices.Unsafe (4.5) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (&& (== net461) (>= netcoreapp2.0)) (&& (== net461) (< netstandard1.1) (>= netstandard2.0)) (&& (== net461) (>= netstandard2.0) (>= uap10.1)) (&& (== net461) (>= netstandard2.0) (>= wpa81)) (== netcoreapp2.0)
     System.Runtime.Extensions (4.3) - restriction: == netcoreapp2.0
       Microsoft.NETCore.Platforms (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       Microsoft.NETCore.Targets (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
@@ -189,6 +209,9 @@ NUGET
       System.Resources.ResourceManager (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wpa81)) (== netcoreapp2.0)
       System.Runtime (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wpa81)) (== netcoreapp2.0)
       System.Runtime.Extensions (>= 4.3) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wpa81)) (== netcoreapp2.0)
+    System.Security.AccessControl (4.5) - restriction: || (&& (== net461) (>= monoandroid) (>= netstandard2.0)) (&& (== net461) (>= monotouch) (>= netstandard2.0)) (&& (== net461) (< net45) (>= netstandard2.0)) (&& (== net461) (>= netstandard2.0) (>= xamarinios)) (&& (== net461) (>= netstandard2.0) (>= xamarinmac)) (&& (== net461) (>= netstandard2.0) (>= xamarintvos)) (&& (== net461) (>= netstandard2.0) (>= xamarinwatchos)) (== netcoreapp2.0)
+      Microsoft.NETCore.Platforms (>= 2.0) - restriction: || (&& (== net461) (>= netcoreapp2.0)) (== netcoreapp2.0)
+      System.Security.Principal.Windows (>= 4.5)
     System.Security.Cryptography.Algorithms (4.3.1) - restriction: || (&& (== net461) (< net35)) (== netcoreapp2.0)
       Microsoft.NETCore.Platforms (>= 1.1) - restriction: || (&& (== net461) (< net46) (>= netstandard1.6)) (&& (== net461) (< netstandard1.3)) (== netcoreapp2.0)
       runtime.native.System.Security.Cryptography.Apple (>= 4.3.1) - restriction: || (&& (== net461) (< net46) (>= netstandard1.6)) (== netcoreapp2.0)
@@ -239,7 +262,12 @@ NUGET
       System.Runtime (>= 4.3) - restriction: || (&& (== net461) (< net46)) (== netcoreapp2.0)
       System.Threading (>= 4.3) - restriction: || (&& (== net461) (< net46)) (== netcoreapp2.0)
       System.Threading.Tasks (>= 4.3) - restriction: || (&& (== net461) (< net46)) (== netcoreapp2.0)
-    System.Security.Cryptography.ProtectedData (4.4) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (&& (== net461) (>= netcoreapp2.0)) (== netcoreapp2.0)
+    System.Security.Cryptography.ProtectedData (4.5) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (== netcoreapp2.0)
+      System.Memory (>= 4.5) - restriction: || (&& (== net461) (< net46) (>= netstandard2.0)) (== netcoreapp2.0)
+    System.Security.Permissions (4.5) - restriction: || (&& (== net461) (>= monoandroid) (>= netstandard2.0)) (&& (== net461) (>= monotouch) (>= netstandard2.0)) (&& (== net461) (< net45) (>= netstandard2.0)) (&& (== net461) (>= netstandard2.0) (>= xamarinios)) (&& (== net461) (>= netstandard2.0) (>= xamarinmac)) (&& (== net461) (>= netstandard2.0) (>= xamarintvos)) (&& (== net461) (>= netstandard2.0) (>= xamarinwatchos)) (== netcoreapp2.0)
+      System.Security.AccessControl (>= 4.5)
+    System.Security.Principal.Windows (4.5) - restriction: || (&& (== net461) (>= monoandroid) (>= netstandard2.0)) (&& (== net461) (>= monotouch) (>= netstandard2.0)) (&& (== net461) (< net45) (>= netstandard2.0)) (&& (== net461) (>= netcoreapp2.0)) (&& (== net461) (>= netstandard2.0) (>= xamarinios)) (&& (== net461) (>= netstandard2.0) (>= xamarinmac)) (&& (== net461) (>= netstandard2.0) (>= xamarintvos)) (&& (== net461) (>= netstandard2.0) (>= xamarinwatchos)) (== netcoreapp2.0)
+      Microsoft.NETCore.Platforms (>= 2.0) - restriction: || (&& (== net461) (>= netcoreapp2.0)) (== netcoreapp2.0)
     System.Text.Encoding (4.3) - restriction: == netcoreapp2.0
       Microsoft.NETCore.Platforms (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)
       Microsoft.NETCore.Targets (>= 1.1) - restriction: || (&& (== net461) (< net45)) (&& (== net461) (< portable-net45+win8+wp8+wpa81)) (== netcoreapp2.0)

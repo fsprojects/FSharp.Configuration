@@ -5,7 +5,6 @@
     <TargetFrameworks>netstandard2.0; net45</TargetFrameworks>
     <AssemblyName>FSharp.Configuration</AssemblyName>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
     <DefineConstants>NET45</DefineConstants>

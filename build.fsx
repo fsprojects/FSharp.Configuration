@@ -106,7 +106,7 @@ Target "CleanDocs" (fun _ ->
 // Build library & test project
 
 let mutable dotnetExePath = "dotnet"
-let dotnetcliVersion = "2.1.105"
+let dotnetcliVersion = "2.1.300"
 
 Target "InstallDotNetCore" (fun _ ->
     dotnetExePath <- DotNetCli.InstallDotNetSDK dotnetcliVersion
@@ -136,7 +136,9 @@ Target "BuildTests" (fun _ ->
         { c with
             Project = "FSharp.Configuration.Tests.sln"
             Configuration = "Release"
-            ToolPath = dotnetExePath })
+            ToolPath = dotnetExePath
+            AdditionalArgs= ["-v n"] 
+        })
 )
 
 // --------------------------------------------------------------------------------------
