@@ -9,7 +9,6 @@ open System.Resources
 open System.ComponentModel.Design
 open System.Collections
 open System.Collections.Concurrent
-open System.Runtime.Caching
 open ProviderImplementation.ProvidedTypes
 open FSharp.Configuration.Helper
 
@@ -55,26 +54,23 @@ let inline private replace (oldChar:char) (newChar:char) (s:string) = s.Replace(
 
 let internal typedResources (context: Context) =
     let resXType = erasedType<obj> thisAssembly rootNamespace "ResXProvider" None
-    let cache = new MemoryCache("ResXProvider")
-    context.AddDisposable cache
-
+    
     resXType.DefineStaticParameters(
         parameters = [ ProvidedStaticParameter ("file", typeof<string>) ],
-        instantiationFunction = (fun typeName parameterValues ->
-            let value = lazy (
-                match parameterValues with
-                | [| :? string as resourcePath|] ->
-                    let filePath = findConfigFile context.ResolutionFolder resourcePath
-                    if not (File.Exists filePath) then invalidArg "file" "Resource file not found"
-                    let resourceName =
-                        Path.ChangeExtension (resourcePath, null)
-                        |> replace '\\' '.'
-                        |> replace '/' '.'
-                    let providedType = createResXProvider typeName resourceName filePath
-                    context.WatchFile filePath
-                    providedType
-                | _ -> failwith "unexpected parameter values")
-            cache.GetOrAdd (typeName, value)))
+        instantiationFunction = fun typeName parameterValues ->
+            match parameterValues with
+            | [| :? string as resourcePath|] ->
+                let filePath = findConfigFile context.ResolutionFolder resourcePath
+                if not (File.Exists filePath) then invalidArg "file" "Resource file not found"
+                let resourceName =
+                    Path.ChangeExtension (resourcePath, null)
+                    |> replace '\\' '.'
+                    |> replace '/' '.'
+                let providedType = createResXProvider typeName resourceName filePath
+                context.WatchFile filePath
+                providedType
+            | _ -> failwith "unexpected parameter values"
+    )
     resXType
 
 #endif

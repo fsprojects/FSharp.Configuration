@@ -1,7 +1,6 @@
 YamlDotNet
 FSharp.Core
 
-System.Runtime.Caching
 System.Configuration.ConfigurationManager
 
 File: ProvidedTypes.fsi .
@@ -9,5 +8,5 @@ File: ProvidedTypes.fs .
 File: ProvidedTypesTesting.fs .
 
 group Legacy
-  FSharp.Core
-  YamlDotNet
+  FSharp.Core framework: net45
+  YamlDotNet framework: net45

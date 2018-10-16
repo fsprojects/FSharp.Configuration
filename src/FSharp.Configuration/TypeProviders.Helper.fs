@@ -21,7 +21,12 @@ let inline satisfies predicate (charOption:option<char>) =
     | _ -> None
 
 let dispose (x: IDisposable) = if x = null then () else x.Dispose()
-let inline debug msg = Printf.kprintf Diagnostics.Debug.WriteLine msg
+let debug msg = 
+    let dt = DateTime.Now
+    let writer msg = 
+        Diagnostics.Debug.WriteLine msg
+//        System.IO.File.AppendAllLines("debug.log", [sprintf "[%O] %s\n" dt msg])
+    Printf.kprintf writer msg
 
 let (|EOF|_|) = function
     | Some _ -> None
@@ -312,20 +317,3 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
 
     interface IDisposable with
         member __.Dispose() = agent.Post Cancel
-
-open System.Runtime.Caching
-
-type MemoryCache with
-    member x.GetOrAdd(key: string, value: Lazy<ProvidedTypeDefinition>, ?expiration: TimeSpan) =
-        let policy = CacheItemPolicy()
-        policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
-
-        match x.AddOrGetExisting(key, value, policy) with
-        | :? Lazy<ProvidedTypeDefinition> as item ->
-            try item.Value
-            with _ ->
-                x.Remove key |> ignore
-                value.Value
-        | x ->
-            assert(x = null)
-            value.Value

@@ -7,7 +7,6 @@ open System.Reflection
 open System
 open System.IO
 open System.Collections.Generic
-open System.Runtime.Caching
 
 open Microsoft.FSharp.Quotations
 
@@ -559,37 +558,33 @@ let internal typedYamlConfig (context: Context) =
            <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
            <param name='YamlText'>Yaml as text. Mutually exclusive with FilePath parameter.</param>"""
 
-    let cache = new MemoryCache("YamlConfigProvider")
-    context.AddDisposable cache
-
     yamlConfig.DefineStaticParameters(
         parameters = staticParams,
         instantiationFunction = fun typeName paramValues ->
-            let value = lazy (
-                let createTy yaml readOnly inferTypesFromStrings =
-                    let myAssem = ProvidedAssembly()
-                    let ty = ProvidedTypeDefinition (myAssem, rootNamespace, typeName, Some baseTy, isErased = false, hideObjectMethods = true)
-                    let types = TypesFactory.transform readOnly None (Parser.parse inferTypesFromStrings yaml)
-                    let ctr = ProvidedConstructor([], invokeCode = fun (me :: _) -> types.Init me)
-                    let baseCtor = baseTy.GetConstructor(BindingFlags.Public ||| BindingFlags.Instance, null, [|typeof<bool>|], null)
-                    ctr.BaseConstructorCall <- fun [me] -> baseCtor, [me; Expr.Value inferTypesFromStrings]
-                    ty.AddMembers (ctr :> MemberInfo :: types.Types)
-                    myAssem.AddTypes [ty]
-                    ty
+            let createTy yaml readOnly inferTypesFromStrings =
+                let myAssem = ProvidedAssembly()
+                let ty = ProvidedTypeDefinition (myAssem, rootNamespace, typeName, Some baseTy, isErased = false, hideObjectMethods = true)
+                let types = TypesFactory.transform readOnly None (Parser.parse inferTypesFromStrings yaml)
+                let ctr = ProvidedConstructor([], invokeCode = fun (me :: _) -> types.Init me)
+                let baseCtor = baseTy.GetConstructor(BindingFlags.Public ||| BindingFlags.Instance, null, [|typeof<bool>|], null)
+                ctr.BaseConstructorCall <- fun [me] -> baseCtor, [me; Expr.Value inferTypesFromStrings]
+                ty.AddMembers (ctr :> MemberInfo :: types.Types)
+                myAssem.AddTypes [ty]
+                ty
 
-                match paramValues with
-                | [| :? string as filePath; :? bool as readOnly; :? string as yamlText; :? bool as inferTypesFromStrings |] ->
-                     match filePath, yamlText with
-                     | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
-                     | "", yamlText -> createTy yamlText readOnly inferTypesFromStrings
-                     | filePath, _ ->
-                          let filePath =
-                              if Path.IsPathRooted filePath
-                              then filePath
-                              else context.ResolutionFolder </> filePath
-                              |> Path.GetFullPath
-                          context.WatchFile filePath
-                          createTy (File.ReadAllText filePath) readOnly inferTypesFromStrings
-                | _ -> failwith "Wrong parameters")
-            cache.GetOrAdd (typeName, value))
+            match paramValues with
+            | [| :? string as filePath; :? bool as readOnly; :? string as yamlText; :? bool as inferTypesFromStrings |] ->
+                 match filePath, yamlText with
+                 | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
+                 | "", yamlText -> createTy yamlText readOnly inferTypesFromStrings
+                 | filePath, _ ->
+                      let filePath =
+                          if Path.IsPathRooted filePath
+                          then filePath
+                          else context.ResolutionFolder </> filePath
+                          |> Path.GetFullPath
+                      context.WatchFile filePath
+                      createTy (File.ReadAllText filePath) readOnly inferTypesFromStrings
+            | _ -> failwith "Wrong parameters"
+        )
     yamlConfig
