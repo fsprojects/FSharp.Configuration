@@ -67,7 +67,6 @@ module Parser =
 
 open ProviderImplementation.ProvidedTypes
 open System.Globalization
-open System.Runtime.Caching
 
 let getValue (iniFileName: string) (section: string) (key: string) =
     match Parser.parse (Path.GetFileName iniFileName) with
@@ -80,14 +79,12 @@ let getValue (iniFileName: string) (section: string) (key: string) =
     | Choice2Of2 _ -> None
 
 let internal typedIniFile (context: Context) =
-    let iniFile = erasedType<obj> thisAssembly rootNamespace "IniFile" None
-    let cache = new MemoryCache(name = "IniFileProvider")
-    context.AddDisposable cache
+    try
+        let iniFile = erasedType<obj> thisAssembly rootNamespace "IniFile" None
 
-    iniFile.DefineStaticParameters(
-        parameters = [ ProvidedStaticParameter ("configFileName", typeof<string>) ],
-        instantiationFunction = (fun typeName parameterValues ->
-            let value = lazy (
+        iniFile.DefineStaticParameters(
+            parameters = [ ProvidedStaticParameter ("configFileName", typeof<string>) ],
+            instantiationFunction = fun typeName parameterValues ->
                 match parameterValues with
                 | [| :? string as iniFileName |] ->
                     let typeDef = erasedType<obj> thisAssembly rootNamespace typeName (Some true)
@@ -145,6 +142,9 @@ let internal typedIniFile (context: Context) =
                         context.WatchFile filePath
                         typeDef
                     with _ -> typeDef
-                | x -> failwithf "unexpected parameter values %A" x)
-            cache.GetOrAdd (typeName, value)))
-    iniFile
+                | x -> failwithf "unexpected parameter values %A" x
+        )
+        iniFile
+    with ex ->
+        debug "Error in IniProvider: %s\n\t%s" ex.Message ex.StackTrace
+        reraise ()

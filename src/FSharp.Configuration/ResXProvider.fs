@@ -9,7 +9,6 @@ open System.Resources
 open System.ComponentModel.Design
 open System.Collections
 open System.Collections.Concurrent
-open System.Runtime.Caching
 open ProviderImplementation.ProvidedTypes
 open FSharp.Configuration.Helper
 
@@ -54,14 +53,12 @@ let private createResXProvider typeName resourceName filePath =
 let inline private replace (oldChar:char) (newChar:char) (s:string) = s.Replace(oldChar, newChar)
 
 let internal typedResources (context: Context) =
-    let resXType = erasedType<obj> thisAssembly rootNamespace "ResXProvider" None
-    let cache = new MemoryCache("ResXProvider")
-    context.AddDisposable cache
+    try
+        let resXType = erasedType<obj> thisAssembly rootNamespace "ResXProvider" None
 
-    resXType.DefineStaticParameters(
-        parameters = [ ProvidedStaticParameter ("file", typeof<string>) ],
-        instantiationFunction = (fun typeName parameterValues ->
-            let value = lazy (
+        resXType.DefineStaticParameters(
+            parameters = [ ProvidedStaticParameter ("file", typeof<string>) ],
+            instantiationFunction = fun typeName parameterValues ->
                 match parameterValues with
                 | [| :? string as resourcePath|] ->
                     let filePath = findConfigFile context.ResolutionFolder resourcePath
@@ -73,8 +70,11 @@ let internal typedResources (context: Context) =
                     let providedType = createResXProvider typeName resourceName filePath
                     context.WatchFile filePath
                     providedType
-                | _ -> failwith "unexpected parameter values")
-            cache.GetOrAdd (typeName, value)))
-    resXType
+                | _ -> failwith "unexpected parameter values"
+        )
+        resXType
+    with ex ->
+        debug "Error in ResxProvider: %s\n\t%s" ex.Message ex.StackTrace
+        reraise ()
 
 #endif

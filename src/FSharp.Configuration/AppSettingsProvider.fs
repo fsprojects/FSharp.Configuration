@@ -11,7 +11,6 @@ open System.Globalization
 #if NET45
 open System.Web.Hosting
 #endif
-open System.Runtime.Caching
 
 let mutable private exePath = Map.empty
 let setExeFilePath key filePath = exePath <- exePath.Add(key, filePath)
@@ -51,14 +50,12 @@ let setConnectionString(file, key: string, value) =
     config.Save()
 
 let internal typedAppSettings (context: Context) =
-    let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings" None
-    let cache = new MemoryCache("AppSettingProvider")
-    context.AddDisposable cache
+    try
+        let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings" None
 
-    appSettings.DefineStaticParameters(
-        parameters = [ProvidedStaticParameter("configFileName", typeof<string>)],
-        instantiationFunction = (fun typeName parameterValues ->
-            let value = lazy (
+        appSettings.DefineStaticParameters(
+            parameters = [ProvidedStaticParameter("configFileName", typeof<string>)],
+            instantiationFunction = fun typeName parameterValues ->
                 let typedConnectionStrings (config: Configuration, filePath, configFileName) =
                     let typeDef = ProvidedTypeDefinition ("ConnectionStrings", Some typeof<obj>, hideObjectMethods = true)
                     typeDef.AddXmlDoc (sprintf "Represents the available connection strings from %s" configFileName)
@@ -168,7 +165,10 @@ let internal typedAppSettings (context: Context) =
                         context.WatchFile filePath
                         typeDef
                     with _ -> typeDef
-                | x -> failwithf "unexpected parameter values %A" x)
-            cache.GetOrAdd (typeName, value)))
-    appSettings
+                | x -> failwithf "unexpected parameter values %A" x
+        )
+        appSettings
+    with ex ->
+        debug "Error in AppSettingsProvider: %s\n\t%s" ex.Message ex.StackTrace
+        reraise ()
 

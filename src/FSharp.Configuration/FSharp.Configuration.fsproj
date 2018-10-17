@@ -2,13 +2,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../netfx.props" />
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0; net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <AssemblyName>FSharp.Configuration</AssemblyName>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+      <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
-    <DefineConstants>NET45</DefineConstants>
-  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net45'" />
+    <Reference Include="System.Runtime.Caching" Condition="'$(TargetFramework)' == 'net45'" />
+    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' == 'net45'" />
+    <Reference Include="System.Windows.Forms" Condition="'$(TargetFramework)' == 'net45'" />
+  </ItemGroup>
    <ItemGroup>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi">
       <Paket>True</Paket>
@@ -30,41 +35,10 @@
     <Compile Include="IniFileProvider.fs" />
     <Compile Include="ConfigTypeProvider.fs" />
     <None Include="paket.references" />
+    <None Include="..\..\packages\NETStandard.Library.NETFramework\build\net461\lib\netstandard.dll" Condition="'$(TargetFramework)' == 'net45'">
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net45'" />
-    <Reference Include="System.Runtime.Caching" Condition="'$(TargetFramework)' == 'net45'" />
-    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' == 'net45'" />
-    <Reference Include="System.Windows.Forms" Condition="'$(TargetFramework)' == 'net45'" />
-  </ItemGroup>
+    
   <Import Project="..\..\.paket\Paket.Restore.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3' Or $(TargetFrameworkVersion) == 'v4.7' Or $(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2')">
-      <ItemGroup>
-        <Reference Include="FSharp.Core">
-          <HintPath>..\..\packages\FSharp.Core\lib\net40\FSharp.Core.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3' Or $(TargetFrameworkVersion) == 'v4.7' Or $(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2')">
-      <ItemGroup>
-        <Reference Include="SharpYaml">
-          <HintPath>..\..\packages\SharpYaml\lib\net45\SharpYaml.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
 </Project>

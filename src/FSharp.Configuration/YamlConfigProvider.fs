@@ -7,7 +7,6 @@ open System.Reflection
 open System
 open System.IO
 open System.Collections.Generic
-open System.Runtime.Caching
 
 open Microsoft.FSharp.Quotations
 
@@ -542,30 +541,27 @@ type Root (inferTypesFromStrings: bool) =
     member __.Error = errorEvent.Publish
 
 let internal typedYamlConfig (context: Context) =
-    let baseTy = typeof<Root>
+    try
+        let baseTy = typeof<Root>
 
-    let asm = Assembly.GetExecutingAssembly()
-    let yamlConfig = ProvidedTypeDefinition(asm, rootNamespace, "YamlConfig", Some baseTy, isErased = false)
+        let asm = Assembly.GetExecutingAssembly()
+        let yamlConfig = ProvidedTypeDefinition(asm, rootNamespace, "YamlConfig", Some baseTy, isErased = false)
 
-    let staticParams =
-        [ ProvidedStaticParameter ("FilePath", typeof<string>, "")
-          ProvidedStaticParameter ("ReadOnly", typeof<bool>, false)
-          ProvidedStaticParameter ("YamlText", typeof<string>, "")
-          ProvidedStaticParameter ("InferTypesFromStrings", typeof<bool>, true) ]
+        let staticParams =
+            [ ProvidedStaticParameter ("FilePath", typeof<string>, "")
+              ProvidedStaticParameter ("ReadOnly", typeof<bool>, false)
+              ProvidedStaticParameter ("YamlText", typeof<string>, "")
+              ProvidedStaticParameter ("InferTypesFromStrings", typeof<bool>, true) ]
 
-    yamlConfig.AddXmlDoc
-        """<summary>Statically typed YAML config.</summary>
-           <param name='FilePath'>Path to YAML file.</param>
-           <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
-           <param name='YamlText'>Yaml as text. Mutually exclusive with FilePath parameter.</param>"""
+        yamlConfig.AddXmlDoc
+            """<summary>Statically typed YAML config.</summary>
+               <param name='FilePath'>Path to YAML file.</param>
+               <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
+               <param name='YamlText'>Yaml as text. Mutually exclusive with FilePath parameter.</param>"""
 
-    let cache = new MemoryCache("YamlConfigProvider")
-    context.AddDisposable cache
-
-    yamlConfig.DefineStaticParameters(
-        parameters = staticParams,
-        instantiationFunction = fun typeName paramValues ->
-            let value = lazy (
+        yamlConfig.DefineStaticParameters(
+            parameters = staticParams,
+            instantiationFunction = fun typeName paramValues ->
                 let createTy yaml readOnly inferTypesFromStrings =
                     let myAssem = ProvidedAssembly()
                     let ty = ProvidedTypeDefinition (myAssem, rootNamespace, typeName, Some baseTy, isErased = false, hideObjectMethods = true)
@@ -590,6 +586,11 @@ let internal typedYamlConfig (context: Context) =
                               |> Path.GetFullPath
                           context.WatchFile filePath
                           createTy (File.ReadAllText filePath) readOnly inferTypesFromStrings
-                | _ -> failwith "Wrong parameters")
-            cache.GetOrAdd (typeName, value))
-    yamlConfig
+                | _ -> failwith "Wrong parameters"
+
+            )
+
+        yamlConfig
+    with ex ->
+        debug "Error in YamlProvider: %s\n\t%s" ex.Message ex.StackTrace
+        reraise ()
