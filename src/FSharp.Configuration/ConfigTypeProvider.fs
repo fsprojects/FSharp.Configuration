@@ -6,20 +6,18 @@ open ProviderImplementation.ProvidedTypes
 
 [<TypeProvider>]
 type FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
-    class
-        inherit TypeProviderForNamespaces(cfg)
-        let context = new Context(this, cfg)
-        do this.AddNamespace (
+    inherit TypeProviderForNamespaces(cfg, addDefaultProbingLocation = true)
+    let context = new Context(this, cfg)
+    do this.AddNamespace (
             rootNamespace,
-            [ 
+            [
 #if NET45
               ResXProvider.typedResources context
 #endif
               AppSettingsTypeProvider.typedAppSettings context
               YamlConfigTypeProvider.typedYamlConfig context
               IniFileProvider.typedIniFile context ])
-        do this.Disposing.Add (fun _ -> dispose context)
-    end
+    do this.Disposing.Add (fun _ -> dispose context)
 
 [<TypeProviderAssembly>]
 do ()

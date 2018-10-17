@@ -541,50 +541,56 @@ type Root (inferTypesFromStrings: bool) =
     member __.Error = errorEvent.Publish
 
 let internal typedYamlConfig (context: Context) =
-    let baseTy = typeof<Root>
+    try
+        let baseTy = typeof<Root>
 
-    let asm = Assembly.GetExecutingAssembly()
-    let yamlConfig = ProvidedTypeDefinition(asm, rootNamespace, "YamlConfig", Some baseTy, isErased = false)
+        let asm = Assembly.GetExecutingAssembly()
+        let yamlConfig = ProvidedTypeDefinition(asm, rootNamespace, "YamlConfig", Some baseTy, isErased = false)
 
-    let staticParams =
-        [ ProvidedStaticParameter ("FilePath", typeof<string>, "")
-          ProvidedStaticParameter ("ReadOnly", typeof<bool>, false)
-          ProvidedStaticParameter ("YamlText", typeof<string>, "")
-          ProvidedStaticParameter ("InferTypesFromStrings", typeof<bool>, true) ]
+        let staticParams =
+            [ ProvidedStaticParameter ("FilePath", typeof<string>, "")
+              ProvidedStaticParameter ("ReadOnly", typeof<bool>, false)
+              ProvidedStaticParameter ("YamlText", typeof<string>, "")
+              ProvidedStaticParameter ("InferTypesFromStrings", typeof<bool>, true) ]
 
-    yamlConfig.AddXmlDoc
-        """<summary>Statically typed YAML config.</summary>
-           <param name='FilePath'>Path to YAML file.</param>
-           <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
-           <param name='YamlText'>Yaml as text. Mutually exclusive with FilePath parameter.</param>"""
+        yamlConfig.AddXmlDoc
+            """<summary>Statically typed YAML config.</summary>
+               <param name='FilePath'>Path to YAML file.</param>
+               <param name='ReadOnly'>Whether the resulting properties will be read-only or not.</param>
+               <param name='YamlText'>Yaml as text. Mutually exclusive with FilePath parameter.</param>"""
 
-    yamlConfig.DefineStaticParameters(
-        parameters = staticParams,
-        instantiationFunction = fun typeName paramValues ->
-            let createTy yaml readOnly inferTypesFromStrings =
-                let myAssem = ProvidedAssembly()
-                let ty = ProvidedTypeDefinition (myAssem, rootNamespace, typeName, Some baseTy, isErased = false, hideObjectMethods = true)
-                let types = TypesFactory.transform readOnly None (Parser.parse inferTypesFromStrings yaml)
-                let ctr = ProvidedConstructor([], invokeCode = fun (me :: _) -> types.Init me)
-                let baseCtor = baseTy.GetConstructor(BindingFlags.Public ||| BindingFlags.Instance, null, [|typeof<bool>|], null)
-                ctr.BaseConstructorCall <- fun [me] -> baseCtor, [me; Expr.Value inferTypesFromStrings]
-                ty.AddMembers (ctr :> MemberInfo :: types.Types)
-                myAssem.AddTypes [ty]
-                ty
+        yamlConfig.DefineStaticParameters(
+            parameters = staticParams,
+            instantiationFunction = fun typeName paramValues ->
+                let createTy yaml readOnly inferTypesFromStrings =
+                    let myAssem = ProvidedAssembly()
+                    let ty = ProvidedTypeDefinition (myAssem, rootNamespace, typeName, Some baseTy, isErased = false, hideObjectMethods = true)
+                    let types = TypesFactory.transform readOnly None (Parser.parse inferTypesFromStrings yaml)
+                    let ctr = ProvidedConstructor([], invokeCode = fun (me :: _) -> types.Init me)
+                    let baseCtor = baseTy.GetConstructor(BindingFlags.Public ||| BindingFlags.Instance, null, [|typeof<bool>|], null)
+                    ctr.BaseConstructorCall <- fun [me] -> baseCtor, [me; Expr.Value inferTypesFromStrings]
+                    ty.AddMembers (ctr :> MemberInfo :: types.Types)
+                    myAssem.AddTypes [ty]
+                    ty
 
-            match paramValues with
-            | [| :? string as filePath; :? bool as readOnly; :? string as yamlText; :? bool as inferTypesFromStrings |] ->
-                 match filePath, yamlText with
-                 | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
-                 | "", yamlText -> createTy yamlText readOnly inferTypesFromStrings
-                 | filePath, _ ->
-                      let filePath =
-                          if Path.IsPathRooted filePath
-                          then filePath
-                          else context.ResolutionFolder </> filePath
-                          |> Path.GetFullPath
-                      context.WatchFile filePath
-                      createTy (File.ReadAllText filePath) readOnly inferTypesFromStrings
-            | _ -> failwith "Wrong parameters"
-        )
-    yamlConfig
+                match paramValues with
+                | [| :? string as filePath; :? bool as readOnly; :? string as yamlText; :? bool as inferTypesFromStrings |] ->
+                     match filePath, yamlText with
+                     | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
+                     | "", yamlText -> createTy yamlText readOnly inferTypesFromStrings
+                     | filePath, _ ->
+                          let filePath =
+                              if Path.IsPathRooted filePath
+                              then filePath
+                              else context.ResolutionFolder </> filePath
+                              |> Path.GetFullPath
+                          context.WatchFile filePath
+                          createTy (File.ReadAllText filePath) readOnly inferTypesFromStrings
+                | _ -> failwith "Wrong parameters"
+
+            )
+
+        yamlConfig
+    with ex ->
+        debug "Error in YamlProvider: %s\n\t%s" ex.Message ex.StackTrace
+        reraise ()
