@@ -1,23 +1,28 @@
 REDIRECTS: FORCE
-RESTRICTION: == netstandard2.0
+RESTRICTION: || (== net461) (== netstandard2.0)
 NUGET
   remote: http://www.nuget.org/api/v2
     FSharp.Core (4.3.4)
+    Microsoft.NETCore.Platforms (2.2.0-preview3-27014-02) - restriction: || (== net461) (&& (== netstandard2.0) (>= net461))
+    NETStandard.Library (2.0.3) - restriction: || (== net461) (&& (== netstandard2.0) (>= net461))
+      Microsoft.NETCore.Platforms (>= 1.1)
     NETStandard.Library.NETFramework (2.0.0-preview2-25405-01)
-    System.Buffers (4.5)
+      Microsoft.NETCore.Platforms (>= 2.0.0-preview2-25405-01) - restriction: || (== net461) (&& (== netstandard2.0) (>= net461))
+      NETStandard.Library (>= 2.0.0-preview2-25401-01) - restriction: || (== net461) (&& (== netstandard2.0) (>= net461))
+    System.Buffers (4.5) - restriction: == netstandard2.0
     System.Configuration.ConfigurationManager (4.5)
-      System.Security.Cryptography.ProtectedData (>= 4.5)
+      System.Security.Cryptography.ProtectedData (>= 4.5) - restriction: == netstandard2.0
       System.Security.Permissions (>= 4.5)
-    System.Memory (4.5.1)
+    System.Memory (4.5.1) - restriction: == netstandard2.0
       System.Buffers (>= 4.4)
       System.Numerics.Vectors (>= 4.4)
       System.Runtime.CompilerServices.Unsafe (>= 4.5)
-    System.Numerics.Vectors (4.5)
-    System.Runtime.CompilerServices.Unsafe (4.5.2)
+    System.Numerics.Vectors (4.5) - restriction: == netstandard2.0
+    System.Runtime.CompilerServices.Unsafe (4.5.2) - restriction: == netstandard2.0
     System.Security.AccessControl (4.5)
       System.Security.Principal.Windows (>= 4.5)
-    System.Security.Cryptography.ProtectedData (4.5)
-      System.Memory (>= 4.5)
+    System.Security.Cryptography.ProtectedData (4.5) - restriction: == netstandard2.0
+      System.Memory (>= 4.5) - restriction: || (&& (== net461) (< net46) (>= netstandard2.0)) (== netstandard2.0)
     System.Security.Permissions (4.5)
       System.Security.AccessControl (>= 4.5)
     System.Security.Principal.Windows (4.5.1)
@@ -28,7 +33,7 @@ GITHUB
     src/ProvidedTypes.fsi (7d57cd409d7299592822713195924e42b2b7acde)
     src/ProvidedTypesTesting.fs (7d57cd409d7299592822713195924e42b2b7acde)
 GROUP Build
-RESTRICTION: == net45
+RESTRICTION: == net461
 NUGET
   remote: https://www.nuget.org/api/v2
     FAKE (4.64.13)
@@ -44,14 +49,6 @@ GITHUB
   remote: fsharp/FAKE
     modules/Octokit/Octokit.fsx (3827f95ad533978ec14c29db92658f48b0609e05)
       Octokit (>= 0.20)
-GROUP Legacy
-REDIRECTS: FORCE
-RESTRICTION: == net45
-NUGET
-  remote: https://api.nuget.org/v3/index.json
-    FSharp.Core (4.0.0.1)
-    YamlDotNet (5.2.1)
-
 GROUP Test
 REDIRECTS: FORCE
 RESTRICTION: || (== net461) (== netcoreapp2.0)

@@ -15,7 +15,7 @@ licenseUrl
 requireLicenseAcceptance
     false
 copyright
-    Copyright 2014-2018
+    Copyright 2014-2019
 tags
     appsettings YAML F# ResX Ini config
 summary
@@ -23,8 +23,8 @@ summary
 description
     The FSharp.Configuration project contains type providers for the configuration of .NET projects.
 files
-    bin/lib/net45/FSharp.Configuration.* ==> lib/net45
-    bin/lib/net45/YamlDotNet.dll ==> lib/net45
+    bin/lib/net461/FSharp.Configuration.* ==> lib/net461
+    bin/lib/net461/YamlDotNet.dll ==> lib/net461
     bin/lib/netstandard2.0/FSharp.Configuration.* ==> lib/netstandard2.0
     bin/lib/netstandard2.0/YamlDotNet.dll ==> lib/netstandard2.0
     bin/lib/netstandard2.0/System.*.dll ==> lib/netstandard2.0
@@ -36,8 +36,8 @@ files
 dependencies
     framework: netstandard20
         FSharp.Core >= LOCKEDVERSION
-    framework: net45
-        FSharp.Core >= LOCKEDVERSION-Legacy
+    framework: net461
+        FSharp.Core >= LOCKEDVERSION
 references
     FSharp.Configuration.dll
     YamlDotNet.dll

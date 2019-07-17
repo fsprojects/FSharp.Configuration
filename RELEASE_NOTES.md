@@ -1,3 +1,6 @@
+#### 2.0.0-beta1 - 17.07.2019
+* Targets net461 instead of net45
+
 #### 2.0.0-alpha2 - 16.06.2018
 * Migration to project system
 * YamlConfigTypeProvider targets net45 and netstandard2.0
@@ -7,7 +10,7 @@
 
 #### 1.5.0 - 15.06.2018
 * Tweak INI File Parser to allow semicolon characters inside string values (thanks [@zakakula](https://github.com/zakaluka)!).
-  * NOTE: This will result in comments no longer being valid beside string values, instead comments should go on a line above the key-value pair
+* NOTE: This will result in comments no longer being valid beside string values, instead comments should go on a line above the key-value pair
 
 #### 1.4.0 - 23.02.2018
 * Migration to latest TPSDK

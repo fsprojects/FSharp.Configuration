@@ -6,7 +6,8 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.0; net461</TargetFrameworks>
     <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DisableAutoSetFscCompilerPath>true</DisableAutoSetFscCompilerPath>
+    <DotnetFscCompilerPath></DotnetFscCompilerPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>NET461</DefineConstants>
@@ -31,8 +32,27 @@
     </Content>
     <Content Include="TextFile.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../../src/FSharp.Configuration/FSharp.Configuration.fsproj" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+     <Reference Include="FSharp.Configuration">
+       <HintPath>..\..\bin\lib\net461\FSharp.Configuration.dll</HintPath>
+     </Reference>
+     <Reference Include="System.Configuration.ConfigurationManager">
+       <HintPath>..\..\bin\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+     </Reference>
+     <Reference Include="YamlDotNet">
+       <HintPath>..\..\bin\lib\net461\YamlDotNet.dll</HintPath>
+     </Reference>
+   </ItemGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+     <Reference Include="FSharp.Configuration">
+       <HintPath>..\..\bin\lib\netstandard2.0\FSharp.Configuration.dll</HintPath>
+     </Reference>
+      <Reference Include="System.Configuration.ConfigurationManager">
+       <HintPath>..\..\bin\lib\netstandard2.0\System.Configuration.ConfigurationManager.dll</HintPath>
+     </Reference>
+     <Reference Include="YamlDotNet">
+       <HintPath>..\..\bin\lib\netstandard2.0\YamlDotNet.dll</HintPath>
+     </Reference>
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

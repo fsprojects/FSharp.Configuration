@@ -1,27 +1,19 @@
 source http://nuget.org/api/v2
-framework: netstandard2.0
+framework: netstandard2.0, net461
 redirects: force
 
 nuget YamlDotNet
 nuget FSharp.Core 4.3.4
 
 nuget System.Configuration.ConfigurationManager
-nuget NETStandard.Library.NETFramework prerelease
+nuget NETStandard.Library.NETFramework
 
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fs
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fsi
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypesTesting.fs
 
-group Legacy
-  source https://api.nuget.org/v3/index.json
-  framework: net45
-  redirects: force
-
-  nuget YamlDotNet
-  nuget FSharp.Core >= 4.0 lowest_matching:true
-
 group Build
-    framework: net45
+    framework: net461
     source https://nuget.org/api/v2
 
     nuget FAKE ~> 4.0

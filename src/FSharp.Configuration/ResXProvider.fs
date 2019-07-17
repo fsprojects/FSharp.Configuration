@@ -1,6 +1,6 @@
 ﻿module FSharp.Configuration.ResXProvider
 
-#if NET45
+#if NET461
 
 open System
 open System.IO

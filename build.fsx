@@ -106,7 +106,7 @@ Target "CleanDocs" (fun _ ->
 // Build library & test project
 
 let mutable dotnetExePath = "dotnet"
-let dotnetcliVersion = "2.1.300"
+let dotnetcliVersion = "2.2.301"
 
 Target "InstallDotNetCore" (fun _ ->
     dotnetExePath <- DotNetCli.InstallDotNetSDK dotnetcliVersion
@@ -114,12 +114,12 @@ Target "InstallDotNetCore" (fun _ ->
 )
 
 Target "Build" (fun _ ->
-    let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/net45/"
+    let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/net461/"
     CreateDir outDir
     DotNetCli.Publish (fun p -> 
         { p with
             Output = outDir
-            Framework = "net45"
+            Framework = "net461"
             WorkingDir = "src/FSharp.Configuration/" })
 
     let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/netstandard2.0/"

@@ -8,7 +8,7 @@ open System
 open System.Configuration
 open System.Collections.Generic
 open System.Globalization
-#if NET45
+#if NET461
 open System.Web.Hosting
 #endif
 
@@ -20,7 +20,7 @@ let getConfig file =
     if path.ContainsKey(file) && System.IO.File.Exists(path.[file]) then
         ConfigurationManager.OpenExeConfiguration path.[file]
     else
-#if NET45
+#if NET461
         if HostingEnvironment.IsHosted then
             Web.Configuration.WebConfigurationManager.OpenWebConfiguration "~"
         else ConfigurationManager.OpenExeConfiguration ConfigurationUserLevel.None
