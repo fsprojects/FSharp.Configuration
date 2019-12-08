@@ -61,7 +61,7 @@ let nugetDir = "./nuget/"
 // Read additional information from the release notes document
 let release = LoadReleaseNotes "RELEASE_NOTES.md"
 
-let genFSAssemblyInfo (projectPath) =
+let genFSAssemblyInfo (projectPath:string) =
     let projectName = System.IO.Path.GetFileNameWithoutExtension(projectPath)
     let basePath = "src/" + projectName
     let fileName = basePath + "/AssemblyInfo.fs"
@@ -72,7 +72,7 @@ let genFSAssemblyInfo (projectPath) =
         Attribute.Version release.AssemblyVersion
         Attribute.FileVersion release.AssemblyVersion ]
 
-let genCSAssemblyInfo (projectPath) =
+let genCSAssemblyInfo (projectPath:string) =
     let projectName = System.IO.Path.GetFileNameWithoutExtension(projectPath)
     let basePath = "src/" + projectName + "/Properties"
     let fileName = basePath + "/AssemblyInfo.cs"
@@ -106,7 +106,7 @@ Target "CleanDocs" (fun _ ->
 // Build library & test project
 
 let mutable dotnetExePath = "dotnet"
-let dotnetcliVersion = "2.2.301"
+let dotnetcliVersion = "2.1.802"
 
 Target "InstallDotNetCore" (fun _ ->
     dotnetExePath <- DotNetCli.InstallDotNetSDK dotnetcliVersion
