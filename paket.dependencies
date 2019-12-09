@@ -28,5 +28,6 @@ group Test
     source https://nuget.org/api/v2
     redirects: force
 
-    nuget FSharp.Core 4.3.4 redirects: force
+    nuget FSharp.Core redirects: force
     nuget Expecto
+    nuget System.Resources.Extensions

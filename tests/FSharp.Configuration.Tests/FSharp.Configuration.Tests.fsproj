@@ -8,6 +8,7 @@
     <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
     <DisableAutoSetFscCompilerPath>true</DisableAutoSetFscCompilerPath>
     <DotnetFscCompilerPath></DotnetFscCompilerPath>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>NET461</DefineConstants>
