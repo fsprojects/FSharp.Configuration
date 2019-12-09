@@ -112,7 +112,7 @@ module ValueParser =
 
     /// Converts a function returning bool,value to a function returning value option.
     /// Useful to process TryXX style functions.
-    let inline private tryParseWith func = func >> function
+    let inline private tryParseWith (func : string -> 'a) = func >> function
         | true, value -> Some value
         | false, _ -> None
 
