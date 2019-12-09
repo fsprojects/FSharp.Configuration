@@ -105,14 +105,6 @@ Target "CleanDocs" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build library & test project
 
-let mutable dotnetExePath = "dotnet"
-let dotnetcliVersion = "2.1.802"
-
-Target "InstallDotNetCore" (fun _ ->
-    dotnetExePath <- DotNetCli.InstallDotNetSDK dotnetcliVersion
-    Environment.SetEnvironmentVariable("DOTNET_EXE_PATH", dotnetExePath)
-)
-
 Target "Build" (fun _ ->
     let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/net461/"
     CreateDir outDir
@@ -136,7 +128,6 @@ Target "BuildTests" (fun _ ->
         { c with
             Project = "FSharp.Configuration.Tests.sln"
             Configuration = "Release"
-            ToolPath = dotnetExePath
             AdditionalArgs= ["-v n"] 
         })
 )
@@ -273,7 +264,6 @@ Target "All" DoNothing
 
 "Clean"
   ==> "AssemblyInfo"
-  ==> "InstallDotNetCore"
   ==> "Build"
   ==> "BuildTests"
   ==> "RunTests"
