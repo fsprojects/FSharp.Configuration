@@ -117,7 +117,7 @@ module ValueParser =
 
     /// Converts a function returning bool,value to a function returning value option.
     /// Useful to process TryXX style functions.
-    let inline private tryParseWith func = func >> function
+    let inline private tryParseWith (func : string -> 'a) = func >> function
         | true, value -> Some value
         | false, _ -> None
 
@@ -317,3 +317,20 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
 
     interface IDisposable with
         member __.Dispose() = agent.Post Cancel
+
+// open System.Runtime.Caching
+
+// type MemoryCache with
+//     member x.GetOrAdd(key: string, value: Lazy<ProvidedTypeDefinition>, ?expiration: TimeSpan) =
+//         let policy = CacheItemPolicy()
+//         policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
+
+//         match x.AddOrGetExisting(key, value, policy) with
+//         | :? Lazy<ProvidedTypeDefinition> as item ->
+//             try item.Value
+//             with _ ->
+//                 x.Remove key |> ignore
+//                 value.Value
+//         | x ->
+//             assert(x = null)
+//             value.Value
