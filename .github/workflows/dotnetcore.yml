@@ -27,6 +27,10 @@ jobs:
     - name: Build and Test (.sh)
       if: matrix.os != 'windows-latest'
       run: ./build.sh
+<<<<<<< HEAD
       - name: Build and Test (.cmd)
+=======
+    - name: Build and Test (.cmd)
+>>>>>>> 9aa9e7c04e2102a31dec390532988a69d4e7514a
       if: matrix.os == 'windows-latest'
       run: .\build.cmd
