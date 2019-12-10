@@ -24,7 +24,7 @@ group Build
     github fsharp/FAKE modules/Octokit/Octokit.fsx
 
 group Test
-    framework: net461, netcoreapp2.0
+    framework: net461, netcoreapp3.1
     source https://nuget.org/api/v2
     redirects: force
 

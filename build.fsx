@@ -145,7 +145,7 @@ Target "RunTests" (fun _ ->
 Target "RunTestsNetCore" (fun _ ->
     DotNetCli.RunCommand 
         (fun r -> { r with  WorkingDir = "tests/FSharp.Configuration.Tests/" }) 
-        "run --framework netcoreapp2.0"
+        "run --framework netcoreapp3.1"
 )
 
 // --------------------------------------------------------------------------------------
