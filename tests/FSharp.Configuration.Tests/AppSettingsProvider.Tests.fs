@@ -24,12 +24,12 @@ let [<Tests>] tests =
     ]
 
 [<Literal>] 
-let fakeConfig = __SOURCE_DIRECTORY__ + @"/../../packages/FAKE/tools/FAKE.Deploy.exe.config"
+let fakeConfig = __SOURCE_DIRECTORY__ + @"/../../packages/build/FAKE/tools/FAKE.Deploy.exe.config"
 type FakeSettings = AppSettings<fakeConfig>
     
 let [<Tests>] test =
     testCase "Can read different configuration file" (fun _ -> 
-        [| __SOURCE_DIRECTORY__; ".."; ".."; "packages"; "FAKE"; "tools"; "FAKE.Deploy.exe" |]
+        [| __SOURCE_DIRECTORY__; ".."; ".."; "packages"; "build"; "FAKE"; "tools"; "FAKE.Deploy.exe" |]
         |> System.IO.Path.Combine |> System.IO.Path.GetFullPath
         |> FakeSettings.SelectExecutableFile
     

@@ -197,7 +197,7 @@ let createNiceNameProvider() =
         set.Add name |> ignore
         name
 
-let findConfigFile resolutionFolder configFileName =
+let findConfigFile resolutionFolder (configFileName:string) =
     if Path.IsPathRooted configFileName then
         configFileName
     else
@@ -268,7 +268,7 @@ module File =
         watcher.EnableRaisingEvents <- true
         watcher :> IDisposable
 
-    let getFullPath resolutionFolder fileName =
+    let getFullPath resolutionFolder (fileName:string) =
         if Path.IsPathRooted fileName then
           fileName
         else resolutionFolder </> fileName

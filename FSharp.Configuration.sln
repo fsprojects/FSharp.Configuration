@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A6A6AF7D-D
 		docs\content\Sample.ini = docs\content\Sample.ini
 		docs\content\YamlConfigProvider.fsx = docs\content\YamlConfigProvider.fsx
 	EndProjectSection
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Configuration", "src\FSharp.Configuration\FSharp.Configuration.fsproj", "{7E90D6CE-A10B-4858-A5BC-41DF7250CBCA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{BF60BC93-E09B-4E5F-9D85-95A519479D54}"
 	ProjectSection(SolutionItems) = preProject
@@ -33,16 +31,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{83F16175
 		docs\tools\templates\template.cshtml = docs\tools\templates\template.cshtml
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Configuration.Runtime", "src\FSharp.Configuration.Runtime\FSharp.Configuration.Runtime.fsproj", "{CB156D37-AA7D-4F43-9BC8-816318107F79}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Configuration.DesignTime", "src\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj", "{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7E90D6CE-A10B-4858-A5BC-41DF7250CBCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E90D6CE-A10B-4858-A5BC-41DF7250CBCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E90D6CE-A10B-4858-A5BC-41DF7250CBCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E90D6CE-A10B-4858-A5BC-41DF7250CBCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

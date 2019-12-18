@@ -106,21 +106,28 @@ Target "CleanDocs" (fun _ ->
 // Build library & test project
 
 Target "Build" (fun _ ->
-    let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/net461/"
-    CreateDir outDir
-    DotNetCli.Publish (fun p -> 
-        { p with
-            Output = outDir
-            Framework = "net461"
-            WorkingDir = "src/FSharp.Configuration/" })
+    DotNetCli.Build (fun c ->
+        { c with
+            Project = "FSharp.Configuration.sln"
+            Configuration = "Release"
+            //AdditionalArgs= ["-v n"] 
+        })
 
-    let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/netstandard2.0/"
-    CreateDir outDir
-    DotNetCli.Publish (fun p -> 
-        { p with
-            Output = outDir
-            Framework = "netstandard2.0"
-            WorkingDir = "src/FSharp.Configuration/" })
+    // let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/net461/"
+    // CreateDir outDir
+    // DotNetCli.Publish (fun p -> 
+    //     { p with
+    //         Output = outDir
+    //         Framework = "net461"
+    //         WorkingDir = "src/FSharp.Configuration/" })
+
+    // let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/netstandard2.0/"
+    // CreateDir outDir
+    // DotNetCli.Publish (fun p -> 
+    //     { p with
+    //         Output = outDir
+    //         Framework = "netstandard2.0"
+    //         WorkingDir = "src/FSharp.Configuration/" })
 )
 
 Target "BuildTests" (fun _ ->
