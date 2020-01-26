@@ -1,3 +1,6 @@
+#### 1.6.0 - 26.01.2020
+* Fix bug triggering exception 'xx_ItemType is not comparable' when updating an empty list
+
 #### 1.5.0 - 15.06.2018
 * Tweak INI File Parser to allow semicolon characters inside string values (thanks [@zakakula](https://github.com/zakaluka)!).
   * NOTE: This will result in comments no longer being valid beside string values, instead comments should go on a line above the key-value pair
