@@ -12,17 +12,6 @@ github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fs
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fsi
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypesTesting.fs
 
-group Build
-    framework: net461
-    source https://nuget.org/api/v2
-
-    nuget FAKE ~> 4.0
-    nuget FSharp.Formatting
-    nuget Octokit
-    nuget SourceLink.Fake
-
-    github fsharp/FAKE modules/Octokit/Octokit.fsx
-
 group Test
     framework: net461, netcoreapp3.1
     source https://nuget.org/api/v2

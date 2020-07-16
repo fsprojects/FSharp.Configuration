@@ -175,6 +175,7 @@ TestResults.xml
 release.cmd
 nuget/
 .paket/
+.fake/
 
 # Nuget outputs
 nuget/*.nupkg

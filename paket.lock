@@ -41,18 +41,6 @@ GITHUB
     src/ProvidedTypes.fs (b45779c1571b54a2bc6bafa12690a8d9763150d1)
     src/ProvidedTypes.fsi (b45779c1571b54a2bc6bafa12690a8d9763150d1)
     src/ProvidedTypesTesting.fs (b45779c1571b54a2bc6bafa12690a8d9763150d1)
-GROUP Build
-RESTRICTION: == net461
-NUGET
-  remote: https://www.nuget.org/api/v2
-    FAKE (4.64.18)
-    FSharp.Formatting (5.0.5)
-    Octokit (0.48)
-    SourceLink.Fake (1.1)
-GITHUB
-  remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (74421063dd3915e8e1e407926b38b8b25df50e36)
-      Octokit (>= 0.20)
 GROUP Test
 REDIRECTS: FORCE
 RESTRICTION: || (== net461) (== netcoreapp3.1)

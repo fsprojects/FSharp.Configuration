@@ -5,5 +5,5 @@ then
 else
   dotnet tool restore
   dotnet paket restore
-  mono packages/build/FAKE/tools/FAKE.exe build.fsx $@
+  dotnet fake run build.fsx $@
 fi

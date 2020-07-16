@@ -1,6 +1,7 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A6A6AF7D-D6E3-442D-9B1E-58CC91879BE1}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,7 +19,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{BF60BC93-E09B-4E5F-9D85-95A519479D54}"
 	ProjectSection(SolutionItems) = preProject
 		build.fsx = build.fsx
-		FSharp.Configuration.nuspec = FSharp.Configuration.nuspec
 		paket.dependencies = paket.dependencies
 		paket.lock = paket.lock
 		README.md = README.md
@@ -31,15 +31,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{83F16175
 		docs\tools\templates\template.cshtml = docs\tools\templates\template.cshtml
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Configuration.Runtime", "src\FSharp.Configuration.Runtime\FSharp.Configuration.Runtime.fsproj", "{CB156D37-AA7D-4F43-9BC8-816318107F79}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FSharp.Configuration.Runtime", "src\FSharp.Configuration.Runtime\FSharp.Configuration.Runtime.fsproj", "{CB156D37-AA7D-4F43-9BC8-816318107F79}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Configuration.DesignTime", "src\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj", "{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FSharp.Configuration.DesignTime", "src\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj", "{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F1BDBF61-84AB-476B-9A1D-3FB51E7DB4BC}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Configuration.Tests", "tests\FSharp.Configuration.Tests\FSharp.Configuration.Tests.fsproj", "{783E4DEA-BB2F-4A71-8D24-781260DB38F1}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{09FBC2D9-4689-4759-919B-B0A2662522BC}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Configuration.Tests", "tests\FSharp.Configuration.Tests\FSharp.Configuration.Tests.fsproj", "{4E6FEA3F-9C19-45E1-AA59-2FA7CEBAF11F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,22 +47,29 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CB156D37-AA7D-4F43-9BC8-816318107F79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB156D37-AA7D-4F43-9BC8-816318107F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB156D37-AA7D-4F43-9BC8-816318107F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB156D37-AA7D-4F43-9BC8-816318107F79}.Release|Any CPU.Build.0 = Release|Any CPU
 		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{783E4DEA-BB2F-4A71-8D24-781260DB38F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{783E4DEA-BB2F-4A71-8D24-781260DB38F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{783E4DEA-BB2F-4A71-8D24-781260DB38F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{783E4DEA-BB2F-4A71-8D24-781260DB38F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E6FEA3F-9C19-45E1-AA59-2FA7CEBAF11F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E6FEA3F-9C19-45E1-AA59-2FA7CEBAF11F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E6FEA3F-9C19-45E1-AA59-2FA7CEBAF11F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E6FEA3F-9C19-45E1-AA59-2FA7CEBAF11F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{83F16175-43B1-4C90-A1EE-8E351C33435D} = {A6A6AF7D-D6E3-442D-9B1E-58CC91879BE1}
-		{783E4DEA-BB2F-4A71-8D24-781260DB38F1} = {F1BDBF61-84AB-476B-9A1D-3FB51E7DB4BC}
-		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68} = {09FBC2D9-4689-4759-919B-B0A2662522BC}
 		{CB156D37-AA7D-4F43-9BC8-816318107F79} = {09FBC2D9-4689-4759-919B-B0A2662522BC}
+		{28A30128-1DDE-4CD8-9A67-A6FC0BBC2D68} = {09FBC2D9-4689-4759-919B-B0A2662522BC}
+		{4E6FEA3F-9C19-45E1-AA59-2FA7CEBAF11F} = {F1BDBF61-84AB-476B-9A1D-3FB51E7DB4BC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F7E4B18-0D4C-454A-A7BD-3F3E5E8CE018}
 	EndGlobalSection
 EndGlobal
