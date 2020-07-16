@@ -81,8 +81,11 @@ module private TypesFactory =
         let field = ProvidedField("_" +  name, rawType)
         let prop =
             if readOnly
-            then ProvidedProperty (name, rawType, isStatic = false, getterCode = (fun [me] -> Expr.FieldGetUnchecked(me, field)))
-            else ProvidedProperty (name, rawType, isStatic = false, getterCode = (fun [me] -> Expr.FieldGetUnchecked(me, field)), setterCode = (fun [me;v] -> Expr.FieldSetUnchecked(me, field, v)))
+            then ProvidedProperty (name, rawType, isStatic = false,
+                                   getterCode = (fun [me] -> Expr.FieldGetUnchecked(me, field)))
+            else ProvidedProperty (name, rawType, isStatic = false,
+                                   getterCode = (fun [me] -> Expr.FieldGetUnchecked(me, field)),
+                                   setterCode = (fun [me;v] -> Expr.FieldSetUnchecked(me, field, v)))
         let initValue = node.ToExpr()
 
         { MainType = Some rawType
@@ -121,7 +124,8 @@ module private TypesFactory =
                     )
 
                 let ctr = ProvidedConstructor([], invokeCode = (fun [me] -> childInits me))
-                mapTy.AddMembers (ctr :> MemberInfo :: childTypes)
+                mapTy.AddMembers childTypes
+                mapTy.AddMember ctr
                 mapTy.AddMember eventField
                 mapTy.AddMember event
                 [{ MainType = Some (mapTy :> _)
@@ -195,7 +199,8 @@ module private TypesFactory =
             let prop = ProvidedProperty (name, mapTy, isStatic = false, getterCode = (fun [me] -> Expr.FieldGetUnchecked(me, field)))
             { MainType = Some (mapTy :> _)
               Types = [mapTy :> MemberInfo; field :> MemberInfo; prop :> MemberInfo]
-              Init = fun me -> Expr.FieldSetUnchecked(me, field, Expr.NewObject(ctr, [])) }
+              Init = fun me -> Expr.FieldSetUnchecked(me, field, Expr.NewObject(ctr, [])) 
+            }
         | None ->
             { MainType = None
               Types = [eventField :> MemberInfo; event :> MemberInfo] @ childTypes
