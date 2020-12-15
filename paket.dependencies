@@ -10,7 +10,7 @@ nuget NETStandard.Library.NETFramework
 
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fs
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fsi
-github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypesTesting.fs
+github fsprojects/FSharp.TypeProviders.SDK tests/ProvidedTypesTesting.fs
 
 group Test
     framework: net461, netcoreapp3.1

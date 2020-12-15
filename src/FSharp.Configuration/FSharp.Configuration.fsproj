@@ -4,9 +4,9 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <AssemblyName>FSharp.Configuration</AssemblyName>
-      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
-      <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>NET461</DefineConstants>
@@ -15,7 +15,11 @@
     <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net461'" />
     <Reference Include="System.Windows.Forms" Condition="'$(TargetFramework)' == 'net461'" />
   </ItemGroup>
-   <ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\tests\ProvidedTypesTesting.fs">
+      <Paket>True</Paket>
+      <Link>ProvidedTypesTesting.fs</Link>
+    </Compile>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi">
       <Paket>True</Paket>
       <Link>ProvidedTypes.fsi</Link>
@@ -23,10 +27,6 @@
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fs">
       <Paket>True</Paket>
       <Link>ProvidedTypes.fs</Link>
-    </Compile>
-    <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypesTesting.fs">
-      <Paket>True</Paket>
-      <Link>ProvidedTypesTesting.fs</Link>
     </Compile>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="TypeProviders.Helper.fs" />
@@ -37,9 +37,8 @@
     <Compile Include="ConfigTypeProvider.fs" />
     <None Include="paket.references" />
     <None Include="..\..\packages\NETStandard.Library.NETFramework\build\net461\lib\netstandard.dll" Condition="'$(TargetFramework)' == 'net461'">
-       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-    
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

@@ -176,6 +176,7 @@ release.cmd
 nuget/
 .paket/
 .fake/
+.ionide/
 
 # Nuget outputs
 nuget/*.nupkg

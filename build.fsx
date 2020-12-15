@@ -1,6 +1,7 @@
 #r @"paket:
 source https://nuget.org/api/v2
 framework netstandard2.0
+nuget FSharp.Core 4.7.2
 nuget Fake.Core.Target
 nuget Fake.Core.Process
 nuget Fake.Core.ReleaseNotes 
@@ -303,7 +304,7 @@ Target.create "All" ignore
   ==> "Build"
   ==> "BuildTests"
   ==> "RunTestsNetCore"
-  ==> "RunTests"
+  //==> "RunTests"
   //=?> ("GenerateReferenceDocs",isLocalBuild && not isMono)
   //=?> ("GenerateDocs",isLocalBuild && not isMono)
   ==> "All"
