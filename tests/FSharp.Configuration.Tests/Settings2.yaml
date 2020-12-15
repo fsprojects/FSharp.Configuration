@@ -11,8 +11,8 @@
     Password: pass2
     CheckPeriod: 0:00:01:00.0000000
   ErrorNotificationRecipients:
-    - user1@sample.com
-    - user2@sample.com
+  - user1@sample.com
+  - user2@sample.com
 DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 11

@@ -1,5 +1,8 @@
-SharpYaml
+YamlDotNet
 FSharp.Core
+
+System.Configuration.ConfigurationManager
+
 File: ProvidedTypes.fsi .
 File: ProvidedTypes.fs .
 File: ProvidedTypesTesting.fs .
