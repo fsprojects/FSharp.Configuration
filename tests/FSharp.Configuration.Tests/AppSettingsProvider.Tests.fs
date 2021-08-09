@@ -23,17 +23,17 @@ let [<Tests>] tests =
         testCase "Can read multiple connection strings from the config file" (fun _ -> Expect.notEqual Settings.ConnectionStrings.Test1 Settings.ConnectionStrings.Test2 "value")
     ]
 
-[<Literal>] 
-let fakeConfig = __SOURCE_DIRECTORY__ + @"/../../packages/build/FAKE/tools/FAKE.Deploy.exe.config"
-type FakeSettings = AppSettings<fakeConfig>
+// [<Literal>] 
+// let fakeConfig = __SOURCE_DIRECTORY__ + @"/../../packages/build/FAKE/tools/FAKE.Deploy.exe.config"
+// type FakeSettings = AppSettings<fakeConfig>
     
-let [<Tests>] test =
-    testCase "Can read different configuration file" (fun _ -> 
-        [| __SOURCE_DIRECTORY__; ".."; ".."; "packages"; "build"; "FAKE"; "tools"; "FAKE.Deploy.exe" |]
-        |> System.IO.Path.Combine |> System.IO.Path.GetFullPath
-        |> FakeSettings.SelectExecutableFile
+// let [<Tests>] test =
+//     testCase "Can read different configuration file" (fun _ -> 
+//         [| __SOURCE_DIRECTORY__; ".."; ".."; "packages"; "build"; "FAKE"; "tools"; "FAKE.Deploy.exe" |]
+//         |> System.IO.Path.Combine |> System.IO.Path.GetFullPath
+//         |> FakeSettings.SelectExecutableFile
     
-    #if INTERACTIVE //Travis can't handle fakeConfig-directory
-        FakeSettings.ServerName =! "localhost"
-    #endif
-    )
+//     #if INTERACTIVE //Travis can't handle fakeConfig-directory
+//         FakeSettings.ServerName =! "localhost"
+//     #endif
+//     )

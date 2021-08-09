@@ -32,25 +32,25 @@ let internal typedIniFile (context: Context) =
                                                 match Ini.getValue filePath sectionName key with
                                                 | Some v -> Int32.Parse v
                                                 | None -> value
-                                             @@>)
+                                            @@>)
                                         | ValueParser.Bool value -> ProvidedProperty(key, typeof<bool>, isStatic = true, getterCode = fun _ ->
                                             <@@
                                                 match Ini.getValue filePath sectionName key with
                                                 | Some v -> Boolean.Parse v
                                                 | None -> value
-                                             @@>)
+                                            @@>)
                                         | ValueParser.Float value -> ProvidedProperty(key, typeof<float>, isStatic = true, getterCode = fun _ ->
                                             <@@
                                                 match Ini.getValue filePath sectionName key with
                                                 | Some v -> Double.Parse (v, NumberStyles.Any, CultureInfo.InvariantCulture)
                                                 | None -> value
-                                             @@>)
+                                            @@>)
                                         | value -> ProvidedProperty(key, typeof<string>, isStatic = true, getterCode = fun _ ->
                                             <@@
                                                 match Ini.getValue filePath sectionName key with
                                                 | Some v -> v
                                                 | None -> value
-                                             @@>)
+                                            @@>)
 
                                     prop.AddXmlDoc (sprintf "Returns the value from %s from section %s with key %s" iniFileName section.Name setting.Key)
                                     prop.AddDefinitionLocation(1, 1, filePath)

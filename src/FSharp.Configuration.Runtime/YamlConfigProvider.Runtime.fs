@@ -5,6 +5,7 @@ open System
 open System.IO
 open System.Collections.Generic
 
+open YamlDotNet.Core
 open YamlDotNet.Serialization
 open FSharp.Configuration
 
@@ -273,7 +274,7 @@ type Root (inferTypesFromStrings: bool) =
                         match value with
                         | :? TimeSpan as ts ->
                             let formattedValue = ts.ToString("G")
-                            emitter.Emit(YamlDotNet.Core.Events.Scalar(null, formattedValue));
+                            emitter.Emit(YamlDotNet.Core.Events.Scalar(TagName(), formattedValue));
                         | _ -> failwithf "Expected TimeSpan but received %A" value
             })
             .Build()

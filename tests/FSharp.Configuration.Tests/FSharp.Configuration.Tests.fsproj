@@ -4,7 +4,7 @@
   <Import Project="../../netfx.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+    <TargetFrameworks>net5.0;net461</TargetFrameworks>
     <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -53,7 +53,7 @@
        <HintPath>..\..\bin\lib\net461\YamlDotNet.dll</HintPath>
      </Reference>
    </ItemGroup>
-   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
      <Reference Include="FSharp.Configuration">
        <HintPath>..\..\bin\lib\netstandard2.0\FSharp.Configuration.dll</HintPath>
      </Reference>

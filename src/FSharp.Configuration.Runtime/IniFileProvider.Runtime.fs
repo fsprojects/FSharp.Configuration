@@ -65,8 +65,8 @@ module Parser =
         | Sections (sections, _) -> Choice1Of2 sections
         | e -> Choice2Of2 e
 
-let getValue (iniFileName: string) (section: string) (key: string) =
-    match Parser.parse (Path.GetFileName iniFileName) with
+let getValue (iniFilePath: string) (section: string) (key: string) =
+    match Parser.parse iniFilePath with
     | Choice1Of2 sections ->
         maybe {
             let! section = sections |> List.tryFind (fun s -> s.Name = section)
