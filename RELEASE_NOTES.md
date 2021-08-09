@@ -1,10 +1,11 @@
-#### 2.0.0-beta1 - 09.08.2021
+#### 2.0.0-beta2 - 09.08.2021
 * Migration to project system
 * Migration from SharpYaml to YamlDotNet
 * YamlConfigTypeProvider targets net461 and netstandard2.0
 * IniFileProvider targets net461 and netstandard2.0
 * AppSettingsProvider targets net461 and netstandard2.0
 * Dependencies update
+* Fix bug triggering exception 'xx_ItemType is not comparable' when updating an empty list #158
 
 #### 1.5.0 - 15.06.2018
 * Tweak INI File Parser to allow semicolon characters inside string values (thanks [@zakakula](https://github.com/zakaluka)!).

@@ -178,13 +178,13 @@ module Parser =
                 if field.FieldType <> fieldType then
                     failwithf "Cannot assign %O to %O." fieldType.Name field.FieldType.Name
 
-                let isComparable (x: obj) = x :? Uri || x :? IComparable
                 let values = field.GetValue target :?> Collections.IEnumerable |> Seq.cast<obj>
+                let itemType = fieldType.GetGenericArguments().[0]
                 // NOTE: another solution would be to make our provided type implement IComparable
                 // On the other side I'm not completely sure why we sort at all.
                 // What if the ordering of the item matters for the user?
-                let isSortable = values |> Seq.forall isComparable
-
+                let isSortable =
+                    itemType.IsSubclassOf(typeof<Uri>) || typeof<IComparable>.IsAssignableFrom(itemType)
                 let sort (xs: obj seq) =
                     xs
                     |> Seq.sortBy (function
@@ -193,7 +193,6 @@ module Parser =
                        | x -> failwithf "%A is not comparable, so it cannot be included into a list."  x)
                     |> Seq.toList
 
-                let itemType = fieldType.GetGenericArguments().[0]
                 let updaters = makeListItemUpdaters itemType updaters
 
                 let oldValues, newValues =
