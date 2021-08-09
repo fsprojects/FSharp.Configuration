@@ -16,6 +16,9 @@ type private Listener(event: IEvent<EventHandler, _>) =
     do event.Add (fun _ -> incr events)
     member __.Events = !events
 
+let private getPath fileName =
+    Path.Combine(__SOURCE_DIRECTORY__, fileName)
+
 let [<Tests>] tests = 
     testList "Yaml Config Provider tests" [
         testCase "Can return a string from the settings file" (fun _ ->
@@ -78,19 +81,20 @@ let [<Tests>] tests =
             settings.DB.NumberOfDeadlockRepeats <- 11
             settings.DB.DefaultTimeout <- System.TimeSpan.FromMinutes 6.
             settings.JustStuff.SomeDoubleValue <- 0.5
-            settings.Save "SettingsModifed.yaml"
-            assertFilesAreEqual "SettingsModifed.yaml" "Settings2.yaml")
+            let tempFile = Path.GetTempFileName()
+            settings.Save tempFile
+            assertFilesAreEqual tempFile (getPath "Settings2.yaml"))
         
         testCase "Can save settings to the file it was loaded from last time" (fun _ ->
             let settings = Settings()
             let tempFile = Path.GetTempFileName()
             try
-                File.Copy ("Settings.yaml", tempFile, overwrite=true)
+                File.Copy (getPath "Settings.yaml", tempFile, overwrite=true)
                 settings.Load tempFile
                 settings.DB.NumberOfDeadlockRepeats <- 11
                 settings.DB.DefaultTimeout <- System.TimeSpan.FromMinutes 6.
                 settings.Save()
-                assertFilesAreEqual tempFile "Settings2.yaml"
+                assertFilesAreEqual tempFile (getPath "Settings2.yaml")
             finally File.Delete tempFile)
         
         testCase "Throws exception during saving if it was not loaded from a file and location is not specified" (fun _ ->
@@ -184,7 +188,7 @@ let [<Tests>] tests =
             let settings = Settings()
             let tempFile = Path.GetTempFileName()
             try
-                File.Copy ("Settings.yaml", tempFile, overwrite = true)
+                File.Copy (getPath "Settings.yaml", tempFile, overwrite = true)
                 settings.LoadAndWatch tempFile |> ignore
             finally
                 File.Delete tempFile)
@@ -195,7 +199,7 @@ let [<Tests>] tests =
             let mutable err = false
             settings.Error.Add(fun _ -> err <- true) 
             try
-                File.Copy ("Settings.yaml", tempFile, overwrite=true)
+                File.Copy (getPath "Settings.yaml", tempFile, overwrite=true)
                 use __ = settings.LoadAndWatch tempFile
                 System.Threading.Thread.Sleep(800)
                 let f = new FileStream(tempFile, FileMode.Append)

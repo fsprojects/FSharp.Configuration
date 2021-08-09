@@ -6,53 +6,16 @@ open FSharp.Configuration.Helper
 open ProviderImplementation.ProvidedTypes
 open System
 open System.Configuration
-open System.Collections.Generic
 open System.Globalization
-open System.Web.Hosting
-open System.Runtime.Caching
-
-let mutable private exePath = Map.empty
-let setExeFilePath key filePath = exePath <- exePath.Add(key, filePath)
-
-let getConfig file =
-    let path = exePath
-    if path.ContainsKey(file) && System.IO.File.Exists(path.[file]) then
-        ConfigurationManager.OpenExeConfiguration path.[file]
-    else
-        if HostingEnvironment.IsHosted then
-            Web.Configuration.WebConfigurationManager.OpenWebConfiguration "~"
-        else ConfigurationManager.OpenExeConfiguration ConfigurationUserLevel.None
-
-let getConfigValue(file,key) =
-    let conf = getConfig file
-    match conf.AppSettings.Settings.[key] with
-    | null -> raise <| KeyNotFoundException (sprintf "Cannot find name %s in <appSettings> section of config file. (%s)" key conf.FilePath)
-    | settings -> settings.Value
-
-let setConfigValue(file, key, value) =
-    let config = getConfig file
-    config.AppSettings.Settings.[key].Value <- value
-    config.Save()
-
-let getConnectionString(file, key: string) =
-    match getConfig(file).ConnectionStrings.ConnectionStrings.[key] with
-    | null -> raise <| KeyNotFoundException (sprintf "Cannot find name %s in <connectionStrings> section of config file." key)
-    | section -> section.ConnectionString
-
-let setConnectionString(file, key: string, value) =
-    let config = getConfig file
-    config.ConnectionStrings.ConnectionStrings.[key].ConnectionString <- value
-    config.Save()
+open FSharp.Configuration
 
 let internal typedAppSettings (context: Context) =
-    let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings" None
-    let cache = new MemoryCache("AppSettingProvider")
-    context.AddDisposable cache
+    try
+        let appSettings = erasedType<obj> thisAssembly rootNamespace "AppSettings" None
 
-    appSettings.DefineStaticParameters(
-        parameters = [ProvidedStaticParameter("configFileName", typeof<string>)],
-        instantiationFunction = (fun typeName parameterValues ->
-            let value = lazy (
+        appSettings.DefineStaticParameters(
+            parameters = [ProvidedStaticParameter("configFileName", typeof<string>)],
+            instantiationFunction = fun typeName parameterValues ->
                 let typedConnectionStrings (config: Configuration, filePath, configFileName) =
                     let typeDef = ProvidedTypeDefinition ("ConnectionStrings", Some typeof<obj>, hideObjectMethods = true)
                     typeDef.AddXmlDoc (sprintf "Represents the available connection strings from %s" configFileName)
@@ -65,8 +28,8 @@ let internal typedAppSettings (context: Context) =
                             ProvidedProperty(
                                 name,
                                 typeof<string>,
-                                getterCode = (fun _ -> <@@ getConnectionString(filePath, key) @@>),
-                                setterCode = (fun args -> <@@ setConnectionString(filePath, key, %%args.[0]) @@>),
+                                getterCode = (fun _ -> <@@ AppSettings.getConnectionString(filePath, key) @@>),
+                                setterCode = (fun args -> <@@ AppSettings.setConnectionString(filePath, key, %%args.[0]) @@>),
                                 isStatic = true)
 
                         prop.AddXmlDoc (sprintf "Returns the connection string from %s with name %s" configFileName name)
@@ -91,43 +54,43 @@ let internal typedAppSettings (context: Context) =
                                 | ValueParser.Uri _ ->
                                     ProvidedProperty(name, typeof<Uri>,
                                         isStatic = true,
-                                        getterCode = (fun _ -> <@@ Uri (getConfigValue(filePath, key)) @@>),
-                                        setterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: Uri)) @@>)
+                                        getterCode = (fun _ -> <@@ Uri (AppSettings.getConfigValue(filePath, key)) @@>),
+                                        setterCode = fun args -> <@@ AppSettings.setConfigValue(filePath, key, string (%%args.[0]: Uri)) @@>)
                                 | ValueParser.Int _ ->
                                     ProvidedProperty(name, typeof<int>,
                                         isStatic = true,
-                                        getterCode = (fun _ -> <@@ Int32.Parse (getConfigValue(filePath, key)) @@>),
-                                        setterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: Int32)) @@>)
+                                        getterCode = (fun _ -> <@@ Int32.Parse (AppSettings.getConfigValue(filePath, key)) @@>),
+                                        setterCode = fun args -> <@@ AppSettings.setConfigValue(filePath, key, string (%%args.[0]: Int32)) @@>)
                                 | ValueParser.Bool _ ->
                                     ProvidedProperty(name, typeof<bool>,
                                         isStatic = true,
-                                        getterCode = (fun _ -> <@@ Boolean.Parse (getConfigValue(filePath, key)) @@>),
-                                        setterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: Boolean)) @@>)
+                                        getterCode = (fun _ -> <@@ Boolean.Parse (AppSettings.getConfigValue(filePath, key)) @@>),
+                                        setterCode = fun args -> <@@ AppSettings.setConfigValue(filePath, key, string (%%args.[0]: Boolean)) @@>)
                                 | ValueParser.Float _ ->
                                     ProvidedProperty(name, typeof<float>,
                                         isStatic = true,
-                                        getterCode = (fun _ -> <@@ Double.Parse (getConfigValue(filePath, key), NumberStyles.Any, CultureInfo.InvariantCulture) @@>),
-                                        setterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: float)) @@>)
+                                        getterCode = (fun _ -> <@@ Double.Parse (AppSettings.getConfigValue(filePath, key), NumberStyles.Any, CultureInfo.InvariantCulture) @@>),
+                                        setterCode = fun args -> <@@ AppSettings.setConfigValue(filePath, key, string (%%args.[0]: float)) @@>)
                                 | ValueParser.TimeSpan _ ->
                                     ProvidedProperty(name, typeof<TimeSpan>,
                                         isStatic = true,
-                                        getterCode = (fun _ -> <@@ TimeSpan.Parse(getConfigValue(filePath, key), CultureInfo.InvariantCulture) @@>),
-                                        setterCode = fun args -> <@@ setConfigValue(filePath, key, string (%%args.[0]: TimeSpan)) @@>)
+                                        getterCode = (fun _ -> <@@ TimeSpan.Parse(AppSettings.getConfigValue(filePath, key), CultureInfo.InvariantCulture) @@>),
+                                        setterCode = fun args -> <@@ AppSettings.setConfigValue(filePath, key, string (%%args.[0]: TimeSpan)) @@>)
                                 | ValueParser.DateTime _ ->
                                     ProvidedProperty(name, typeof<DateTime>,
                                         isStatic = true,
-                                        getterCode = (fun _ -> <@@ DateTime.Parse(getConfigValue(filePath, key), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal) @@>),
-                                        setterCode = fun args -> <@@ setConfigValue(filePath, key, (%%args.[0]: DateTime).ToString("o")) @@>)
+                                        getterCode = (fun _ -> <@@ DateTime.Parse(AppSettings.getConfigValue(filePath, key), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal) @@>),
+                                        setterCode = fun args -> <@@ AppSettings.setConfigValue(filePath, key, (%%args.[0]: DateTime).ToString("o")) @@>)
                                 | ValueParser.Guid _ ->
                                     ProvidedProperty(name, typeof<Guid>,
                                         isStatic = true,
-                                        getterCode = (fun _ -> <@@ Guid.Parse(getConfigValue(filePath, key)) @@>),
-                                        setterCode = fun args -> <@@ setConfigValue(filePath, key, (%%args.[0]: Guid).ToString("B")) @@>)
+                                        getterCode = (fun _ -> <@@ Guid.Parse(AppSettings.getConfigValue(filePath, key)) @@>),
+                                        setterCode = fun args -> <@@ AppSettings.setConfigValue(filePath, key, (%%args.[0]: Guid).ToString("B")) @@>)
                                 | _ ->
                                     ProvidedProperty(name, typeof<string>,
                                         isStatic = true,
-                                        getterCode = (fun _ -> <@@ getConfigValue(filePath, key) @@>),
-                                        setterCode = fun args -> <@@ setConfigValue(filePath, key, %%args.[0]) @@>)
+                                        getterCode = (fun _ -> <@@ AppSettings.getConfigValue(filePath, key) @@>),
+                                        setterCode = fun args -> <@@ AppSettings.setConfigValue(filePath, key, %%args.[0]) @@>)
 
                             prop.AddXmlDoc (sprintf "Returns the value from %s with key %s" configFileName key)
                             prop.AddDefinitionLocation(1, 1, filePath)
@@ -140,7 +103,7 @@ let internal typedAppSettings (context: Context) =
                                 [ ProvidedParameter ("pathOfExe", typeof<string>) ],
                                 typeof<Unit>,
                                 isStatic = true,
-                                invokeCode = fun args -> <@@ setExeFilePath filePath %%args.[0] @@>)
+                                invokeCode = fun args -> <@@ AppSettings.setExeFilePath filePath %%args.[0] @@>)
 
                         executeSelector.AddXmlDoc "Property to change the executable file that is read for configurations. This idea is that you can manage other executables also (e.g. from script)."
                         typeDef.AddMember executeSelector
@@ -162,6 +125,10 @@ let internal typedAppSettings (context: Context) =
                         context.WatchFile filePath
                         typeDef
                     with _ -> typeDef
-                | x -> failwithf "unexpected parameter values %A" x)
-            cache.GetOrAdd (typeName, value)))
-    appSettings
+                | x -> failwithf "unexpected parameter values %A" x
+        )
+        appSettings
+    with ex ->
+        debug "Error in AppSettingsProvider: %s\n\t%s" ex.Message ex.StackTrace
+        reraise ()
+

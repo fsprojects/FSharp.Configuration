@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../netfx.props" />
+  <Import Project="..\..\netfx.props" />
   <PropertyGroup>
+    <OutputType>Library</OutputType>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <AssemblyName>FSharp.Configuration</AssemblyName>
+    <Optimize>true</Optimize>
+    <Tailcalls>true</Tailcalls>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -15,29 +17,30 @@
     <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net461'" />
     <Reference Include="System.Windows.Forms" Condition="'$(TargetFramework)' == 'net461'" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\tests\ProvidedTypesTesting.fs">
-      <Paket>True</Paket>
-      <Link>ProvidedTypesTesting.fs</Link>
-    </Compile>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi">
       <Paket>True</Paket>
-      <Link>ProvidedTypes.fsi</Link>
+      <Link>paket-files/ProvidedTypes.fsi</Link>
     </Compile>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fs">
       <Paket>True</Paket>
-      <Link>ProvidedTypes.fs</Link>
+      <Link>paket-files/ProvidedTypes.fs</Link>
     </Compile>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="TypeProviders.Helper.fs" />
+    <Compile Include="..\FSharp.Configuration.Runtime\TypeProviders.Helper.fs" />
+    <Compile Include="..\FSharp.Configuration.Runtime\ResXProvider.Runtime.fs" />
+    <Compile Include="..\FSharp.Configuration.Runtime\AppSettingsProvider.Runtime.fs" />
+    <Compile Include="..\FSharp.Configuration.Runtime\YamlConfigProvider.Runtime.fs" />
+    <Compile Include="..\FSharp.Configuration.Runtime\IniFileProvider.Runtime.fs" />
     <Compile Include="ResXProvider.fs" />
     <Compile Include="AppSettingsProvider.fs" />
     <Compile Include="YamlConfigProvider.fs" />
     <Compile Include="IniFileProvider.fs" />
-    <Compile Include="ConfigTypeProvider.fs" />
+    <Compile Include="FSharp.Configuration.DesignTime.fs" />
     <None Include="paket.references" />
     <None Include="..\..\packages\NETStandard.Library.NETFramework\build\net461\lib\netstandard.dll" Condition="'$(TargetFramework)' == 'net461'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

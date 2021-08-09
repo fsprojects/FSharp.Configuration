@@ -1,0 +1,41 @@
+type file
+id FSharp.Configuration
+title
+    FSharp.Configuration
+authors
+    Steffen Forkmann; Sergey Tihon; Daniel Mohl; Tomas Petricek; Ryan Riley; Mauricio Scheffer; Phil Trelford; Vasily Kirichenko; Reed Copsey, Jr.
+owners
+    Steffen Forkmann; Sergey Tihon; Daniel Mohl; Tomas Petricek; Ryan Riley; Mauricio Scheffer; Phil Trelford; Vasily Kirichenko; Reed Copsey, Jr.
+projectUrl
+    https://fsprojects.github.io/FSharp.Configuration/
+iconUrl
+    https://raw.githubusercontent.com/fsprojects/FSharp.Configuration/master/docs/files/img/logo.png
+licenseUrl
+    https://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt
+requireLicenseAcceptance
+    false
+copyright
+    Copyright 2014-2021
+tags
+    F# fsharp typeproviders FSharp.Configuration appsettings YAML F# ResX Ini config
+summary
+    The FSharp.Configuration project contains type providers for the configuration of .NET projects.
+description
+    The FSharp.Configuration project contains type providers for the configuration of .NET projects.
+tags
+    F# fsharp typeproviders FSharp.Configuration
+files
+    bin/Release/net461/FSharp.Configuration.Runtime.* ==> lib/net461
+    bin/Release/net461/YamlDotNet.dll ==> lib/net461
+    bin/Release/netstandard2.0/FSharp.Configuration.Runtime.* ==> lib/netstandard2.0
+    bin/Release/netstandard2.0/YamlDotNet.dll ==> lib/netstandard2.0
+    bin/Release/typeproviders/fsharp41/netstandard2.0/*.dll ==> typeproviders/fsharp41/netstandard2.0
+    bin/Release/typeproviders/fsharp41/net461/*.dll ==> typeproviders/fsharp41/net461
+dependencies
+    framework: netstandard20
+        FSharp.Core >= LOCKEDVERSION
+    framework: net461
+        FSharp.Core >= LOCKEDVERSION
+references
+    FSharp.Configuration.Runtime.dll
+    YamlDotNet.dll

@@ -1,39 +1,61 @@
-RESTRICTION: >= net45
+REDIRECTS: FORCE
+RESTRICTION: || (== net461) (== net50) (== netstandard2.0)
 NUGET
   remote: http://www.nuget.org/api/v2
-    FSharp.Core (4.0.0.1)
-    SharpYaml (1.6.2)
+    FSharp.Core (4.7)
+    Microsoft.NETCore.Platforms (5.0.2) - restriction: || (== net461) (== net50) (&& (== netstandard2.0) (>= net461)) (&& (== netstandard2.0) (>= netcoreapp2.0))
+    Microsoft.Win32.SystemEvents (5.0) - restriction: || (&& (== net461) (>= netcoreapp3.0)) (== net50) (&& (== netstandard2.0) (>= netcoreapp3.0))
+      Microsoft.NETCore.Platforms (>= 5.0) - restriction: || (&& (== net461) (>= netcoreapp2.0)) (== net50) (&& (== netstandard2.0) (>= netcoreapp2.0))
+    NETStandard.Library (2.0.3) - restriction: || (== net461) (&& (== net50) (>= net461)) (&& (== netstandard2.0) (>= net461))
+      Microsoft.NETCore.Platforms (>= 1.1)
+    NETStandard.Library.NETFramework (2.0.0-preview2-25405-01)
+      Microsoft.NETCore.Platforms (>= 2.0.0-preview2-25405-01) - restriction: || (== net461) (&& (== net50) (>= net461)) (&& (== netstandard2.0) (>= net461))
+      NETStandard.Library (>= 2.0.0-preview2-25401-01) - restriction: || (== net461) (&& (== net50) (>= net461)) (&& (== netstandard2.0) (>= net461))
+    System.Buffers (4.5.1) - restriction: || (&& (== net461) (== net50)) (&& (== net50) (>= monotouch)) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.0)) (&& (== net50) (< netcoreapp2.1) (>= xamarinios)) (&& (== net50) (< netcoreapp2.1) (>= xamarinmac)) (&& (== net50) (< netcoreapp2.1) (>= xamarintvos)) (&& (== net50) (< netcoreapp2.1) (>= xamarinwatchos)) (&& (== net50) (< netstandard1.1)) (&& (== net50) (< netstandard2.0)) (== netstandard2.0)
+    System.Configuration.ConfigurationManager (5.0)
+      System.Security.Cryptography.ProtectedData (>= 5.0) - restriction: || (== net50) (== netstandard2.0)
+      System.Security.Permissions (>= 5.0)
+    System.Drawing.Common (5.0.2) - restriction: || (&& (== net461) (>= netcoreapp3.0)) (== net50) (&& (== netstandard2.0) (>= netcoreapp3.0))
+      Microsoft.Win32.SystemEvents (>= 5.0) - restriction: || (&& (== net461) (>= netcoreapp2.0)) (&& (== net461) (>= netcoreapp3.0)) (== net50) (&& (== netstandard2.0) (>= netcoreapp2.0)) (&& (== netstandard2.0) (>= netcoreapp3.0))
+    System.Memory (4.5.4) - restriction: || (&& (== net461) (== net50)) (&& (== net50) (< netcoreapp2.1)) (== netstandard2.0)
+      System.Buffers (>= 4.5.1) - restriction: || (== net461) (&& (== net50) (>= monotouch)) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.0)) (&& (== net50) (< netstandard1.1)) (&& (== net50) (< netstandard2.0)) (&& (== net50) (>= xamarinios)) (&& (== net50) (>= xamarinmac)) (&& (== net50) (>= xamarintvos)) (&& (== net50) (>= xamarinwatchos)) (== netstandard2.0)
+      System.Numerics.Vectors (>= 4.4) - restriction: || (&& (== net461) (< net45) (>= netstandard2.0)) (&& (== net50) (< netcoreapp2.0)) (== netstandard2.0)
+      System.Runtime.CompilerServices.Unsafe (>= 4.5.3) - restriction: || (== net461) (&& (== net50) (>= monotouch)) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.0)) (&& (== net50) (< netcoreapp2.1)) (&& (== net50) (< netstandard1.1)) (&& (== net50) (< netstandard2.0)) (&& (== net50) (>= uap10.1)) (&& (== net50) (>= xamarinios)) (&& (== net50) (>= xamarinmac)) (&& (== net50) (>= xamarintvos)) (&& (== net50) (>= xamarinwatchos)) (== netstandard2.0)
+    System.Numerics.Vectors (4.5) - restriction: || (&& (== net461) (== net50)) (&& (== net50) (< netcoreapp2.0)) (== netstandard2.0)
+    System.Runtime.CompilerServices.Unsafe (5.0) - restriction: || (&& (== net461) (== net50)) (&& (== net50) (>= monotouch)) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.0)) (&& (== net50) (< netcoreapp2.1)) (&& (== net50) (< netstandard1.1)) (&& (== net50) (< netstandard2.0)) (&& (== net50) (>= uap10.1)) (== netstandard2.0)
+    System.Security.AccessControl (5.0)
+      Microsoft.NETCore.Platforms (>= 5.0) - restriction: || (&& (== net461) (>= netcoreapp2.0)) (== net50) (&& (== netstandard2.0) (>= netcoreapp2.0))
+      System.Security.Principal.Windows (>= 5.0)
+    System.Security.Cryptography.ProtectedData (5.0) - restriction: || (== net50) (== netstandard2.0)
+      System.Memory (>= 4.5.4) - restriction: || (&& (== net461) (< net46) (>= netstandard2.0)) (&& (== net50) (< netcoreapp2.1)) (== netstandard2.0)
+    System.Security.Permissions (5.0)
+      System.Security.AccessControl (>= 5.0)
+      System.Windows.Extensions (>= 5.0) - restriction: || (&& (== net461) (>= netcoreapp3.0)) (== net50) (&& (== netstandard2.0) (>= netcoreapp3.0))
+    System.Security.Principal.Windows (5.0)
+    System.Windows.Extensions (5.0) - restriction: || (&& (== net461) (>= netcoreapp3.0)) (== net50) (&& (== netstandard2.0) (>= netcoreapp3.0))
+      System.Drawing.Common (>= 5.0) - restriction: || (&& (== net461) (>= netcoreapp3.0)) (== net50) (&& (== netstandard2.0) (>= netcoreapp3.0))
+    YamlDotNet (11.2.1)
 GITHUB
   remote: fsprojects/FSharp.TypeProviders.SDK
-    src/ProvidedTypes.fs (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
-    src/ProvidedTypes.fsi (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
-    src/ProvidedTypesTesting.fs (f0c4a6300db313eb2616c4f792cd6ae68c255e56)
-GROUP Build
-RESTRICTION: == net45
-NUGET
-  remote: https://www.nuget.org/api/v2
-    FAKE (4.64.12)
-    FSharp.Compiler.Service (2.0.0.6)
-    FSharp.Formatting (2.14.4)
-      FSharp.Compiler.Service (2.0.0.6)
-      FSharpVSPowerTools.Core (>= 2.3 < 2.4)
-    FSharpVSPowerTools.Core (2.3)
-      FSharp.Compiler.Service (>= 2.0.0.3)
-    NuGet.CommandLine (4.6.2)
-    Octokit (0.29)
-    SourceLink.Fake (1.1)
-GITHUB
-  remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (800579e69ce35b77345ee21923ddf117168067cd)
-      Octokit (>= 0.20)
+    src/ProvidedTypes.fs (f4aca36af04aa84b16ec04df6f6bf55ac2f17a73)
+    src/ProvidedTypes.fsi (f4aca36af04aa84b16ec04df6f6bf55ac2f17a73)
+    tests/ProvidedTypesTesting.fs (f4aca36af04aa84b16ec04df6f6bf55ac2f17a73)
 GROUP Test
-RESTRICTION: == net461
+REDIRECTS: FORCE
+RESTRICTION: || (== net461) (== net50)
 NUGET
   remote: https://www.nuget.org/api/v2
-    Argu (5.1)
-      FSharp.Core (>= 4.0.0.1)
-    Expecto (7.0.1)
-      Argu (>= 5.1)
-      Mono.Cecil (>= 0.10)
-    FSharp.Core (4.3.4) - redirects: force
-    Mono.Cecil (0.10)
+    Expecto (9.0.2)
+      FSharp.Core (>= 4.6)
+      Mono.Cecil (>= 0.11.2)
+    FSharp.Core (5.0.2) - redirects: force
+    Mono.Cecil (0.11.4)
+    System.Buffers (4.5.1) - restriction: || (== net461) (&& (== net50) (>= monotouch)) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.0)) (&& (== net50) (< netcoreapp2.1) (>= xamarinios)) (&& (== net50) (< netcoreapp2.1) (>= xamarinmac)) (&& (== net50) (< netcoreapp2.1) (>= xamarintvos)) (&& (== net50) (< netcoreapp2.1) (>= xamarinwatchos)) (&& (== net50) (< netstandard1.1)) (&& (== net50) (< netstandard2.0))
+    System.Memory (4.5.4) - restriction: || (== net461) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.1))
+      System.Buffers (>= 4.5.1) - restriction: || (== net461) (&& (== net50) (>= monotouch)) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.0)) (&& (== net50) (< netstandard1.1)) (&& (== net50) (< netstandard2.0)) (&& (== net50) (>= xamarinios)) (&& (== net50) (>= xamarinmac)) (&& (== net50) (>= xamarintvos)) (&& (== net50) (>= xamarinwatchos))
+      System.Numerics.Vectors (>= 4.5) - restriction: || (== net461) (&& (== net50) (>= net461))
+      System.Runtime.CompilerServices.Unsafe (>= 4.5.3) - restriction: || (== net461) (&& (== net50) (>= monotouch)) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.0)) (&& (== net50) (< netcoreapp2.1)) (&& (== net50) (< netstandard1.1)) (&& (== net50) (< netstandard2.0)) (&& (== net50) (>= uap10.1)) (&& (== net50) (>= xamarinios)) (&& (== net50) (>= xamarinmac)) (&& (== net50) (>= xamarintvos)) (&& (== net50) (>= xamarinwatchos))
+    System.Numerics.Vectors (4.5) - restriction: || (== net461) (&& (== net50) (>= net461))
+    System.Resources.Extensions (5.0)
+      System.Memory (>= 4.5.4) - restriction: || (== net461) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.1))
+    System.Runtime.CompilerServices.Unsafe (5.0) - restriction: || (== net461) (&& (== net50) (>= monotouch)) (&& (== net50) (>= net461)) (&& (== net50) (< netcoreapp2.0)) (&& (== net50) (< netcoreapp2.1)) (&& (== net50) (< netstandard1.1)) (&& (== net50) (< netstandard2.0)) (&& (== net50) (>= uap10.1))

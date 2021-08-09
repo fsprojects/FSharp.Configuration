@@ -21,7 +21,12 @@ let inline satisfies predicate (charOption:option<char>) =
     | _ -> None
 
 let dispose (x: IDisposable) = if x = null then () else x.Dispose()
-let inline debug msg = Printf.kprintf Diagnostics.Debug.WriteLine msg
+let debug msg = 
+    let dt = DateTime.Now
+    let writer msg = 
+        Diagnostics.Debug.WriteLine msg
+//        System.IO.File.AppendAllLines("debug.log", [sprintf "[%O] %s\n" dt msg])
+    Printf.kprintf writer msg
 
 let (|EOF|_|) = function
     | Some _ -> None
@@ -118,6 +123,7 @@ module ValueParser =
 
     let (|Bool|_|) = tryParseWith Boolean.TryParse
     let (|Int|_|) = tryParseWith Int32.TryParse
+    let (|Int64|_|) = tryParseWith Int64.TryParse
     let (|Float|_|) = tryParseWith (fun x -> Double.TryParse(x, NumberStyles.Any, CultureInfo.InvariantCulture))
     let (|TimeSpan|_|) = tryParseWith (fun x -> TimeSpan.TryParse(x, CultureInfo.InvariantCulture))
     let (|Guid|_|) = tryParseWith Guid.TryParse
@@ -191,12 +197,11 @@ let createNiceNameProvider() =
         set.Add name |> ignore
         name
 
-let findConfigFile resolutionFolder configFileName =
-    if Path.IsPathRooted configFileName then
-        configFileName
-    else
-        let path = configFileName.Split([|@"\"; "/"|], StringSplitOptions.None)
-        Array.append [|resolutionFolder|] path |> Path.Combine
+let findConfigFile resolutionFolder (configFileName:string) =
+    if Path.IsPathRooted configFileName
+    then configFileName
+    else resolutionFolder </> configFileName
+    |> Path.GetFullPath
 
 let erasedType<'T> assemblyName rootNamespace typeName (hideObjectMethods: bool option) =
     match hideObjectMethods with
@@ -262,7 +267,7 @@ module File =
         watcher.EnableRaisingEvents <- true
         watcher :> IDisposable
 
-    let getFullPath resolutionFolder fileName =
+    let getFullPath resolutionFolder (fileName:string) =
         if Path.IsPathRooted fileName then
           fileName
         else resolutionFolder </> fileName
@@ -312,19 +317,19 @@ type Context (provider: TypeProviderForNamespaces, cfg: TypeProviderConfig) =
     interface IDisposable with
         member __.Dispose() = agent.Post Cancel
 
-open System.Runtime.Caching
+// open System.Runtime.Caching
 
-type MemoryCache with
-    member x.GetOrAdd(key: string, value: Lazy<ProvidedTypeDefinition>, ?expiration: TimeSpan) =
-        let policy = CacheItemPolicy()
-        policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
+// type MemoryCache with
+//     member x.GetOrAdd(key: string, value: Lazy<ProvidedTypeDefinition>, ?expiration: TimeSpan) =
+//         let policy = CacheItemPolicy()
+//         policy.SlidingExpiration <- defaultArg expiration <| TimeSpan.FromHours 24.
 
-        match x.AddOrGetExisting(key, value, policy) with
-        | :? Lazy<ProvidedTypeDefinition> as item ->
-            try item.Value
-            with _ ->
-                x.Remove key |> ignore
-                value.Value
-        | x ->
-            assert(x = null)
-            value.Value
+//         match x.AddOrGetExisting(key, value, policy) with
+//         | :? Lazy<ProvidedTypeDefinition> as item ->
+//             try item.Value
+//             with _ ->
+//                 x.Remove key |> ignore
+//                 value.Value
+//         | x ->
+//             assert(x = null)
+//             value.Value
