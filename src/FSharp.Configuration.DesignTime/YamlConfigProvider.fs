@@ -246,11 +246,7 @@ let internal typedYamlConfig (context: Context) =
                      | "", "" -> failwith "You must specify either FilePath or YamlText parameter."
                      | "", yamlText -> createTy yamlText readOnly inferTypesFromStrings
                      | filePath, _ ->
-                          let filePath =
-                              if Path.IsPathRooted filePath
-                              then filePath
-                              else context.ResolutionFolder </> filePath
-                              |> Path.GetFullPath
+                          let filePath = findConfigFile context.ResolutionFolder filePath
                           context.WatchFile filePath
                           createTy (File.ReadAllText filePath) readOnly inferTypesFromStrings
                 | _ -> failwith "Wrong parameters"

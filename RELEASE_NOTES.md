@@ -1,5 +1,6 @@
-#### 2.0.0-beta1 - 17.07.2019
+#### 2.0.0-alpha3 - 15.12.2020
 * Targets net461 instead of net45
+* Dependencies update
 
 #### 2.0.0-alpha2 - 16.06.2018
 * Migration to project system

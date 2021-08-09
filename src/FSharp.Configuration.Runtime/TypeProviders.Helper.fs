@@ -198,11 +198,10 @@ let createNiceNameProvider() =
         name
 
 let findConfigFile resolutionFolder (configFileName:string) =
-    if Path.IsPathRooted configFileName then
-        configFileName
-    else
-        let path = configFileName.Split([|@"\"; "/"|], StringSplitOptions.None)
-        Array.append [|resolutionFolder|] path |> Path.Combine
+    if Path.IsPathRooted configFileName
+    then configFileName
+    else resolutionFolder </> configFileName
+    |> Path.GetFullPath
 
 let erasedType<'T> assemblyName rootNamespace typeName (hideObjectMethods: bool option) =
     match hideObjectMethods with
