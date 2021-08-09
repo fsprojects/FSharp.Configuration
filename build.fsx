@@ -70,7 +70,6 @@ let gitName = "FSharp.Configuration"
 // --------------------------------------------------------------------------------------
 
 let buildDir = "bin"
-let nugetDir = "./nuget/"
 
 
 // Read additional information from the release notes document
@@ -110,7 +109,7 @@ Target.create "AssemblyInfo" (fun _ ->
 // Clean build results & restore NuGet packages
 
 Target.create "Clean" (fun _ ->
-    Shell.cleanDirs [buildDir; "temp"; nugetDir]
+    Shell.cleanDirs [buildDir]
 )
 
 Target.create "CleanDocs" (fun _ ->

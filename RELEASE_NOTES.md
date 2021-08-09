@@ -1,13 +1,10 @@
-#### 2.0.0-alpha3 - 15.12.2020
-* Targets net461 instead of net45
-* Dependencies update
-
-#### 2.0.0-alpha2 - 16.06.2018
+#### 2.0.0-beta1 - 09.08.2021
 * Migration to project system
-* YamlConfigTypeProvider targets net45 and netstandard2.0
 * Migration from SharpYaml to YamlDotNet
-* IniFileProvider targets net45 and netstandard2.0
-* AppSettingsProvider targets net45 and netstandard2.0
+* YamlConfigTypeProvider targets net461 and netstandard2.0
+* IniFileProvider targets net461 and netstandard2.0
+* AppSettingsProvider targets net461 and netstandard2.0
+* Dependencies update
 
 #### 1.5.0 - 15.06.2018
 * Tweak INI File Parser to allow semicolon characters inside string values (thanks [@zakakula](https://github.com/zakaluka)!).
