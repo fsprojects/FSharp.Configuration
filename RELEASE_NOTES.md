@@ -1,4 +1,4 @@
-#### 2.0.0-beta2 - 09.08.2021
+#### 2.0.0 - 09.08.2021
 * Migration to project system
 * Migration from SharpYaml to YamlDotNet
 * YamlConfigTypeProvider targets net461 and netstandard2.0
