@@ -3,6 +3,7 @@
 * Migration from SharpYaml to YamlDotNet
 * YamlConfigTypeProvider targets net461 and netstandard2.0
 * IniFileProvider targets net461 and netstandard2.0
+* ResXProvider targets net461 and net5.0-windows
 * AppSettingsProvider targets net461 and netstandard2.0
 * Dependencies update
 * Fix bug triggering exception 'xx_ItemType is not comparable' when updating an empty list #158

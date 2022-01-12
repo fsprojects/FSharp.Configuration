@@ -5,12 +5,16 @@
   <Import Project="..\..\netfx.props" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.0; net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0; net461;net5.0-windows</TargetFrameworks>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
-    <DefineConstants>NET461</DefineConstants>
+    <DefineConstants>NET461;ENABLE_RESXPROVIDER</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+    <UseWindowsForms>true</UseWindowsForms>
+    <DefineConstants>ENABLE_RESXPROVIDER</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net461'" />

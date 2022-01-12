@@ -3,7 +3,7 @@ module FSharp.Configuration.Tests.ResXTests
 open FSharp.Configuration
 open Expecto
 
-#if NET461
+#if ENABLE_RESXPROVIDER
 
 type Resource1 = ResXProvider<"Resource1.resx">
 
