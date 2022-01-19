@@ -1,7 +1,7 @@
 #r @"paket:
 source https://nuget.org/api/v2
 framework netstandard2.0
-nuget FSharp.Core 4.7.2
+nuget FSharp.Core 5.0.0
 nuget Fake.Core.Target
 nuget Fake.Core.Process
 nuget Fake.Core.ReleaseNotes 
@@ -119,8 +119,14 @@ Target.create "CleanDocs" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build library & test project
 
+let dotnet buildProps command args =
+    DotNet.exec buildProps command args
+    |> fun x ->
+        if x.ExitCode <> 0 then
+            failwith <| String.Join("\n", x.Errors)
+
 Target.create "Build" (fun _ ->
-    DotNet.exec id "build" "FSharp.Configuration.sln -c Release" |> ignore
+    dotnet id "build" "FSharp.Configuration.sln -c Release"
 
     // let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/net461/"
     // CreateDir outDir
@@ -140,7 +146,7 @@ Target.create "Build" (fun _ ->
 )
 
 Target.create "BuildTests" (fun _ ->
-    DotNet.exec id "build" "FSharp.Configuration.Tests.sln -c Release -v n" |> ignore
+    dotnet id "build" "FSharp.Configuration.Tests.sln -c Release -v n"
 )
 
 // --------------------------------------------------------------------------------------
@@ -173,10 +179,9 @@ Target.create "RunTests" (fun _ ->
 )
 
 Target.create "RunTestsNetCore" (fun _ ->
-    DotNet.exec 
+    dotnet
         (fun r -> { r with  WorkingDirectory = "tests/FSharp.Configuration.Tests/" }) 
         "run" "--framework net6.0"
-    |> ignore
 )
 
 // --------------------------------------------------------------------------------------
