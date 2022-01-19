@@ -1,9 +1,9 @@
-source http://nuget.org/api/v2
-framework: netstandard2.0, net461, net5.0
+source https://api.nuget.org/v3/index.json
+framework: netstandard2.0, net461
 redirects: force
 
 nuget YamlDotNet
-nuget FSharp.Core 4.7.0
+nuget FSharp.Core 5.0.0
 
 nuget System.Configuration.ConfigurationManager
 nuget NETStandard.Library.NETFramework
@@ -13,8 +13,8 @@ github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fsi
 github fsprojects/FSharp.TypeProviders.SDK tests/ProvidedTypesTesting.fs
 
 group Test
-    framework: net461, net5.0
-    source https://nuget.org/api/v2
+    framework: net461, net6.0
+    source https://api.nuget.org/v3/index.json
     redirects: force
 
     nuget FSharp.Core redirects: force

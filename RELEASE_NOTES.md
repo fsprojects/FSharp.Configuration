@@ -1,10 +1,15 @@
+#### 3.0.0 - 19.01.2022
+* Build with .NET 6.0
+* Migration to latest TPSDK
+* Dependencies updated
+
 #### 2.0.0 - 09.08.2021
 * Migration to project system
 * Migration from SharpYaml to YamlDotNet
 * YamlConfigTypeProvider targets net461 and netstandard2.0
 * IniFileProvider targets net461 and netstandard2.0
 * AppSettingsProvider targets net461 and netstandard2.0
-* Dependencies update
+* Dependencies updated
 * Fix bug triggering exception 'xx_ItemType is not comparable' when updating an empty list #158
 
 #### 1.5.0 - 15.06.2018

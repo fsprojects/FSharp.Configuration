@@ -175,7 +175,7 @@ Target.create "RunTests" (fun _ ->
 Target.create "RunTestsNetCore" (fun _ ->
     DotNet.exec 
         (fun r -> { r with  WorkingDirectory = "tests/FSharp.Configuration.Tests/" }) 
-        "run" "--framework net5.0"
+        "run" "--framework net6.0"
     |> ignore
 )
 
