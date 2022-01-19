@@ -119,22 +119,15 @@ Target.create "CleanDocs" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build library & test project
 
-let dotnet buildProps command args =
-    DotNet.exec buildProps command args
+let dotnet buildOptions command args =
+    DotNet.exec buildOptions command args
     |> fun x ->
-        if x.ExitCode <> 0 then
-            failwith <| String.Join("\n", x.Errors)
+        if x.ExitCode <> 0 then 
+            let messages = List.concat [x.Errors; x.Messages]
+            failwith <| String.Join("\n", messages)
 
 Target.create "Build" (fun _ ->
     dotnet id "build" "FSharp.Configuration.sln -c Release"
-
-    // let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/net461/"
-    // CreateDir outDir
-    // DotNetCli.Publish (fun p -> 
-    //     { p with
-    //         Output = outDir
-    //         Framework = "net461"
-    //         WorkingDir = "src/FSharp.Configuration/" })
 
     // let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/netstandard2.0/"
     // CreateDir outDir
@@ -145,43 +138,15 @@ Target.create "Build" (fun _ ->
     //         WorkingDir = "src/FSharp.Configuration/" })
 )
 
-Target.create "BuildTests" (fun _ ->
-    dotnet id "build" "FSharp.Configuration.Tests.sln -c Release -v n"
-)
-
 // --------------------------------------------------------------------------------------
 // Run the unit tests using test runner
 
 open Fake.Testing
 
 Target.create "RunTests" (fun _ ->
-    !! "tests/**/bin/Release/net461/*Tests*.exe"
-    |> Seq.iter (fun path ->
-        Trace.tracefn "Running tests '%s' ..." path
-
-        let args = "--fail-on-focused-tests --summary --sequenced --version"
-        (if Environment.isWindows
-          then CreateProcess.fromRawCommandLine path args
-          else CreateProcess.fromRawCommandLine "mono" (path + " " + args))
-        |> CreateProcess.ensureExitCode
-        |> Proc.run
-        |> ignore
-    )    
-    // |> Testing.Expecto.run (fun p ->
-    //         { p with 
-    //             //WorkingDirectory = __SOURCE_DIRECTORY__
-    //             FailOnFocusedTests = true
-    //             PrintVersion = true
-    //             Parallel = false
-    //             Summary =  true
-    //             Debug = false
-    //         })
-)
-
-Target.create "RunTestsNetCore" (fun _ ->
     dotnet
         (fun r -> { r with  WorkingDirectory = "tests/FSharp.Configuration.Tests/" }) 
-        "run" "--framework net6.0"
+        "run" ""
 )
 
 // --------------------------------------------------------------------------------------
@@ -306,8 +271,6 @@ Target.create "All" ignore
 "Clean"
   ==> "AssemblyInfo"
   ==> "Build"
-  ==> "BuildTests"
-  ==> "RunTestsNetCore"
   ==> "RunTests"
   //=?> ("GenerateReferenceDocs",isLocalBuild && not isMono)
   //=?> ("GenerateDocs",isLocalBuild && not isMono)

@@ -5,17 +5,13 @@
   <Import Project="..\..\netfx.props" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.0; net461</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>NET461</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net461'" />
-    <Reference Include="System.Windows.Forms" Condition="'$(TargetFramework)' == 'net461'" />
-  </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi">
@@ -37,18 +33,13 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Be explicit about the version of FSharp.Core since we mention it in the manual nuget package spec -->
-    <PackageReference Include="FSharp.Core" Version="4.3.4" />
+    <PackageReference Include="FSharp.Core" Version="5.0.0" />
   </ItemGroup>
   <Target Name="BeforeBuild">
     <MSBuild Projects="..\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj" Targets="Restore" />
     <MSBuild Projects="..\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=netstandard2.0" />
-    <MSBuild Projects="..\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net461" />
   </Target>
   <Target Name="AfterBuild">
-    <CreateItem Include="..\FSharp.Configuration.DesignTime\bin\$(Configuration)\net461\*.dll;..\FSharp.Configuration.DesignTime\bin\$(Configuration)\net461\*.pdb">
-      <Output TaskParameter="Include" ItemName="DesignTimeBinaries2" />
-    </CreateItem>
-    <Copy SourceFiles="@(DesignTimeBinaries2)" DestinationFolder="$(OutputPath)/../typeproviders/fsharp41/net461" />
     <CreateItem Include="..\FSharp.Configuration.DesignTime\bin\$(Configuration)\netstandard2.0\*.dll;..\FSharp.Configuration.DesignTime\bin\$(Configuration)\netstandard2.0\*.pdb">
       <Output TaskParameter="Include" ItemName="DesignTimeBinaries3" />
     </CreateItem>

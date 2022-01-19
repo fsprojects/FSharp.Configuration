@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../netfx.props" />
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>FSharp.Configuration</AssemblyName>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -11,10 +11,6 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>NET461</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net461'" />
-    <Reference Include="System.Windows.Forms" Condition="'$(TargetFramework)' == 'net461'" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\tests\ProvidedTypesTesting.fs">
       <Paket>True</Paket>
@@ -36,9 +32,6 @@
     <Compile Include="IniFileProvider.fs" />
     <Compile Include="ConfigTypeProvider.fs" />
     <None Include="paket.references" />
-    <None Include="..\..\packages\NETStandard.Library.NETFramework\build\net461\lib\netstandard.dll" Condition="'$(TargetFramework)' == 'net461'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

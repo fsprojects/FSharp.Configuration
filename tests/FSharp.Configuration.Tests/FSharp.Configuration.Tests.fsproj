@@ -4,7 +4,7 @@
   <Import Project="../../netfx.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net461</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,17 +42,7 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <!-- <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-     <Reference Include="FSharp.Configuration">
-       <HintPath>..\..\bin\lib\net461\FSharp.Configuration.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Configuration.ConfigurationManager">
-       <HintPath>..\..\bin\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
-     </Reference>
-     <Reference Include="YamlDotNet">
-       <HintPath>..\..\bin\lib\net461\YamlDotNet.dll</HintPath>
-     </Reference>
-   </ItemGroup>
+  <!-- 
    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
      <Reference Include="FSharp.Configuration">
        <HintPath>..\..\bin\lib\netstandard2.0\FSharp.Configuration.dll</HintPath>
