@@ -3,6 +3,7 @@
 * Build with .NET 6.0
 * Migration to latest TPSDK
 * Dependencies updated
+* Docs migrated to fsdocs
 
 #### 2.0.0 - 09.08.2021
 * Migration to project system

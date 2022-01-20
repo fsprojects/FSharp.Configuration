@@ -1,8 +1,8 @@
 (*** hide ***)
-#I "../../bin"
+#I "../src/FSharp.Configuration.Runtime/bin/Release/netstandard2.0"
 
 (**
-The AppSettings type provider
+AppSettingsProvider
 ============================
 
 This tutorial shows the use of the AppSettings type provider. 
@@ -35,7 +35,7 @@ Reference the type provider assembly and configure it to use your app.settings f
 
 *)
 
-#r "FSharp.Configuration.dll"
+#r "FSharp.Configuration.Runtime.dll"
 #r "System.Configuration.dll"
 open FSharp.Configuration
 

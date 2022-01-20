@@ -9,11 +9,13 @@ owners
 projectUrl
     https://fsprojects.github.io/FSharp.Configuration/
 iconUrl
-    https://raw.githubusercontent.com/fsprojects/FSharp.Configuration/master/docs/files/img/logo.png
+    https://raw.githubusercontent.com/fsprojects/FSharp.Configuration/master/docs/img/logo.png
 licenseUrl
     https://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt
 requireLicenseAcceptance
     false
+licenseExpression
+     Apache-2.0
 copyright
     Copyright 2014-2022
 tags

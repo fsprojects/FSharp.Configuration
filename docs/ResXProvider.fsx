@@ -1,8 +1,8 @@
 (*** hide ***)
-#I "../../bin"
+#I "../src/FSharp.Configuration.Runtime/bin/Release/netstandard2.0"
 
 (**
-The ResX type provider
+ResXProvider
 ============================
 
 This tutorial shows the use of the ResX type provider. 
@@ -17,7 +17,7 @@ Reference the type provider assembly and configure it to use your Resource1.resx
 *)
 
 // reference the type provider dll
-#r "FSharp.Configuration.dll"
+#r "FSharp.Configuration.Runtime.dll"
 open FSharp.Configuration
 
 // Let the type provider do it's work
