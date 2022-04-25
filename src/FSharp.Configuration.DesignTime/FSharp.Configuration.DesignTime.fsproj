@@ -8,8 +8,6 @@
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <FSharpPreferNetFrameworkTools>true</FSharpPreferNetFrameworkTools>
-    <FSharpPrefer64BitTools>false</FSharpPrefer64BitTools>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>NET461</DefineConstants>
