@@ -1,5 +1,5 @@
 source https://api.nuget.org/v3/index.json
-framework: netstandard2.0
+frameworks: net6.0, netstandard2.0
 
 nuget YamlDotNet
 nuget FSharp.Core 4.7.2
@@ -17,4 +17,5 @@ group Test
 
     nuget FSharp.Core redirects: force
     nuget Expecto
+    nuget System.Configuration.ConfigurationManager redirects: force
     nuget System.Resources.Extensions

@@ -4,8 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
-    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
@@ -32,23 +33,7 @@
     <Content Include="TextFile.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FSharp.Configuration.Runtime\FSharp.Configuration.Runtime.fsproj">
-      <Name>FSharp.Configuration.Runtime</Name>
-      <Project>{7e90d6ce-a10b-4858-a5bc-41df7250cbca}</Project>
-      <Private>True</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\..\src\FSharp.Configuration.Runtime\FSharp.Configuration.Runtime.fsproj" />
   </ItemGroup>
-  <!-- 
-   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-     <Reference Include="FSharp.Configuration">
-       <HintPath>..\..\bin\lib\netstandard2.0\FSharp.Configuration.dll</HintPath>
-     </Reference>
-      <Reference Include="System.Configuration.ConfigurationManager">
-       <HintPath>..\..\bin\lib\netstandard2.0\System.Configuration.ConfigurationManager.dll</HintPath>
-     </Reference>
-     <Reference Include="YamlDotNet">
-       <HintPath>..\..\bin\lib\netstandard2.0\YamlDotNet.dll</HintPath>
-     </Reference>
-  </ItemGroup> -->
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
