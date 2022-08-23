@@ -1,6 +1,6 @@
 ﻿module FSharp.Configuration.ResXProvider
 
-#if NET461
+#if ENABLE_RESXPROVIDER
 
 open System
 open System.IO

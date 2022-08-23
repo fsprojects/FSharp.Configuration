@@ -17,7 +17,7 @@ type FSharpConfigurationProvider(cfg: TypeProviderConfig) as this =
     do this.AddNamespace (
             rootNamespace,
             [
-#if NET461
+#if ENABLE_RESXPROVIDER
               ResXProvider.typedResources context
 #endif
               AppSettingsTypeProvider.typedAppSettings context

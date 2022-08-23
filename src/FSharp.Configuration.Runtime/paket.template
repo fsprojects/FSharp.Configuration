@@ -29,12 +29,17 @@ files
     bin/Release/net461/YamlDotNet.dll ==> lib/net461
     bin/Release/netstandard2.0/FSharp.Configuration.Runtime.* ==> lib/netstandard2.0
     bin/Release/netstandard2.0/YamlDotNet.dll ==> lib/netstandard2.0
+    bin/Release/net5.0-windows/FSharp.Configuration.Runtime.* ==> lib/net5.0-windows
+    bin/Release/net5.0-windows/YamlDotNet.dll ==> lib/net5.0-windows
     bin/Release/typeproviders/fsharp41/netstandard2.0/*.dll ==> typeproviders/fsharp41/netstandard2.0
     bin/Release/typeproviders/fsharp41/net461/*.dll ==> typeproviders/fsharp41/net461
+    bin/Release/typeproviders/fsharp41/net5.0-windows/*.dll ==> typeproviders/fsharp41/net5.0-windows
 dependencies
     framework: netstandard20
         FSharp.Core >= LOCKEDVERSION
     framework: net461
+        FSharp.Core >= LOCKEDVERSION
+    framework: net5.0-windows
         FSharp.Core >= LOCKEDVERSION
 references
     FSharp.Configuration.Runtime.dll
