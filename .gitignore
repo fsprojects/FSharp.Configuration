@@ -160,6 +160,7 @@ $RECYCLE.BIN/
 
 .idea/
 .vs/
+.vscode/
 
 # NuGet Packages Directory
 packages/
