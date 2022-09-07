@@ -1,7 +1,6 @@
 module FSharp.Configuration.Tests.YamlTests
 
 open FSharp.Configuration
-open System.Globalization
 open System
 open System.IO
 open Expecto
