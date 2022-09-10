@@ -1,7 +1,7 @@
 RESTRICTION: || (== net6.0) (== netstandard2.0)
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    FSharp.Core (4.7.2)
+    FSharp.Core (5.0.2)
     Microsoft.Win32.SystemEvents (6.0.1) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
     NETStandard.Library.NETFramework (2.0.0-preview2-25405-01)
     System.Buffers (4.5.1) - restriction: == netstandard2.0
@@ -10,7 +10,7 @@ NUGET
       System.Security.Permissions (>= 6.0)
     System.Drawing.Common (6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       Microsoft.Win32.SystemEvents (>= 6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
-    System.Memory (4.5.4) - restriction: == netstandard2.0
+    System.Memory (4.5.5) - restriction: == netstandard2.0
       System.Buffers (>= 4.5.1) - restriction: || (&& (== net6.0) (>= monotouch)) (&& (== net6.0) (>= net461)) (&& (== net6.0) (< netcoreapp2.0)) (&& (== net6.0) (< netstandard1.1)) (&& (== net6.0) (< netstandard2.0)) (&& (== net6.0) (>= xamarinios)) (&& (== net6.0) (>= xamarinmac)) (&& (== net6.0) (>= xamarintvos)) (&& (== net6.0) (>= xamarinwatchos)) (== netstandard2.0)
       System.Numerics.Vectors (>= 4.4) - restriction: || (&& (== net6.0) (< netcoreapp2.0)) (== netstandard2.0)
       System.Runtime.CompilerServices.Unsafe (>= 4.5.3) - restriction: || (&& (== net6.0) (>= monotouch)) (&& (== net6.0) (>= net461)) (&& (== net6.0) (< netcoreapp2.0)) (&& (== net6.0) (< netcoreapp2.1)) (&& (== net6.0) (< netstandard1.1)) (&& (== net6.0) (< netstandard2.0)) (&& (== net6.0) (>= uap10.1)) (&& (== net6.0) (>= xamarinios)) (&& (== net6.0) (>= xamarinmac)) (&& (== net6.0) (>= xamarintvos)) (&& (== net6.0) (>= xamarinwatchos)) (== netstandard2.0)
@@ -26,12 +26,12 @@ NUGET
     System.Security.Principal.Windows (5.0) - restriction: || (&& (== net6.0) (>= net461)) (== netstandard2.0)
     System.Windows.Extensions (6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Drawing.Common (>= 6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
-    YamlDotNet (11.2.1)
+    YamlDotNet (12.0)
 GITHUB
   remote: fsprojects/FSharp.TypeProviders.SDK
-    src/ProvidedTypes.fs (a35115bd94a4e989b6a978a9c2634f7725301a1f)
-    src/ProvidedTypes.fsi (a35115bd94a4e989b6a978a9c2634f7725301a1f)
-    tests/ProvidedTypesTesting.fs (a35115bd94a4e989b6a978a9c2634f7725301a1f)
+    src/ProvidedTypes.fs (6ad1174db0794a348f4a1c0aa5a60ae3f1803810)
+    src/ProvidedTypes.fsi (6ad1174db0794a348f4a1c0aa5a60ae3f1803810)
+    tests/ProvidedTypesTesting.fs (6ad1174db0794a348f4a1c0aa5a60ae3f1803810)
 GROUP Test
 RESTRICTION: == net6.0
 NUGET
@@ -39,7 +39,7 @@ NUGET
     Expecto (9.0.4)
       FSharp.Core (>= 4.6)
       Mono.Cecil (>= 0.11.3)
-    FSharp.Core (6.0.4) - redirects: force
+    FSharp.Core (6.0.5) - redirects: force
     Microsoft.Win32.SystemEvents (6.0.1) - redirects: force
     Mono.Cecil (0.11.4)
     System.Configuration.ConfigurationManager (6.0) - redirects: force

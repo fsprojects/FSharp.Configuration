@@ -199,7 +199,7 @@ module private TypesFactory =
             let prop = ProvidedProperty (name, mapTy, isStatic = false, getterCode = (fun [me] -> Expr.FieldGetUnchecked(me, field)))
             { MainType = Some (mapTy :> _)
               Types = [mapTy :> MemberInfo; field :> MemberInfo; prop :> MemberInfo]
-              Init = fun me -> Expr.FieldSetUnchecked(me, field, Expr.NewObject(ctr, [])) 
+              Init = fun me -> Expr.FieldSetUnchecked(me, field, Expr.NewObject(ctr, []))
             }
         | None ->
             { MainType = None
