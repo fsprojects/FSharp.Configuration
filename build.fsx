@@ -1,7 +1,7 @@
 #r @"paket:
-source https://nuget.org/api/v2
-framework netstandard2.0
-nuget FSharp.Core 4.7.2
+source https://api.nuget.org/v3/index.json
+framework net6.0
+nuget FSharp.Core
 nuget Fake.Core.Target
 nuget Fake.Core.Process
 nuget Fake.Core.ReleaseNotes 
@@ -15,23 +15,16 @@ nuget Fake.DotNet.FSFormatting
 nuget Fake.Tools.Git
 nuget Fake.Api.GitHub //"
 
-#if !FAKE
 #load "./.fake/build.fsx/intellisense.fsx"
-#r "netstandard" // Temp fix for https://github.com/fsharp/FAKE/issues/1985
-#endif
 
 open Fake 
 open Fake.Core.TargetOperators
 open Fake.Core 
 open Fake.IO
-open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fake.DotNet
-open Fake.DotNet.Testing
 open Fake.Tools
-open Fake.Tools.Git
 open System
-open System.IO
 
 Target.initEnvironment()
 
@@ -45,26 +38,7 @@ let project = "FSharp.Configuration"
 // (used as description in AssemblyInfo and as a short summary for NuGet package)
 let summary = "The FSharp.Configuration project contains type providers for the configuration of .NET projects."
 
-// Longer description of the project
-// (used as a description for NuGet package; line breaks are automatically cleaned up)
-let description = "The FSharp.Configuration project contains type providers for the configuration of .NET projects."
-
-// List of author names (for NuGet package)
-let authors = ["Steffen Forkmann"; "Sergey Tihon"; "Daniel Mohl"; "Tomas Petricek"; "Ryan Riley"; "Mauricio Scheffer"; "Phil Trelford"; "Vasily Kirichenko"; "Reed Copsey, Jr."]
-
-// Tags for your project (for NuGet package)
-let tags = "appsettings, YAML, F#, ResX, Ini, config"
-
-// File system information
-let solutionFile  = "FSharp.Configuration"
-
-// Git configuration (used for publishing documentation in gh-pages branch)
-// The profile where the project is posted
-let gitOwner = "fsprojects"
-let gitHome = "https://github.com/" + gitOwner
-// The name of the project on GitHub
-let gitName = "FSharp.Configuration"
-
+let cloneUrl = "git@github.com:fsprojects/FSharp.Configuration.git"
 // --------------------------------------------------------------------------------------
 // END TODO: The rest of the file includes standard build steps
 // --------------------------------------------------------------------------------------
@@ -119,68 +93,22 @@ Target.create "CleanDocs" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build library & test project
 
+let dotnet buildOptions command args =
+    DotNet.exec buildOptions command args
+    |> fun x ->
+        if x.ExitCode <> 0 then 
+            let messages = List.concat [x.Errors; x.Messages]
+            failwith <| String.Join("\n", messages)
+
 Target.create "Build" (fun _ ->
-    DotNet.exec id "build" "FSharp.Configuration.sln -c Release" |> ignore
-
-    // let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/net461/"
-    // CreateDir outDir
-    // DotNetCli.Publish (fun p -> 
-    //     { p with
-    //         Output = outDir
-    //         Framework = "net461"
-    //         WorkingDir = "src/FSharp.Configuration/" })
-
-    // let outDir = __SOURCE_DIRECTORY__ + "/bin/lib/netstandard2.0/"
-    // CreateDir outDir
-    // DotNetCli.Publish (fun p -> 
-    //     { p with
-    //         Output = outDir
-    //         Framework = "netstandard2.0"
-    //         WorkingDir = "src/FSharp.Configuration/" })
+    dotnet id "build" "FSharp.Configuration.sln -c Release"
 )
-
-Target.create "BuildTests" (fun _ ->
-    DotNet.exec id "build" "FSharp.Configuration.Tests.sln -c Release -v n" |> ignore
-)
-
-// --------------------------------------------------------------------------------------
-// Run the unit tests using test runner
-
-open Fake.Testing
 
 Target.create "RunTests" (fun _ ->
-    !! "tests/**/bin/Release/net461/*Tests*.exe"
-    |> Seq.iter (fun path ->
-        Trace.tracefn "Running tests '%s' ..." path
-
-        let args = "--fail-on-focused-tests --summary --sequenced --version"
-        (if Environment.isWindows
-          then CreateProcess.fromRawCommandLine path args
-          else CreateProcess.fromRawCommandLine "mono" (path + " " + args))
-        |> CreateProcess.ensureExitCode
-        |> Proc.run
-        |> ignore
-    )    
-    // |> Testing.Expecto.run (fun p ->
-    //         { p with 
-    //             //WorkingDirectory = __SOURCE_DIRECTORY__
-    //             FailOnFocusedTests = true
-    //             PrintVersion = true
-    //             Parallel = false
-    //             Summary =  true
-    //             Debug = false
-    //         })
-)
-
-Target.create "RunTestsNetCore" (fun _ ->
-    DotNet.exec 
+    dotnet
         (fun r -> { r with  WorkingDirectory = "tests/FSharp.Configuration.Tests/" }) 
-        "run" "--framework net5.0"
-    |> ignore
+        "run" ""
 )
-
-// --------------------------------------------------------------------------------------
-// Build a NuGet package
 
 Target.create "NuGet" (fun _ ->
     Paket.pack(fun p ->
@@ -194,102 +122,22 @@ Target.create "NuGet" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Generate the documentation
 
-//let fakePath = "packages" @@ "build" @@ "FAKE" @@ "tools" @@ "FAKE.exe"
-//let fakeStartInfo script workingDirectory args fsiargs environmentVars =
-//    (fun (info: System.Diagnostics.ProcessStartInfo) ->
-//        info.FileName <- System.IO.Path.GetFullPath fakePath
-//        info.Arguments <- sprintf "%s --fsiargs -d:FAKE %s \"%s\"" args fsiargs script
-//        info.WorkingDirectory <- workingDirectory
-//        let setVar k v =
-//            info.EnvironmentVariables.[k] <- v
-//        for (k, v) in environmentVars do
-//            setVar k v
-//        setVar "MSBuild" msBuildExe
-//        setVar "GIT" Git.CommandHelper.gitPath
-//        setVar "FSI" fsiPath)
-
-///// Run the given buildscript with FAKE.exe
-//let executeFAKEWithOutput workingDirectory script fsiargs envArgs =
-//    let exitCode =
-//        ExecProcessWithLambdas
-//            (fakeStartInfo script workingDirectory "" fsiargs envArgs)
-//            TimeSpan.MaxValue false ignore ignore
-//    System.Threading.Thread.Sleep 1000
-//    exitCode
-
-//// Documentation
-//let buildDocumentationTarget fsiargs target =
-    //Trace.traceImportantfn "Building documentation (%s), this could take some time, please wait..." target
-    //let exit = executeFAKEWithOutput "docs/tools" "generate.fsx" fsiargs ["target", target]
-    //if exit <> 0 then
-    //    failwith "generating reference documentation failed"
-    //()
-
-Target.create "GenerateReferenceDocs" (fun _ ->
-    ()
-    //buildDocumentationTarget "-d:RELEASE -d:REFERENCE" "Default"
+Target.create "GenerateDocs" (fun _ ->
+   Shell.cleanDir ".fsdocs"
+   DotNet.exec id "fsdocs" "build --clean" |> ignore
 )
-
-//let generateHelp' fail debug =
-//    let args =
-//        if debug then "--define:HELP"
-//        else "--define:RELEASE --define:HELP"
-//    try
-//        buildDocumentationTarget args "Default"
-//        Trace.traceImportant "Help generated"
-//    with
-//    | _ when not fail ->
-//        Trace.traceImportant "generating help documentation failed"
-
-//let generateHelp fail =
-    //generateHelp' fail false
-
-Target.create "GenerateHelp" (fun _ ->
-    ()
-    //DeleteFile "docs/content/release-notes.md"
-    //CopyFile "docs/content/" "RELEASE_NOTES.md"
-    //Rename "docs/content/release-notes.md" "docs/content/RELEASE_NOTES.md"
-
-    //DeleteFile "docs/content/license.md"
-    //CopyFile "docs/content/" "LICENSE.txt"
-    //Rename "docs/content/license.md" "docs/content/LICENSE.txt"
-
-    //generateHelp true
-)
-
-Target.create "GenerateDocs" ignore
-
-// --------------------------------------------------------------------------------------
-// Release Scripts
 
 Target.create "ReleaseDocs" (fun _ ->
-    ()
-    //let tempDocsDir = "temp/gh-pages"
-    //CleanDir tempDocsDir
-    //Repository.cloneSingleBranch "" (gitHome + "/" + gitName + ".git") "gh-pages" tempDocsDir
-
-    //fullclean tempDocsDir
-    //CopyRecursive "docs/output" tempDocsDir true |> tracefn "%A"
-    //StageAll tempDocsDir
-    //Git.Commit.Commit tempDocsDir (sprintf "Update generated documentation for version %s" release.NugetVersion)
-    //Branches.push tempDocsDir
+    Git.Repository.clone "" cloneUrl "temp/gh-pages"
+    Git.Branches.checkoutBranch "temp/gh-pages" "gh-pages"
+    Shell.copyRecursive "output" "temp/gh-pages" true |> printfn "%A"
+    Git.CommandHelper.runSimpleGitCommand "temp/gh-pages" "add ." |> printfn "%s"
+    let cmd = sprintf """commit -a -m "Update generated documentation for version %s""" release.NugetVersion
+    Git.CommandHelper.runSimpleGitCommand "temp/gh-pages" cmd |> printfn "%s"
+    Git.Branches.push "temp/gh-pages"
 )
 
-Target.create "Release" (fun _ ->
-    ()
-    //StageAll ""
-    //Git.Commit.Commit "" (sprintf "Bump version to %s" release.NugetVersion)
-    //Branches.push ""
-
-    //Branches.tag "" release.NugetVersion
-    //Branches.pushTag "" "origin" release.NugetVersion
-
-    //// release on github
-    //createClient (getBuildParamOrDefault "github-user" "") (getBuildParamOrDefault "github-pw" "")
-    //|> createDraft gitOwner gitName release.NugetVersion (release.SemVer.PreRelease <> None) release.Notes
-    //|> releaseDraft
-    //|> Async.RunSynchronously
-)
+Target.create "Release" ignore
 
 Target.create "BuildPackage" ignore
 
@@ -301,27 +149,16 @@ Target.create "All" ignore
 "Clean"
   ==> "AssemblyInfo"
   ==> "Build"
-  ==> "BuildTests"
-  ==> "RunTestsNetCore"
   ==> "RunTests"
-  //=?> ("GenerateReferenceDocs",isLocalBuild && not isMono)
-  //=?> ("GenerateDocs",isLocalBuild && not isMono)
   ==> "All"
-  //=?> ("ReleaseDocs",isLocalBuild && not isMono)
 
 "All"
   ==> "NuGet"
   ==> "BuildPackage"
-
-"CleanDocs"
-  ==> "GenerateHelp"
-  ==> "GenerateReferenceDocs"
-  ==> "GenerateDocs"
-
-"ReleaseDocs"
   ==> "Release"
 
-"BuildPackage"
+"GenerateDocs"
+  ==> "ReleaseDocs"
   ==> "Release"
 
 Target.runOrDefault "All"

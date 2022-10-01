@@ -1,8 +1,8 @@
 (*** hide ***)
-#I "../../bin"
+#I "../src/FSharp.Configuration.Runtime/bin/Release/netstandard2.0"
 
 (**
-The Ini type provider
+IniTypeProvider
 =====================
 
 This tutorial shows the use of the Ini type provider. 
@@ -29,7 +29,7 @@ Create a `Sample.ini` file like this:
 Reference the type provider assembly and configure it to use your ini file:
 *)
 
-#r "FSharp.Configuration.dll"
+#r "FSharp.Configuration.Runtime.dll"
 open FSharp.Configuration
 
 // Let the type provider do it's work

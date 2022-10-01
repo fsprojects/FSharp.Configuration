@@ -160,6 +160,7 @@ $RECYCLE.BIN/
 
 .idea/
 .vs/
+.vscode/
 
 # NuGet Packages Directory
 packages/
@@ -169,6 +170,7 @@ docs/output/
 
 # Temp folder used for publishing docs
 temp/
+tmp/
 
 # Test results produced by build
 TestResults.xml
@@ -177,6 +179,7 @@ nuget/
 .paket/
 .fake/
 .ionide/
+.fsdocs/
 
 # Nuget outputs
 nuget/*.nupkg

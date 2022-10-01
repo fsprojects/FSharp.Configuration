@@ -21,9 +21,9 @@ let inline satisfies predicate (charOption:option<char>) =
     | _ -> None
 
 let dispose (x: IDisposable) = if x = null then () else x.Dispose()
-let debug msg = 
+let debug msg =
     let dt = DateTime.Now
-    let writer msg = 
+    let writer msg =
         Diagnostics.Debug.WriteLine msg
 //        System.IO.File.AppendAllLines("debug.log", [sprintf "[%O] %s\n" dt msg])
     Printf.kprintf writer msg

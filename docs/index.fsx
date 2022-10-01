@@ -1,5 +1,5 @@
 (*** hide ***)
-#I "../../bin"
+#I "../src/FSharp.Configuration.Runtime/bin/Release/netstandard2.0"
 
 (**
 FSharp.Configuration
@@ -13,15 +13,16 @@ The FSharp.Configuration project contains type providers for the configuration o
 * [Ini](IniTypeProvider.html)
 
 <div class="row">
-  <div class="span1"></div>
-  <div class="span6">
-    <div class="well well-small" id="nuget">
-      The library can be <a href="https://nuget.org/packages/FSharp.Configuration">installed from NuGet</a>:
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+    <div class="card card-body p-3" id="nuget">
+      <p class="mb-0">The library can be <a href="https://nuget.org/packages/FSharp.Configuration">installed from NuGet:</a></a></p>
       <pre>PM> Install-Package FSharp.Configuration</pre>
     </div>
   </div>
-  <div class="span1"></div>
+  <div class="col-sm-2"></div>
 </div>
+
 
 Example
 -------
@@ -30,7 +31,7 @@ This example demonstrates the use of the AppSettings type provider:
 
 *)
 // reference the type provider dll
-#r "FSharp.Configuration.dll"
+#r "FSharp.Configuration.Runtime.dll"
 #r "System.Configuration.dll"
 open FSharp.Configuration
 

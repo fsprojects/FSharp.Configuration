@@ -1,4 +1,5 @@
 group Test
   FSharp.Core
   Expecto
+  System.Configuration.ConfigurationManager
   System.Resources.Extensions

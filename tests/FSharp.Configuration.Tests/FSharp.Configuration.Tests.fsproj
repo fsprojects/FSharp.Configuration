@@ -1,15 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../fsc.props" />
-  <Import Project="../../netfx.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net5.0;net461</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
-    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <DisableAutoSetFscCompilerPath>true</DisableAutoSetFscCompilerPath>
-    <DotnetFscCompilerPath></DotnetFscCompilerPath>
+    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
@@ -36,33 +33,7 @@
     <Content Include="TextFile.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FSharp.Configuration.Runtime\FSharp.Configuration.Runtime.fsproj">
-      <Name>FSharp.Configuration.Runtime</Name>
-      <Project>{7e90d6ce-a10b-4858-a5bc-41df7250cbca}</Project>
-      <Private>True</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\..\src\FSharp.Configuration.Runtime\FSharp.Configuration.Runtime.fsproj" />
   </ItemGroup>
-  <!-- <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-     <Reference Include="FSharp.Configuration">
-       <HintPath>..\..\bin\lib\net461\FSharp.Configuration.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Configuration.ConfigurationManager">
-       <HintPath>..\..\bin\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
-     </Reference>
-     <Reference Include="YamlDotNet">
-       <HintPath>..\..\bin\lib\net461\YamlDotNet.dll</HintPath>
-     </Reference>
-   </ItemGroup>
-   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-     <Reference Include="FSharp.Configuration">
-       <HintPath>..\..\bin\lib\netstandard2.0\FSharp.Configuration.dll</HintPath>
-     </Reference>
-      <Reference Include="System.Configuration.ConfigurationManager">
-       <HintPath>..\..\bin\lib\netstandard2.0\System.Configuration.ConfigurationManager.dll</HintPath>
-     </Reference>
-     <Reference Include="YamlDotNet">
-       <HintPath>..\..\bin\lib\netstandard2.0\YamlDotNet.dll</HintPath>
-     </Reference>
-  </ItemGroup> -->
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
