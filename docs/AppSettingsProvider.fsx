@@ -37,6 +37,7 @@ Reference the type provider assembly and configure it to use your app.settings f
 
 #r "FSharp.Configuration.Runtime.dll"
 #r "System.Configuration.dll"
+
 open FSharp.Configuration
 
 type Settings = AppSettings<"app.config">
@@ -73,6 +74,6 @@ The default executable is the current project .config. (Which is Fsi.exe.config 
 How ever, if you want to modify the configuration of some other application, you can do with SelectExecutableFile-method:
 *)
 
-let path = System.IO.Path.Combine [|__SOURCE_DIRECTORY__ ; "bin"; "myProject.exe" |]
+let path = System.IO.Path.Combine [| __SOURCE_DIRECTORY__; "bin"; "myProject.exe" |]
 Settings.SelectExecutableFile path
 Settings.Test2

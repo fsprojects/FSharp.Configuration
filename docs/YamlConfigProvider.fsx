@@ -46,6 +46,7 @@ Reference the type provider assembly and configure it to use your yaml file:
 *)
 
 #r "FSharp.Configuration.Runtime.dll"
+
 open FSharp.Configuration
 
 // Let the type provider do it's work
@@ -223,15 +224,19 @@ Let's show the event in action:
 
 // ...reference assemblies and open namespaces as before...
 let c = Config()
-let log name _ = printfn "%s changed!" name
-// add handlers for the root and all down the Mail hierarchy 
-c.Changed.Add (log "ROOT")
-c.Mail.Changed.Add (log "Mail")
-c.Mail.Smtp.Changed.Add (log "Mail.Smtp")
-c.Mail.Pop3.Changed.Add (log "Mail.Pop3")
+
+let log name _ =
+    printfn "%s changed!" name
+// add handlers for the root and all down the Mail hierarchy
+c.Changed.Add(log "ROOT")
+c.Mail.Changed.Add(log "Mail")
+c.Mail.Smtp.Changed.Add(log "Mail.Smtp")
+c.Mail.Pop3.Changed.Add(log "Mail.Pop3")
 // as a marker, add a handler for DB
-c.DB.Changed.Add (log "DB")
-c.LoadText """
+c.DB.Changed.Add(log "DB")
+
+c.LoadText
+    """
 Mail:
   Smtp:
     Host: smtp.sample.com
@@ -253,7 +258,8 @@ DB:
   ConnectionString: Data Source=server1;Initial Catalog=Database1;Integrated Security=SSPI;
   NumberOfDeadlockRepeats: 5
   DefaultTimeout: 00:05:00
-""" |> ignore
+"""
+|> ignore
 
 (**
 The output is as follows:

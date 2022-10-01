@@ -7,7 +7,7 @@ type Settings = AppSettings<"Web.config">
 
 type HomeController() =
     inherit Controller()
-    member this.Index () = 
+
+    member this.Index() =
         let _ = Settings.WebpagesEnabled
         this.View()
-

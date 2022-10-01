@@ -30,6 +30,7 @@ Reference the type provider assembly and configure it to use your ini file:
 *)
 
 #r "FSharp.Configuration.Runtime.dll"
+
 open FSharp.Configuration
 
 // Let the type provider do it's work
