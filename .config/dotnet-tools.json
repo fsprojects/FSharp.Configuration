@@ -19,6 +19,12 @@
       "commands": [
         "fsdocs"
       ]
+    },
+    "fantomas": {
+      "version": "5.0.3",
+      "commands": [
+        "fantomas"
+      ]
     }
   }
 }
