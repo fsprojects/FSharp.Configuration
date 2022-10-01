@@ -1,11 +1,11 @@
 RESTRICTION: || (== net6.0) (== netstandard2.0)
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    FSharp.Core (5.0.2)
+    FSharp.Core (4.7.2)
     Microsoft.Win32.SystemEvents (6.0.1) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
     NETStandard.Library.NETFramework (2.0.0-preview2-25405-01)
     System.Buffers (4.5.1) - restriction: == netstandard2.0
-    System.Configuration.ConfigurationManager (6.0)
+    System.Configuration.ConfigurationManager (6.0.1)
       System.Security.Cryptography.ProtectedData (>= 6.0)
       System.Security.Permissions (>= 6.0)
     System.Drawing.Common (6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
@@ -26,7 +26,7 @@ NUGET
     System.Security.Principal.Windows (5.0) - restriction: || (&& (== net6.0) (>= net461)) (== netstandard2.0)
     System.Windows.Extensions (6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
       System.Drawing.Common (>= 6.0) - restriction: || (== net6.0) (&& (== netstandard2.0) (>= netcoreapp3.1))
-    YamlDotNet (12.0)
+    YamlDotNet (12.0.1)
 GITHUB
   remote: fsprojects/FSharp.TypeProviders.SDK
     src/ProvidedTypes.fs (6ad1174db0794a348f4a1c0aa5a60ae3f1803810)
@@ -39,10 +39,10 @@ NUGET
     Expecto (9.0.4)
       FSharp.Core (>= 4.6)
       Mono.Cecil (>= 0.11.3)
-    FSharp.Core (6.0.5) - redirects: force
+    FSharp.Core (6.0.6) - redirects: force
     Microsoft.Win32.SystemEvents (6.0.1) - redirects: force
     Mono.Cecil (0.11.4)
-    System.Configuration.ConfigurationManager (6.0) - redirects: force
+    System.Configuration.ConfigurationManager (6.0.1) - redirects: force
       System.Security.Cryptography.ProtectedData (>= 6.0)
       System.Security.Permissions (>= 6.0)
     System.Drawing.Common (6.0) - redirects: force
