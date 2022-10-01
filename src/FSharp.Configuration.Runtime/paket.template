@@ -10,12 +10,12 @@ projectUrl
     https://fsprojects.github.io/FSharp.Configuration/
 iconUrl
     https://raw.githubusercontent.com/fsprojects/FSharp.Configuration/master/docs/img/logo.png
-licenseUrl
-    https://github.com/fsprojects/FSharp.Configuration/blob/master/LICENSE.txt
 requireLicenseAcceptance
     false
 licenseExpression
-     Apache-2.0
+    Apache-2.0
+licenseUrl
+    https://licenses.nuget.org/Apache-2.0
 copyright
     Copyright 2014-2022
 tags
