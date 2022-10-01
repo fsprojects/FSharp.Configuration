@@ -33,6 +33,7 @@ This example demonstrates the use of the AppSettings type provider:
 // reference the type provider dll
 #r "FSharp.Configuration.Runtime.dll"
 #r "System.Configuration.dll"
+
 open FSharp.Configuration
 
 // Let the type provider do it's work

@@ -18,6 +18,7 @@ Reference the type provider assembly and configure it to use your Resource1.resx
 
 // reference the type provider dll
 #r "FSharp.Configuration.Runtime.dll"
+
 open FSharp.Configuration
 
 // Let the type provider do it's work

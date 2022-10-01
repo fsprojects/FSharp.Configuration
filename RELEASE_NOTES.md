@@ -1,4 +1,4 @@
-#### 3.0.0 - 25.04.2022
+#### 3.0.0-beta1 - 01.10.2022
 * Removed `net461` target from TPDTC
 * Added `net6.0` target from TPDTC
 * Build with .NET 6.0
