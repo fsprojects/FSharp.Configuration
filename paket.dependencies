@@ -5,7 +5,7 @@ storage: none
 nuget YamlDotNet
 nuget FSharp.Core 8.0.301
 
-nuget System.Configuration.ConfigurationManager 9.0.4
+nuget System.Configuration.ConfigurationManager 8.0.1
 nuget NETStandard.Library.NETFramework
 
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fs
@@ -17,5 +17,5 @@ group Test
 
     nuget FSharp.Core redirects: force
     nuget Expecto 9.0.4
-    nuget System.Configuration.ConfigurationManager 9.0.4 redirects: force
+    nuget System.Configuration.ConfigurationManager 8.0.1 redirects: force
     nuget System.Resources.Extensions
