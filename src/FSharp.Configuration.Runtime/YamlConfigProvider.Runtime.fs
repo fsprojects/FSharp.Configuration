@@ -137,13 +137,16 @@ module Parser =
                 let! field = tryGetField target ("_" + name)
 
                 let newValue =
-                    if field.FieldType <> node.UnderlyingType then
+                    if Type.(<>)(field.FieldType, node.UnderlyingType) then
                         if
-                            node.UnderlyingType <> typeof<string>
-                            && field.FieldType = typeof<string>
+                            Type.(<>)(node.UnderlyingType, typeof<string>)
+                            && Type.(=)(field.FieldType, typeof<string>)
                         then
                             node.BoxedValue |> string |> box
-                        elif node.UnderlyingType = typeof<int32> && field.FieldType = typeof<int64> then
+                        elif
+                            Type.(=)(node.UnderlyingType, typeof<int32>)
+                            && Type.(=)(field.FieldType, typeof<int64>)
+                        then
                             node.BoxedValue :?> int32 |> int64 |> box
                         else
                             failwithf "Cannot assign value of type %s to field of %s: %s." node.UnderlyingType.Name name field.FieldType.Name
@@ -339,8 +342,26 @@ type Root(inferTypesFromStrings: bool) =
     /// Load Yaml config from a file and update itself with it.
     member x.Load(filePath: string) =
         try
-            filePath |> Helper.File.tryReadNonEmptyTextFile |> x.LoadText
+            filePath
+            |> Helper.File.tryReadNonEmptyTextFile
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
+            |> x.LoadText
+
             lastLoadedFrom <- Some filePath
+        with e ->
+            async { errorEvent.Trigger e } |> Async.Start
+            reraise()
+
+    /// Load Yaml config from a file and update itself with it.
+    member x.LoadAsync(filePath: string) =
+        try
+            task {
+                let! t = filePath |> Helper.File.tryReadNonEmptyTextFile
+                t |> x.LoadText
+                lastLoadedFrom <- Some filePath
+                return ()
+            }
         with e ->
             async { errorEvent.Trigger e } |> Async.Start
             reraise()

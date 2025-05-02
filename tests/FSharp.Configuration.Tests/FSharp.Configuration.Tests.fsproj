@@ -2,12 +2,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <!-- If you want to test multiple, you need switch in build.fsx: -->
+    <!--<TargetFrameworks>net48;net8.0</TargetFrameworks>-->
     <AssemblyName>FSharp.Configuration.Tests</AssemblyName>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <DefineConstants>NET461</DefineConstants>

@@ -108,7 +108,8 @@ Target.create "RunTests" (fun _ ->
             { r with
                 WorkingDirectory = "tests/FSharp.Configuration.Tests/"
             })
-        "run"
+        //"run --framework net48"
+        "run --framework net8.0"
         "")
 
 Target.create "NuGet" (fun _ ->

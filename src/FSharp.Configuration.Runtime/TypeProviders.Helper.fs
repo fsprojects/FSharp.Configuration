@@ -15,12 +15,12 @@ type FilePath = string
 type String with
 
     member x.TryGetChar i =
-        if i >= x.Length then None else Some x.[i]
+        if i >= x.Length then ValueNone else ValueSome x.[i]
 
-let inline satisfies predicate (charOption: option<char>) =
+let inline satisfies predicate (charOption: voption<char>) =
     match charOption with
-    | Some c when predicate c -> charOption
-    | _ -> None
+    | ValueSome c when predicate c -> charOption
+    | _ -> ValueNone
 
 let dispose(x: IDisposable) =
     if x = null then () else x.Dispose()
@@ -33,13 +33,19 @@ let debug msg =
     //        System.IO.File.AppendAllLines("debug.log", [sprintf "[%O] %s\n" dt msg])
     Printf.kprintf writer msg
 
+[<return: Struct>]
 let (|EOF|_|) =
     function
-    | Some _ -> None
-    | _ -> Some()
+    | ValueSome _ -> ValueNone
+    | _ -> ValueSome()
 
+[<return: Struct>]
 let (|LetterDigit|_|) = satisfies Char.IsLetterOrDigit
+
+[<return: Struct>]
 let (|Upper|_|) = satisfies Char.IsUpper
+
+[<return: Struct>]
 let (|Lower|_|) = satisfies Char.IsLower
 
 /// Path.Combine
@@ -120,24 +126,33 @@ module ValueParser =
 
     /// Converts a function returning bool,value to a function returning value option.
     /// Useful to process TryXX style functions.
-    let inline private tryParseWith(func: string -> 'a) =
+    let inline private tryParseWith(func: string -> bool * 'b) =
         func
         >> function
-            | true, value -> Some value
-            | false, _ -> None
+            | true, value -> ValueSome value
+            | false, _ -> ValueNone
 
+    [<return: Struct>]
     let (|Bool|_|) = tryParseWith Boolean.TryParse
+
+    [<return: Struct>]
     let (|Int|_|) = tryParseWith Int32.TryParse
+
+    [<return: Struct>]
     let (|Int64|_|) = tryParseWith Int64.TryParse
 
+    [<return: Struct>]
     let (|Float|_|) =
         tryParseWith(fun x -> Double.TryParse(x, NumberStyles.Any, CultureInfo.InvariantCulture))
 
+    [<return: Struct>]
     let (|TimeSpan|_|) =
         tryParseWith(fun x -> TimeSpan.TryParse(x, CultureInfo.InvariantCulture))
 
+    [<return: Struct>]
     let (|Guid|_|) = tryParseWith Guid.TryParse
 
+    [<return: Struct>]
     let (|DateTime|_|) =
         tryParseWith(fun x -> DateTime.TryParse(x, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal))
 
@@ -151,6 +166,15 @@ module ValueParser =
             else
                 None)
 
+let inline forall predicate (source: ReadOnlySpan<_>) =
+    let mutable state = true
+    let mutable e = source.GetEnumerator()
+
+    while state && e.MoveNext() do
+        state <- predicate e.Current
+
+    state
+
 /// Turns a string into a nice PascalCase identifier
 let createNiceNameProvider() =
     let set = HashSet()
@@ -160,40 +184,38 @@ let createNiceNameProvider() =
             s
         else
             // Starting to parse a new segment
-            let rec restart i = seq {
+            let rec restart i =
                 match s.TryGetChar i with
-                | EOF -> ()
-                | LetterDigit _ & Upper _ -> yield! upperStart i (i + 1)
-                | LetterDigit _ -> yield! consume i false (i + 1)
-                | _ -> yield! restart(i + 1)
-            }
+                | EOF -> Seq.empty
+                | LetterDigit _ & Upper _ -> upperStart i (i + 1)
+                | LetterDigit _ -> consume i false (i + 1)
+                | _ -> restart(i + 1)
 
             // Parsed first upper case letter, continue either all lower or all upper
-            and upperStart from i = seq {
+            and upperStart from i =
                 match s.TryGetChar i with
-                | Upper _ -> yield! consume from true (i + 1)
-                | Lower _ -> yield! consume from false (i + 1)
-                | _ -> yield! restart(i + 1)
-            }
+                | Upper _ -> consume from true (i + 1)
+                | Lower _ -> consume from false (i + 1)
+                | _ -> restart(i + 1)
 
             // Consume are letters of the same kind (either all lower or all upper)
-            and consume from takeUpper i = seq {
+            and consume from takeUpper i =
                 match s.TryGetChar i with
-                | Lower _ when not takeUpper -> yield! consume from takeUpper (i + 1)
-                | Upper _ when takeUpper -> yield! consume from takeUpper (i + 1)
-                | _ ->
-                    yield from, i
+                | Lower _ when not takeUpper -> consume from takeUpper (i + 1)
+                | Upper _ when takeUpper -> consume from takeUpper (i + 1)
+                | _ -> seq {
+                    yield struct (from, i)
                     yield! restart i
-            }
+                  }
 
             // Split string into segments and turn them to PascalCase
             let mutable name =
                 seq {
                     for i1, i2 in restart 0 do
-                        let sub = s.Substring(i1, i2 - i1)
+                        let sub = s.AsSpan(i1, i2 - i1)
 
-                        if Seq.forall Char.IsLetterOrDigit sub then
-                            yield sub.[0].ToString().ToUpper() + sub.[1..].ToLower()
+                        if forall Char.IsLetterOrDigit sub then
+                            yield Char.ToUpper(sub.[0]).ToString() + sub.Slice(1).ToString().ToLower()
                 }
                 |> String.concat ""
 
@@ -243,12 +265,12 @@ module File =
     let tryReadNonEmptyTextFile filePath =
         let maxAttempts = 5
 
-        let rec sleepAndRun attempt = async {
-            do! Async.Sleep 1000
+        let rec sleepAndRun attempt = task {
+            do! System.Threading.Tasks.Task.Delay 1000
             return! loop(attempt - 1)
         }
 
-        and loop attemptsLeft = async {
+        and loop attemptsLeft = task {
             let attempt = maxAttempts - attemptsLeft + 1
 
             match tryOpenFile filePath with
@@ -267,19 +289,19 @@ module File =
             | None ->
                 if attemptsLeft = 0 then
                     return raise(FileNotFoundException(sprintf "File, %s could not be opened after %d attempts." filePath maxAttempts))
-
-                printfn "Attempt %d of %d: cannot read %s. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
-                return! sleepAndRun attemptsLeft
+                else
+                    printfn "Attempt %d of %d: cannot read %s. Sleep for 1 sec, then retry..." attempt maxAttempts filePath
+                    return! sleepAndRun attemptsLeft
         }
 
-        loop maxAttempts |> Async.RunSynchronously
+        loop maxAttempts
 
     type private State = {
         LastFileWriteTime: DateTime
         Updated: DateTime
     }
 
-    let watch changesOnly filePath onChanged =
+    let watch changesOnly (filePath: string) onChanged =
         let getLastWrite() =
             File.GetLastWriteTime filePath
 
