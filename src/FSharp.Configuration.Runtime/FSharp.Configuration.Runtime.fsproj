@@ -4,8 +4,9 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     <DefineConstants>TP_RUNTIME</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
@@ -32,12 +33,11 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Be explicit about the version of FSharp.Core since we mention it in the manual nuget package spec -->
-    <PackageReference Include="FSharp.Core" Version="4.7.2" />
+    <PackageReference Include="FSharp.Core" Version="8.0.301" />
   </ItemGroup>
   <Target Name="BeforeBuild">
     <MSBuild Projects="..\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj" Targets="Restore" />
-    <MSBuild Projects="..\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net6.0" />
-    <MSBuild Projects="..\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=netstandard2.0" />
+    <MSBuild Projects="..\FSharp.Configuration.DesignTime\FSharp.Configuration.DesignTime.fsproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=$(TargetFramework)" />
   </Target>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

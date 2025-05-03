@@ -1,10 +1,11 @@
+version 8.1.0
 source https://api.nuget.org/v3/index.json
-framework: net6.0, netstandard2.0
+storage: none
 
 nuget YamlDotNet
-nuget FSharp.Core 4.7.2
+nuget FSharp.Core 8.0.301
 
-nuget System.Configuration.ConfigurationManager
+nuget System.Configuration.ConfigurationManager 8.0.1
 nuget NETStandard.Library.NETFramework
 
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fs
@@ -13,9 +14,8 @@ github fsprojects/FSharp.TypeProviders.SDK tests/ProvidedTypesTesting.fs
 
 group Test
     source https://api.nuget.org/v3/index.json
-    framework: net6.0
 
     nuget FSharp.Core redirects: force
-    nuget Expecto
-    nuget System.Configuration.ConfigurationManager redirects: force
+    nuget Expecto 9.0.4
+    nuget System.Configuration.ConfigurationManager 8.0.1 redirects: force
     nuget System.Resources.Extensions
