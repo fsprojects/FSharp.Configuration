@@ -17,7 +17,7 @@ licenseExpression
 licenseUrl
     https://licenses.nuget.org/Apache-2.0
 copyright
-    Copyright 2014-2022
+    Copyright 2014-2025
 tags
     F# fsharp typeproviders FSharp.Configuration appsettings YAML F# ResX Ini config
 summary
